@@ -9,8 +9,6 @@ const Header = () => {
   const searchInputRef = useRef();
   const location = useLocation();
 
-  console.log(location.pathname);
-
   const [searchValue, setSearchValue] = useState(null);
 
   const handleOnChnage = (e) => {

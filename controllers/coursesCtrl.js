@@ -179,7 +179,6 @@ const coursesCtrl = {
             url,
             platform,
           });
-          console.log(newCourses);
 
           await newCourses.save();
 
@@ -192,7 +191,6 @@ const coursesCtrl = {
       const saveData = (filteredData) => savingData(filteredData);
 
       const filteredData = await filteringData(data);
-      console.log(filteredData);
       const savedData = await saveData(filteredData);
 
       res.json({

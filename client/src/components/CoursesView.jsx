@@ -11,10 +11,15 @@ import "swiper/components/scrollbar/scrollbar.scss";
 
 // dummyData [courses]
 import coursesData from "../_dummyData/courses.json";
+// import { useSelector } from "react-redux";
 
 SwiperCore.use([Navigation, Pagination, Scrollbar, A11y]);
 
 const CourseView = () => {
+  // const {
+  //   course: { inflearn_courses, fastcampus_courses },
+  // } = useSelector((state) => state);
+
   return (
     <StyledCouresesView className="courses-wrapper">
       <div className="courses">
@@ -53,13 +58,17 @@ const StyledCouresesView = styled.div`
 
   .courses {
     &-title {
-      margin: 20px 0;
+      margin: 30px 0 20px;
       text-align: center;
     }
 
     &__data {
       display: flex;
     }
+  }
+
+  .swiper-pagination {
+    bottom: 0;
   }
 
   .swiper-pagination-bullet-active {
@@ -77,7 +86,7 @@ const StyledCouresesView = styled.div`
 
     &::after {
       content: "";
-      border: 4px solid #def3fd;
+      border: 4px solid #fff;
     }
 
     &.swiper-button-next {

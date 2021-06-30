@@ -51,7 +51,7 @@ const Footer = () => {
           </div>
         </div>
         <div className="license">
-          <span>&copy; 2021 All Rights Reserved Me</span>
+          <span>&copy; 2021 CoursePlanet All Rights Reserved</span>
         </div>
       </div>
     </StyledFooter>

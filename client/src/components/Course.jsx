@@ -2,6 +2,14 @@ import React from "react";
 import styled from "styled-components";
 
 const Course = ({ course }) => {
+  let sliceDescription;
+  let sliceTitle;
+
+  if (course.description.length > 125)
+    sliceDescription = course.description.slice(0, 125) + " ...";
+
+  if (course.title.length > 68) sliceTitle = course.title.slice(0, 68) + " ...";
+
   return (
     <StyledCourse>
       <div className="course">
@@ -9,10 +17,14 @@ const Course = ({ course }) => {
           <img src={course.image} alt={`${course.title} img`} />
         </div>
         <div className="course__title">
-          <span>{course.title}</span>
+          <span>{course.title.length > 68 ? sliceTitle : course.title}</span>
         </div>
         <div className="course__description">
-          <p>{course.description}</p>
+          <p>
+            {course.description.length > 125
+              ? sliceDescription
+              : course.description}
+          </p>
         </div>
         <div className="course-content">
           <div className="course-content__instructor">
@@ -23,7 +35,7 @@ const Course = ({ course }) => {
               가격 <span>{course.price}</span>
             </div>
             <div className="course-content__price-review__review">
-              강의 리뷰 <span>{course.review.length}</span>
+              강의 리뷰 <span>{course.review?.length}</span>
             </div>
           </div>
         </div>
@@ -101,7 +113,7 @@ const StyledCourse = styled.div`
         }
 
         &__review {
-          margin-top: 3px;
+          margin-top: 5px;
           text-align: end;
         }
       }

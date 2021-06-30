@@ -1,8 +1,18 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 
 const Login = () => {
+  const initialState = { userId: "", password: "" };
+  const [userData, setUserData] = useState(initialState);
+  const { userId, password } = userData;
+
+  const handleChnageInput = (e) => {
+    const { name, value } = e.target;
+
+    setUserData({ [name]: value });
+  };
+
   return (
     <StyledLogin>
       <div className="wrapper">
@@ -15,6 +25,9 @@ const Login = () => {
               id="login__form__input-id"
               className="login__form__input-id"
               placeholder="아이디를 입력해주세요."
+              name="userId"
+              value={userId}
+              onChange={handleChnageInput}
             />
             <label htmlFor="login__form__input-pw">패스워드</label>
             <input
@@ -22,6 +35,9 @@ const Login = () => {
               id="login__form__input-pw"
               className="login__form__input-pw"
               placeholder="패스워드를 입력해주세요."
+              name="password"
+              value={password}
+              onChange={handleChnageInput}
             />
             <button type="submit" className="login__form__submit">
               로그인
