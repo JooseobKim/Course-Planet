@@ -1,12 +1,21 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import SearchIcon from "@material-ui/icons/Search";
 import CoursesView from "../../components/CoursesView";
+import { useDispatch, useSelector } from "react-redux";
+import { getCourses } from "../../redux/actions/courseAction";
 
 const Home = () => {
-  const searchInputRef = useRef();
+  const {
+    course: { get_courses },
+  } = useSelector((state) => state);
+  const dispatch = useDispatch();
 
   const [searchValue, setSearchValue] = useState(null);
+
+  useEffect(() => {
+    dispatch(getCourses());
+  }, [dispatch]);
 
   const handleOnChnage = (e) => {
     setSearchValue(e.target.value);
@@ -22,7 +31,6 @@ const Home = () => {
           <form className="search">
             <label htmlFor="search-input" className="search-input__label">
               <SearchIcon />
-              <span className="blind">Search</span>
             </label>
             <input
               type="text"
@@ -32,7 +40,6 @@ const Home = () => {
               value={searchValue}
               onChange={handleOnChnage}
               placeholder="검색어를 입력하세요."
-              ref={searchInputRef}
             />
             <button type="submit" className="search__button">
               검색
@@ -41,7 +48,7 @@ const Home = () => {
         </StyledSearchContainer>
       </div>
       <div className="courses-view" style={{ margin: "20px 0" }}>
-        <CoursesView />
+        <CoursesView get_courses={get_courses} />
       </div>
     </>
   );
@@ -60,10 +67,6 @@ const StyledSearchContainer = styled.section`
   align-items: center;
   margin: auto;
 
-  .blind {
-    display: none;
-  }
-
   .search-title {
     color: #272c48;
     font-weight: 500;
@@ -79,7 +82,7 @@ const StyledSearchContainer = styled.section`
     box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 15px -3px,
       rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
 
-    .search-input__label {
+    &-input__label {
       height: 40px;
       padding: 0 7px;
       border-right: 2px solid #ecebf6;
@@ -90,7 +93,7 @@ const StyledSearchContainer = styled.section`
       align-items: center;
     }
 
-    .search__input {
+    &__input {
       font-size: 15px;
       flex: 1;
       height: 40px;
@@ -105,7 +108,7 @@ const StyledSearchContainer = styled.section`
       }
     }
 
-    .search__button {
+    &__button {
       border: none;
       height: 40px;
       padding: 0 15px;

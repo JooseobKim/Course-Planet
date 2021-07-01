@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import { Link } from "react-router-dom";
 
 const Course = ({ course }) => {
   let sliceDescription;
@@ -48,14 +49,12 @@ const Course = ({ course }) => {
           >
             강의 홈페이지로 이동
           </a>
-          <a
-            href="/"
-            target="_blank"
-            rel="noreferrer"
+          <Link
+            to={`/courses/${course._id}`}
             className="course__url__move-review"
           >
             리뷰 작성하기
-          </a>
+          </Link>
         </div>
       </div>
     </StyledCourse>
@@ -82,18 +81,20 @@ const StyledCourse = styled.div`
       padding: 5px 0 5px;
 
       img {
-        width: 260px;
+        width: 100%;
         height: 179px;
         object-fit: contain;
       }
     }
 
     &__title {
+      height: 30px;
       text-align: center;
       padding: 5px 10px;
     }
 
     &__description {
+      height: 72px;
       padding: 5px 7px;
       line-height: 1.2;
     }
@@ -123,7 +124,7 @@ const StyledCourse = styled.div`
       position: absolute;
       top: 0;
       left: 0;
-      width: 350px;
+      width: 375px;
       height: 189px;
       background-color: rgba(0, 0, 0, 0.4);
       opacity: 0;

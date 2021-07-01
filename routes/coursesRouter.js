@@ -15,6 +15,12 @@ courseRouter.post("/admin/save_data", coursesCtrl.saveCourses);
 // 코스 검색
 courseRouter.get("/search", coursesCtrl.searchCourse);
 
+// 최근 리뷰 작성 강의 불러오기 [리뷰 파트 작성 후에 진행]
+// courseRouter.get("/recent_review", coursesCtrl.getRecentReview);
+
+// 최근 리뷰 작성 강의 불러오기 [리뷰 파트 작성 후에 진행]
+// courseRouter.get("/recent_review", coursesCtrl.getMostReview);
+
 // 강의 불러오기
 courseRouter.get("/", coursesCtrl.getCourses);
 

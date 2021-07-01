@@ -4,6 +4,8 @@ import styled from "styled-components";
 import { Swiper, SwiperSlide } from "swiper/react";
 import SwiperCore, { Navigation, Pagination, Scrollbar, A11y } from "swiper";
 
+import Skeleton from "./Skeleton";
+
 import "swiper/swiper.scss";
 import "swiper/components/navigation/navigation.scss";
 import "swiper/components/pagination/pagination.scss";
@@ -11,18 +13,24 @@ import "swiper/components/scrollbar/scrollbar.scss";
 
 // dummyData [courses]
 import coursesData from "../_dummyData/courses.json";
-// import { useSelector } from "react-redux";
 
 SwiperCore.use([Navigation, Pagination, Scrollbar, A11y]);
 
-const CourseView = () => {
-  // const {
-  //   course: { inflearn_courses, fastcampus_courses },
-  // } = useSelector((state) => state);
-
+const CourseView = ({ get_courses }) => {
   return (
     <StyledCouresesView className="courses-wrapper">
       <div className="courses">
+        <h3 className="courses-title">최긘에 추가된 강의</h3>
+        {get_courses.length === 0 && <Skeleton loading={alert.loading} />}
+        <Swiper slidesPerView={4} slidesPerGroup={4} navigation pagination>
+          <div className="courses__data" style={{ display: "flex" }}>
+            {get_courses.map((course) => (
+              <SwiperSlide>
+                <Course course={course} />
+              </SwiperSlide>
+            ))}
+          </div>
+        </Swiper>
         <h3 className="courses-title">가장 최근에 리뷰가 작성된 강의</h3>
         <Swiper slidesPerView={4} slidesPerGroup={4} navigation pagination>
           <div className="courses__data" style={{ display: "flex" }}>

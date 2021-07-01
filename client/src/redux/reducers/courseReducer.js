@@ -3,6 +3,8 @@ import { COURSE_TYPES } from "../actions/courseAction";
 const initialState = {
   inflearn_courses: [],
   fastcampus_courses: [],
+  get_courses: [],
+  get_course: [],
 };
 
 const courseReducer = (state = initialState, action) => {
@@ -21,6 +23,16 @@ const courseReducer = (state = initialState, action) => {
       return {
         ...state,
         ...action.payload,
+      };
+    case COURSE_TYPES.GET_COURSES:
+      return {
+        ...state,
+        get_courses: [...action.payload],
+      };
+    case COURSE_TYPES.GET_COURSE:
+      return {
+        ...state,
+        get_course: [...state.get_course, action.payload],
       };
     default:
       return state;

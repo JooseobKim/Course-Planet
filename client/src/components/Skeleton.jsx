@@ -2,12 +2,12 @@ import React from "react";
 import styled from "styled-components";
 import Checkbox from "@material-ui/core/Checkbox";
 
-const Skeleton = ({ loading }) => {
+const Skeleton = ({ loading, admin }) => {
   const skeletonFrom = (
     <>
       <StyledSkeleton loading={loading}>
         <div className="skeleton">
-          <Checkbox size="small" color="primary" disabled />
+          {admin && <Checkbox size="small" color="primary" disabled />}
           <div className="skeleton__image">
             <div></div>
           </div>

@@ -1,0 +1,82 @@
+[
+  {
+    "id": 1,
+    "likes": [],
+    "owner": "ObjId username1",
+    "merit": "재미있는 강의입니다.",
+    "demerit": "너무 얉게만 훑는 느낌입니다.",
+    "rating": 5,
+    "difficulty": "쉬움",
+    "createdAt": "2021-06-28"
+  },
+  {
+    "id": 2,
+    "likes": [],
+    "owner": "ObjId username2",
+    "merit": "짧지만 필요한 지식은 모두 알려주는 강의입니다.",
+    "demerit": "지루하고 졸음이 몰려옵니다.",
+    "rating": 3,
+    "difficulty": "보통",
+    "createdAt": "2021-06-28"
+  },
+  {
+    "id": 3,
+    "likes": [],
+    "owner": "ObjId username3",
+    "merit": "강의의 가격이 저렴합니다.",
+    "demerit": "싼게 비지떡입니다. 형편없는 강의입니다.",
+    "rating": 1,
+    "difficulty": "쉬움",
+    "createdAt": "2021-06-28"
+  },
+  {
+    "id": 4,
+    "likes": [],
+    "owner": "ObjId username4",
+    "merit": "깊고 자세하게 배울 수 있습니다.",
+    "demerit": "대학 강의 듣는 듯 하며 강의 시간이 너무 깁니다.",
+    "rating": 3,
+    "difficulty": "어려움",
+    "createdAt": "2021-06-28"
+  },
+  {
+    "id": 5,
+    "likes": [],
+    "owner": "ObjId username5",
+    "merit": "재미있는 강의입니다.",
+    "demerit": "너무 얉게만 훑는 느낌입니다.",
+    "rating": 5,
+    "difficulty": "쉬움",
+    "createdAt": "2021-06-29"
+  },
+  {
+    "id": 6,
+    "likes": [],
+    "owner": "ObjId username6",
+    "merit": "짧지만 필요한 지식은 모두 알려주는 강의입니다.",
+    "demerit": "지루하고 졸음이 몰려옵니다.",
+    "rating": 3,
+    "difficulty": "보통",
+    "createdAt": "2021-06-29"
+  },
+  {
+    "id": 7,
+    "likes": [],
+    "owner": "ObjId username7",
+    "merit": "강의의 가격이 저렴합니다.",
+    "demerit": "싼게 비지떡입니다. 형편없는 강의입니다.",
+    "rating": 1,
+    "difficulty": "쉬움",
+    "createdAt": "2021-06-29"
+  },
+  {
+    "id": 8,
+    "likes": [],
+    "owner": "ObjId username8",
+    "merit": "깊고 자세하게 배울 수 있습니다.",
+    "demerit": "대학 강의 듣는 듯 하며 강의 시간이 너무 깁니다.",
+    "rating": 3,
+    "difficulty": "어려움",
+    "createdAt": "2021-06-29"
+  }
+]

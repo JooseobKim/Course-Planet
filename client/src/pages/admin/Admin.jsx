@@ -80,7 +80,7 @@ const Admin = () => {
           </div>
           <div className="inflearn__scraping__courses">
             {inflearn_courses.length === 0 && (
-              <Skeleton loading={alert.loading} />
+              <Skeleton loading={alert.loading} admin={true} />
             )}
             <Swiper slidesPerView={4} slidesPerGroup={4} navigation pagination>
               {inflearn_courses.map((course, i) => (

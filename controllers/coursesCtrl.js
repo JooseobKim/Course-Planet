@@ -203,7 +203,7 @@ const coursesCtrl = {
   },
   getCourses: async (req, res) => {
     try {
-      const courses = await Courses.find().sort("-createdAt");
+      const courses = await Courses.find().sort("-createdAt").limit(48);
       // .populate("review", "merit demerit rating difficulty");
 
       res.json({
@@ -243,6 +243,15 @@ const coursesCtrl = {
       return res.status(500).json({ msg: err.message });
     }
   },
+  // 리뷰 파트 작성 후에 진행
+  // getRecentReview: async (req, res) => {
+  //   try {
+  //     const courses = await Courses.find();
+
+  //     res.json({ courses });
+  //   } catch (err) {}
+  // },
+  // getMostReivew: async (req, res) => {},
 };
 
 export default coursesCtrl;

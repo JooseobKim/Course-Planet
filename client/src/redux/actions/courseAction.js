@@ -5,6 +5,8 @@ export const COURSE_TYPES = {
   SCRAPING_INFLERN: "SCRAPING_INFLERN",
   SCRAPING_FASTCAMPUS: "SCRAPING_FASTCAMPUS",
   CLEAR_SCRAPING_DATA: "CLEAR_SCRAPING_DATA",
+  GET_COURSES: "GET_COURSES",
+  GET_COURSE: "GET_COURSE",
 };
 
 export const scrapingInflearnCourses =
@@ -145,7 +147,6 @@ export const scrapingDataSave =
 export const clearScrapingData =
   ({ platform }) =>
   async (dispatch) => {
-    console.log({ platform });
     try {
       dispatch({ type: ALERT_TYPES.ALERT, payload: { loading: true } });
 
@@ -175,5 +176,55 @@ export const clearScrapingData =
         type: ALERT_TYPES.ALERT,
         payload: { loading: false, msg: err.message },
       });
+    }
+  };
+
+export const getCourses = () => async (dispatch) => {
+  try {
+    dispatch({ type: ALERT_TYPES.ALERT, payload: { loading: true } });
+
+    const res = await axios.get("/courses");
+
+    dispatch({
+      type: COURSE_TYPES.GET_COURSES,
+      payload: res.data.courses,
+    });
+
+    dispatch({
+      type: ALERT_TYPES.ALERT,
+      payload: { loading: false, msg: res.data.msg },
+    });
+  } catch (err) {
+    dispatch({
+      type: ALERT_TYPES.ALERT,
+      payload: { loading: false, msg: err.message },
+    });
+  }
+};
+
+export const getCourse =
+  ({ courses, id }) =>
+  async (dispatch) => {
+    if (courses.every((course) => course._id !== id)) {
+      try {
+        dispatch({ type: ALERT_TYPES.ALERT, payload: { loading: true } });
+
+        const res = await axios.get(`/courses/${id}`);
+
+        dispatch({
+          type: COURSE_TYPES.GET_COURSE,
+          payload: res.data.course,
+        });
+
+        dispatch({
+          type: ALERT_TYPES.ALERT,
+          payload: { loading: false, msg: res.data.msg },
+        });
+      } catch (err) {
+        dispatch({
+          type: ALERT_TYPES.ALERT,
+          payload: { loading: false, msg: err.message },
+        });
+      }
     }
   };
