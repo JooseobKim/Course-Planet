@@ -72,8 +72,13 @@ const CourseDetail = () => {
         </div>
       </div>
       <div className="review-container">
-        <div className="review-container-sort">
-          <select className="review-container-sort__condition">
+        <div className="review-container__create-sort">
+          <div className="review-container__create-sort__create-review">
+            <button className="review-container__create-sort__create-review__button">
+              리뷰 작성하기
+            </button>
+          </div>
+          <select className="review-container__create-sort__condition">
             <option value="recent">최신순</option>
             <option value="lastest">오래된순</option>
             <option value="likes">좋아요순</option>
@@ -198,16 +203,40 @@ const StyledCourseDetail = styled.div`
   .review-container {
     flex: 1.8;
 
-    &-sort {
-      margin: 8px 0;
+    &__create-sort {
+      display: flex;
+      justify-content: space-between;
+      margin: 10px 0;
       padding: 0 15px;
-      text-align: end;
+
+      &__create-review {
+        &__button {
+          font-family: "Noto Sans KR", sans-serif;
+          font-weight: 500;
+          border: none;
+          outline: none;
+          cursor: pointer;
+          padding: 10px 18px;
+          border-radius: 5px;
+          background-color: #ecebf6;
+          color: #272c48;
+          transform: scale(0.95);
+          box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+          transition: all 0.3s;
+
+          &:hover {
+            transform: scale(1);
+            box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+          }
+        }
+      }
 
       &__condition {
         font-family: "Noto Sans KR", sans-serif;
         font-weight: 400;
         border: none;
         outline: none;
+        cursor: pointer;
       }
     }
   }

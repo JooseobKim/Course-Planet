@@ -1,53 +1,117 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { register } from "../redux/actions/authAction";
 
 const Register = () => {
+  const initialState = {
+    username: "",
+    userId: "",
+    email: "",
+    password: "",
+    cf_password: "",
+  };
+  const [userData, setUserData] = useState(initialState);
+  const { username, userId, email, password, cf_password } = userData;
+  const { auth } = useSelector((state) => state);
+
+  const dispatch = useDispatch();
+  const history = useHistory();
+
+  useEffect(() => {
+    if (auth.token) history.push("/");
+  }, [auth.token, history]);
+
+  const handleOnChange = (e) => {
+    let { name, value } = e.target;
+
+    if (name === "username")
+      return setUserData({
+        ...userData,
+        [name]: value.toLowerCase().replace(/ /g, ""),
+      });
+
+    if (name === "userId")
+      return setUserData({
+        ...userData,
+        [name]: value.replace(/ /g, ""),
+      });
+
+    setUserData({ ...userData, [name]: value });
+  };
+
+  const handleOnSubmit = (e) => {
+    e.preventDefault();
+    dispatch(register({ username, userId, email, password, cf_password }));
+  };
+
   return (
     <StyledRgister>
       <div className="wrapper">
         <div className="register">
           <span className="register__title">계정 등록하기</span>
-          <form className="register__form">
-            <label htmlFor="register__form__input-nickname">닉네임</label>
+          <form className="register__form" onSubmit={handleOnSubmit}>
+            <label htmlFor="register__form__input-username">유저이름 *</label>
             <input
               type="text"
-              id="register__form__input-nickname"
-              className="register__form__input-nickname"
-              placeholder="닉네임을 입력해주세요."
+              id="register__form__input-username"
+              className="register__form__input-username"
+              placeholder="유저이름을 입력해주세요."
+              name="username"
+              value={username}
+              onChange={handleOnChange}
             />
-            <label htmlFor="register__form__input-id">아이디</label>
+            <label htmlFor="register__form__input-id">아이디 *</label>
             <input
               type="text"
               id="register__form__input-id"
               className="register__form__input-id"
               placeholder="아이디를 입력해주세요."
+              name="userId"
+              value={userId}
+              onChange={handleOnChange}
             />
-            <label htmlFor="register__form__input-email">이메일</label>
+            <label htmlFor="register__form__input-email">이메일 *</label>
             <input
-              type="text"
+              type="email"
               id="register__form__input-email"
               className="register__form__input-email"
               placeholder="이메일을 입력해주세요."
+              name="email"
+              value={email}
+              onChange={handleOnChange}
             />
-            <label htmlFor="register__form__input-pw">패스워드</label>
+            <label htmlFor="register__form__input-pw">패스워드 *</label>
             <input
               type="password"
               id="register__form__input-pw"
               className="register__form__input-pw"
               placeholder="패스워드를 입력해주세요."
+              name="password"
+              value={password}
+              onChange={handleOnChange}
             />
             <label htmlFor="register__form__input-confirm-pw">
-              패스워드 확인
+              패스워드 확인 *
             </label>
             <input
               type="password"
               id="register__form__input-confirm-pw"
               className="register__form__input-confirm-pw"
               placeholder="패스워드를 다시 한 번 입력해주세요."
+              name="cf_password"
+              value={cf_password}
+              onChange={handleOnChange}
             />
-            <button type="submit" className="register__form__submit">
-              로그인
+            <button
+              type="submit"
+              className="register__form__submit"
+              disabled={
+                !username || !userId || !email || !password || !cf_password
+              }
+            >
+              회원가입
             </button>
           </form>
           <div className="register__link">
@@ -105,7 +169,7 @@ const StyledRgister = styled.div`
       flex-direction: column;
       width: 300px;
 
-      &__input-nickname,
+      &__input-username,
       &__input-id,
       &__input-email,
       &__input-pw,
@@ -139,6 +203,11 @@ const StyledRgister = styled.div`
 
         &:hover {
           opacity: 1;
+        }
+
+        &:disabled {
+          cursor: not-allowed;
+          opacity: 0.7;
         }
       }
     }

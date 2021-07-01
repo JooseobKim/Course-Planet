@@ -7,7 +7,7 @@ import Courses from "./courses/Courses";
 import Community from "./community/Community";
 import About from "./about/About";
 import Admin from "./admin/Admin";
-import CourseDetail from "./courses/CourseDetail";
+import CourseDetail from "./detailCourse/CourseDetail";
 
 const Pages = () => {
   return (

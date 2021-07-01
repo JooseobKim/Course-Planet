@@ -20,7 +20,7 @@ const CourseView = ({ get_courses }) => {
   return (
     <StyledCouresesView className="courses-wrapper">
       <div className="courses">
-        <h3 className="courses-title">최긘에 추가된 강의</h3>
+        <h3 className="courses-title">최근에 추가된 강의</h3>
         {get_courses.length === 0 && <Skeleton loading={alert.loading} />}
         <Swiper slidesPerView={4} slidesPerGroup={4} navigation pagination>
           <div className="courses__data" style={{ display: "flex" }}>
@@ -31,7 +31,7 @@ const CourseView = ({ get_courses }) => {
             ))}
           </div>
         </Swiper>
-        <h3 className="courses-title">가장 최근에 리뷰가 작성된 강의</h3>
+        <h3 className="courses-title">리뷰가 최근에 작성된 강의</h3>
         <Swiper slidesPerView={4} slidesPerGroup={4} navigation pagination>
           <div className="courses__data" style={{ display: "flex" }}>
             {coursesData.map((course) => (

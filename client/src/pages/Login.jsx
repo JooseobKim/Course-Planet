@@ -1,16 +1,31 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
+import { login } from "../redux/actions/authAction";
 
 const Login = () => {
   const initialState = { userId: "", password: "" };
   const [userData, setUserData] = useState(initialState);
   const { userId, password } = userData;
+  const { auth } = useSelector((state) => state);
+
+  const dispatch = useDispatch();
+  const history = useHistory();
+
+  useEffect(() => {
+    if (auth.token) history.push("/");
+  }, [auth.token, history]);
 
   const handleChnageInput = (e) => {
     const { name, value } = e.target;
 
-    setUserData({ [name]: value });
+    setUserData({ ...userData, [name]: value });
+  };
+
+  const hadnleSubmit = (e) => {
+    e.preventDefault();
+    dispatch(login({ userId, password }));
   };
 
   return (
@@ -18,7 +33,7 @@ const Login = () => {
       <div className="wrapper">
         <div className="login">
           <span className="login__title">로그인하기</span>
-          <form className="login__form">
+          <form className="login__form" onSubmit={hadnleSubmit}>
             <label htmlFor="login__form__input-id">아이디</label>
             <input
               type="text"
@@ -39,7 +54,11 @@ const Login = () => {
               value={password}
               onChange={handleChnageInput}
             />
-            <button type="submit" className="login__form__submit">
+            <button
+              type="submit"
+              className="login__form__submit"
+              disabled={!userId || !password}
+            >
               로그인
             </button>
           </form>
@@ -127,6 +146,14 @@ const StyledLogin = styled.div`
 
         &:hover {
           opacity: 1;
+        }
+
+        &:disabled {
+          cursor: not-allowed;
+
+          &:hover {
+            opacity: 0.7;
+          }
         }
       }
     }
