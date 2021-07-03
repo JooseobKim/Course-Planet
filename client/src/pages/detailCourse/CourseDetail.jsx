@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import { getCourse } from "../../redux/actions/courseAction";
+import ReviewModal from "../../components/ReviewModal";
 
 import Review from "../../components/Review";
 
@@ -17,6 +18,8 @@ const CourseDetail = () => {
   const dispatch = useDispatch();
 
   const [detailCourse, setDetailCourse] = useState({});
+  const [viewReview, setViewReview] = useState(false);
+  const [reviewModal, setReviewModal] = useState(false);
 
   useEffect(() => {
     dispatch(getCourse({ courses: get_course, id }));
@@ -27,7 +30,7 @@ const CourseDetail = () => {
   }, [dispatch, id, get_course]);
 
   return (
-    <StyledCourseDetail>
+    <StyledCourseDetail viewReview={viewReview}>
       <div className="course-detail">
         <div className="course-detail__image">
           <img src={detailCourse.image} alt={`${detailCourse.title} img`} />
@@ -72,13 +75,24 @@ const CourseDetail = () => {
         </div>
       </div>
       <div className="review-container">
-        <div className="review-container__create-sort">
-          <div className="review-container__create-sort__create-review">
-            <button className="review-container__create-sort__create-review__button">
-              리뷰 작성하기
+        <div className="review-container__create-review">
+          <button
+            className="review-container__create-review__button"
+            onClick={() => setReviewModal(!reviewModal)}
+          >
+            리뷰 작성하기
+          </button>
+          {!viewReview && (
+            <button
+              className="review-container__create-review__view-button"
+              onClick={() => setViewReview(true)}
+            >
+              리뷰 조회하기
             </button>
-          </div>
-          <select className="review-container__create-sort__condition">
+          )}
+        </div>
+        <div className="review-container__sort">
+          <select className="review-container__sort__condition">
             <option value="recent">최신순</option>
             <option value="lastest">오래된순</option>
             <option value="likes">좋아요순</option>
@@ -88,6 +102,7 @@ const CourseDetail = () => {
           <Review review={review} />
         ))}
       </div>
+      {reviewModal && <ReviewModal setReviewModal={setReviewModal} />}
     </StyledCourseDetail>
   );
 };
@@ -202,34 +217,50 @@ const StyledCourseDetail = styled.div`
 
   .review-container {
     flex: 1.8;
+    position: relative;
 
-    &__create-sort {
+    &__create-review {
+      position: absolute;
       display: flex;
-      justify-content: space-between;
-      margin: 10px 0;
-      padding: 0 15px;
+      flex-direction: column;
+      background-color: ${(props) => !props.viewReview && "rgba(0, 0, 0, 0.8)"};
+      width: ${(props) => !props.viewReview && "100%"};
+      height: ${(props) => !props.viewReview && "100%"};
+      margin-top: ${(props) => props.viewReview && "3px"};
+      margin-left: ${(props) => props.viewReview && "10px"};
+      justify-content: ${(props) => (props.viewReview ? "flex-end" : "center")};
+      align-items: ${(props) => (props.viewReview ? "flex-start" : "center")};
 
-      &__create-review {
-        &__button {
-          font-family: "Noto Sans KR", sans-serif;
-          font-weight: 500;
-          border: none;
-          outline: none;
-          cursor: pointer;
-          padding: 10px 18px;
-          border-radius: 5px;
-          background-color: #ecebf6;
-          color: #272c48;
-          transform: scale(0.95);
-          box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
-          transition: all 0.3s;
+      &__button,
+      &__view-button {
+        font-family: "Noto Sans KR", sans-serif;
+        font-weight: 500;
+        border: none;
+        outline: none;
+        cursor: pointer;
+        padding: 10px 18px;
+        border-radius: 5px;
+        background-color: #ecebf6;
+        color: #272c48;
+        transform: scale(0.95);
+        box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+        transition: all 0.3s;
 
-          &:hover {
-            transform: scale(1);
-            box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
-          }
+        &:first-child {
+          margin-bottom: 5px;
+        }
+
+        &:hover {
+          transform: scale(1);
+          box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
         }
       }
+    }
+
+    &__sort {
+      text-align: end;
+      margin: 10px 0;
+      padding: 0 15px;
 
       &__condition {
         font-family: "Noto Sans KR", sans-serif;
