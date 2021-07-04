@@ -7,10 +7,11 @@ export const COURSE_TYPES = {
   CLEAR_SCRAPING_DATA: "CLEAR_SCRAPING_DATA",
   GET_COURSES: "GET_COURSES",
   GET_COURSE: "GET_COURSE",
+  UPDATE_COURSE: "UPDATE_COURSE",
 };
 
 export const scrapingInflearnCourses =
-  ({ order, pageFrom, pageTo, prev_courses }) =>
+  ({ order, pageFrom, pageTo, prev_courses, auth }) =>
   async (dispatch) => {
     try {
       dispatch({
@@ -18,11 +19,17 @@ export const scrapingInflearnCourses =
         payload: { loading: true },
       });
 
-      const res = await axios.post("/courses/admin/inflearn", {
-        order,
-        pageFrom,
-        pageTo,
-      });
+      const res = await axios.post(
+        "/courses/admin/inflearn",
+        {
+          order,
+          pageFrom,
+          pageTo,
+        },
+        {
+          headers: { Authorization: auth.token },
+        }
+      );
 
       const filteringCourse = (prev_courses) => {
         if (prev_courses) {
@@ -64,7 +71,7 @@ export const scrapingInflearnCourses =
   };
 
 export const scrapingFastcampusCourses =
-  ({ category, prev_courses }) =>
+  ({ category, prev_courses, auth }) =>
   async (dispatch) => {
     try {
       dispatch({
@@ -72,9 +79,15 @@ export const scrapingFastcampusCourses =
         payload: { loading: true },
       });
 
-      const res = await axios.post("/courses/admin/fastcampus", {
-        category,
-      });
+      const res = await axios.post(
+        "/courses/admin/fastcampus",
+        {
+          category,
+        },
+        {
+          headers: { Authorization: auth.token },
+        }
+      );
 
       const filteringCourse = (prev_courses) => {
         if (prev_courses) {
@@ -119,12 +132,18 @@ export const scrapingFastcampusCourses =
   };
 
 export const scrapingDataSave =
-  ({ data }) =>
+  ({ data, auth }) =>
   async (dispatch) => {
     try {
       dispatch({ type: ALERT_TYPES.ALERT, payload: { loading: true } });
 
-      const res = await axios.post("/courses/admin/save_data", { data });
+      const res = await axios.post(
+        "/courses/admin/save_data",
+        { data },
+        {
+          headers: { Authorization: auth.token },
+        }
+      );
 
       dispatch({
         type: ALERT_TYPES.ALERT,

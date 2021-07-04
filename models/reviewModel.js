@@ -12,6 +12,7 @@ const reviewSchema = new mongoose.Schema(
       type: mongoose.Types.ObjectId,
       ref: "user",
     },
+    courseId: mongoose.Types.ObjectId,
     merit: {
       type: String,
       required: true,

@@ -14,6 +14,7 @@ const ScrapingButton = ({
   condition,
   checkState,
   setCheckState,
+  auth,
 }) => {
   const dispatch = useDispatch();
   const { alert } = useSelector((state) => state);
@@ -46,6 +47,7 @@ const ScrapingButton = ({
             pageFrom,
             pageTo,
             prev_courses: courses,
+            auth,
           })
         );
         break;
@@ -54,6 +56,7 @@ const ScrapingButton = ({
           scrapingFastcampusCourses({
             category,
             prev_courses: courses,
+            auth,
           })
         );
         break;
@@ -67,7 +70,7 @@ const ScrapingButton = ({
   };
 
   const handleSaveScrapingData = ({ courses }) => {
-    dispatch(scrapingDataSave({ data: courses }));
+    dispatch(scrapingDataSave({ data: courses, auth }));
   };
 
   const handleSaveAllCheckedData = ({ courses }) => {
@@ -77,7 +80,7 @@ const ScrapingButton = ({
       (item, i) => checkState[Object.keys(checkState)[i]]
     );
 
-    dispatch(scrapingDataSave({ data: checkedData }));
+    dispatch(scrapingDataSave({ data: checkedData, auth }));
   };
 
   const handleCheckingAllData = () => {

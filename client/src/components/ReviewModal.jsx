@@ -1,9 +1,20 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import CloseIcon from "@material-ui/icons/Close";
 import Rating from "@material-ui/lab/Rating";
+import { createReview, updateReview } from "../redux/actions/reviewAction";
+import { useDispatch } from "react-redux";
 
-const Review = ({ setReviewModal }) => {
+const Review = ({
+  setReviewModal,
+  auth,
+  courseId,
+  detailCourse,
+  setViewReview,
+  myReview,
+}) => {
+  const dispatch = useDispatch();
+
   const initialState = {
     difficulty: "easy",
     merit: "",
@@ -13,6 +24,16 @@ const Review = ({ setReviewModal }) => {
   const [reviewForm, setReviewForm] = useState(initialState);
   const { difficulty, merit, demerit, rating } = reviewForm;
 
+  useEffect(() => {
+    if (myReview)
+      setReviewForm({
+        difficulty: myReview.difficulty,
+        merit: myReview.merit,
+        demerit: myReview.demerit,
+        rating: myReview.rating,
+      });
+  }, [myReview]);
+
   const handleOnChange = (e) => {
     const { name, value } = e.target;
 
@@ -21,6 +42,34 @@ const Review = ({ setReviewModal }) => {
 
   const handleOnSubmit = (e) => {
     e.preventDefault();
+
+    if (myReview) {
+      dispatch(
+        updateReview({
+          merit,
+          demerit,
+          detailCourse,
+          auth,
+          reviewId: myReview._id,
+        })
+      );
+    } else {
+      dispatch(
+        createReview({
+          difficulty,
+          merit,
+          demerit,
+          rating,
+          userId: auth.user._id,
+          courseId,
+          detailCourse,
+          auth,
+        })
+      );
+    }
+
+    setReviewModal(false);
+    setViewReview(true);
   };
 
   return (
@@ -40,6 +89,7 @@ const Review = ({ setReviewModal }) => {
                   const { name } = e.target;
                   setReviewForm({ ...reviewForm, [name]: newValue });
                 }}
+                readOnly={myReview ? true : false}
               />
             </div>
             <span className="modal__rating-difficulty__difficulty">
@@ -49,10 +99,18 @@ const Review = ({ setReviewModal }) => {
                 value={difficulty}
                 onChange={handleOnChange}
               >
-                <option value="easy">쉬움</option>
-                <option value="normal">보통</option>
-                <option value="hard">어려움</option>
-                <option value="expert">전문가</option>
+                <option value="easy" disabled={myReview ? true : false}>
+                  쉬움
+                </option>
+                <option value="normal" disabled={myReview ? true : false}>
+                  보통
+                </option>
+                <option value="hard" disabled={myReview ? true : false}>
+                  어려움
+                </option>
+                <option value="expert" disabled={myReview ? true : false}>
+                  전문가
+                </option>
               </select>
             </span>
           </div>
@@ -93,7 +151,7 @@ const Review = ({ setReviewModal }) => {
             </div>
           </div>
           <button type="submit" className="modal__submit-review">
-            리뷰 등록하기
+            {myReview ? "리뷰 수정하기" : "리뷰 등록하기"}
           </button>
         </form>
         <CloseIcon
@@ -108,6 +166,7 @@ const Review = ({ setReviewModal }) => {
 export default Review;
 
 const StyledReviewModal = styled.div`
+  z-index: 2;
   font-weight: 500;
   color: #272c48;
   position: absolute;

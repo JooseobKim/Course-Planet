@@ -8,8 +8,11 @@ import Community from "./community/Community";
 import About from "./about/About";
 import Admin from "./admin/Admin";
 import CourseDetail from "./detailCourse/CourseDetail";
+import { useSelector } from "react-redux";
 
 const Pages = () => {
+  const { auth } = useSelector((state) => state);
+
   return (
     <Switch>
       <Route path="/" exact component={Home} />
@@ -19,7 +22,11 @@ const Pages = () => {
       <Route path="/courses/:id" exact component={CourseDetail} />
       <Route path="/community" exact component={Community} />
       <Route path="/about" exact component={About} />
-      <Route path="/admin" exact component={Admin} />
+      <Route
+        path="/admin"
+        exact
+        component={auth.token && auth.user.role === 1 && Admin}
+      />
     </Switch>
   );
 };

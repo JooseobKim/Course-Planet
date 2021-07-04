@@ -19,6 +19,7 @@ SwiperCore.use([Navigation, Pagination, Scrollbar, A11y]);
 const Admin = () => {
   const {
     alert,
+    auth,
     course: { inflearn_courses, fastcampus_courses },
   } = useSelector((state) => state);
   const scrapingPlatform = {
@@ -75,6 +76,7 @@ const Admin = () => {
                 condition={scrapingCondition}
                 checkState={inflearnCheckState}
                 setCheckState={setInflearnCheckState}
+                auth={auth}
               />
             </div>
           </div>
@@ -115,6 +117,7 @@ const Admin = () => {
                 condition={scrapingCondition}
                 checkState={fastcampusCheckState}
                 setCheckState={setFastcampusCheckState}
+                auth={auth}
               />
             </div>
           </div>

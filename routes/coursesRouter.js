@@ -1,16 +1,28 @@
 import express from "express";
 import coursesCtrl from "../controllers/coursesCtrl";
+import admin from "../middleware/admin";
+import logged from "../middleware/logged";
 
 const courseRouter = express.Router();
 
 // 인프런 강의 스크래핑
-courseRouter.post("/admin/inflearn", coursesCtrl.scrapingInflearnCourses);
+courseRouter.post(
+  "/admin/inflearn",
+  logged,
+  admin,
+  coursesCtrl.scrapingInflearnCourses
+);
 
 // 패스트캠퍼스 강의 스크래핑
-courseRouter.post("/admin/fastcampus", coursesCtrl.scrapingFastcampusCourses);
+courseRouter.post(
+  "/admin/fastcampus",
+  logged,
+  admin,
+  coursesCtrl.scrapingFastcampusCourses
+);
 
 // 강의 데이터베이스에 저장하기
-courseRouter.post("/admin/save_data", coursesCtrl.saveCourses);
+courseRouter.post("/admin/save_data", logged, admin, coursesCtrl.saveCourses);
 
 // 코스 검색
 courseRouter.get("/search", coursesCtrl.searchCourse);

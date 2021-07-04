@@ -7,12 +7,10 @@ import ReviewModal from "../../components/ReviewModal";
 
 import Review from "../../components/Review";
 
-// dummy data
-import reviews from "../../_dummyData/reviews.json";
-
 const CourseDetail = () => {
   const {
     course: { get_course },
+    auth,
   } = useSelector((state) => state);
   const { id } = useParams();
   const dispatch = useDispatch();
@@ -20,6 +18,9 @@ const CourseDetail = () => {
   const [detailCourse, setDetailCourse] = useState({});
   const [viewReview, setViewReview] = useState(false);
   const [reviewModal, setReviewModal] = useState(false);
+  const [existReview, setExistReview] = useState(true);
+  const [myReview, setMyReview] = useState();
+  console.log(myReview);
 
   useEffect(() => {
     dispatch(getCourse({ courses: get_course, id }));
@@ -28,6 +29,23 @@ const CourseDetail = () => {
       if (course._id === id) setDetailCourse(course);
     });
   }, [dispatch, id, get_course]);
+
+  useEffect(() => {
+    const notExistReview = detailCourse.review?.every((review) => {
+      return auth.user && review.owner._id !== auth.user?._id;
+    });
+
+    if (notExistReview) setExistReview(false);
+    else setExistReview(true);
+
+    if (detailCourse.review?.length === 0) return setMyReview();
+
+    detailCourse.review?.forEach((review) => {
+      if (auth.user && review.owner._id === auth.user._id) {
+        setMyReview({ ...review });
+      }
+    });
+  }, [detailCourse.review, auth.user]);
 
   return (
     <StyledCourseDetail viewReview={viewReview}>
@@ -79,9 +97,21 @@ const CourseDetail = () => {
           <button
             className="review-container__create-review__button"
             onClick={() => setReviewModal(!reviewModal)}
+            disabled={
+              !auth.token ? true : existReview && existReview ? true : false
+            }
           >
             리뷰 작성하기
           </button>
+          {viewReview && (
+            <span style={{ fontSize: "15px" }}>
+              {!auth.token
+                ? "* 리뷰는 로그인 후 작성하실 수 있습니다."
+                : existReview && existReview
+                ? "* 리뷰를 이미 작성하였습니다."
+                : ""}
+            </span>
+          )}
           {!viewReview && (
             <button
               className="review-container__create-review__view-button"
@@ -98,11 +128,26 @@ const CourseDetail = () => {
             <option value="likes">좋아요순</option>
           </select>
         </div>
-        {reviews.map((review) => (
-          <Review review={review} />
+        {detailCourse.review?.map((item) => (
+          <Review
+            review={item}
+            detailCourse={detailCourse}
+            auth={auth}
+            setReviewModal={setReviewModal}
+            myReview={myReview}
+          />
         ))}
       </div>
-      {reviewModal && <ReviewModal setReviewModal={setReviewModal} />}
+      {reviewModal && (
+        <ReviewModal
+          setReviewModal={setReviewModal}
+          auth={auth}
+          courseId={id}
+          detailCourse={detailCourse}
+          setViewReview={setViewReview}
+          myReview={myReview}
+        />
+      )}
     </StyledCourseDetail>
   );
 };
@@ -222,7 +267,7 @@ const StyledCourseDetail = styled.div`
     &__create-review {
       position: absolute;
       display: flex;
-      flex-direction: column;
+      flex-direction: ${(props) => !props.viewReview && "column"};
       background-color: ${(props) => !props.viewReview && "rgba(0, 0, 0, 0.8)"};
       width: ${(props) => !props.viewReview && "100%"};
       height: ${(props) => !props.viewReview && "100%"};
@@ -230,6 +275,7 @@ const StyledCourseDetail = styled.div`
       margin-left: ${(props) => props.viewReview && "10px"};
       justify-content: ${(props) => (props.viewReview ? "flex-end" : "center")};
       align-items: ${(props) => (props.viewReview ? "flex-start" : "center")};
+      z-index: 1;
 
       &__button,
       &__view-button {
@@ -253,6 +299,16 @@ const StyledCourseDetail = styled.div`
         &:hover {
           transform: scale(1);
           box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+        }
+
+        &:disabled {
+          cursor: not-allowed;
+          background-color: #999;
+
+          &:hover {
+            transform: scale(0.95);
+            box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+          }
         }
       }
     }

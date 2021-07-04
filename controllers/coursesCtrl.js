@@ -203,8 +203,17 @@ const coursesCtrl = {
   },
   getCourses: async (req, res) => {
     try {
-      const courses = await Courses.find().sort("-createdAt").limit(48);
-      // .populate("review", "merit demerit rating difficulty");
+      const courses = await Courses.find()
+        .sort("-createdAt")
+        .limit(48)
+        .populate("review")
+        .populate({
+          path: "review",
+          populate: {
+            path: "owner likes",
+            select: "-password",
+          },
+        });
 
       res.json({
         msg: "데이터 불러오기 성공.",
@@ -218,8 +227,15 @@ const coursesCtrl = {
     try {
       const { id } = req.params;
 
-      const course = await Courses.findById(id);
-      // .populate("review", "merit demerit rating difficulty");
+      const course = await Courses.findById(id)
+        .populate("review")
+        .populate({
+          path: "review",
+          populate: {
+            path: "owner likes",
+            select: "-password",
+          },
+        });
 
       res.json({
         msg: "데이터 찾기 성공.",

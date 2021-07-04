@@ -2,17 +2,7 @@ import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema(
   {
-    firstname: {
-      type: String,
-      required: true,
-      maxlength: 15,
-    },
-    lastname: {
-      type: String,
-      required: true,
-      maxlength: 10,
-    },
-    nickname: {
+    username: {
       type: String,
       required: true,
       maxlength: 20,
