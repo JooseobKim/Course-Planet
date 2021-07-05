@@ -119,3 +119,88 @@ export const deleteReview =
       });
     }
   };
+
+export const likeReview =
+  ({ review, auth, detailCourse }) =>
+  async (dispatch) => {
+    const editReview = (prev_data, id, update_data) => {
+      const updateData = prev_data.map((item) =>
+        item._id === id ? update_data : item
+      );
+
+      return updateData;
+    };
+
+    try {
+      dispatch({ type: ALERT_TYPES.ALERT, payload: { loading: true } });
+
+      const res = await axios.patch(`/review/${review._id}/like`, null, {
+        headers: { Authorization: auth.token },
+      });
+
+      const addLike = { ...review, likes: [...review.likes, auth.user._id] };
+      const newReviewArr = editReview(detailCourse.review, review._id, addLike);
+      const updateCourse = { ...detailCourse, review: newReviewArr };
+
+      dispatch({ type: COURSE_TYPES.UPDATE_COURSE, payload: updateCourse });
+
+      dispatch({
+        type: ALERT_TYPES.ALERT,
+        payload: { loading: false, msg: res.data.msg },
+      });
+    } catch (err) {
+      dispatch({
+        type: ALERT_TYPES.ALERT,
+        payload: { msg: err.response.data.msg, loading: false },
+      });
+    }
+  };
+
+export const unlikeReview =
+  ({ review, auth, detailCourse }) =>
+  async (dispatch) => {
+    const removeReviewLike = (prev_data, id) => {
+      const removeLikeData = prev_data.filter((item) => item !== id);
+
+      return removeLikeData;
+    };
+
+    const editReview = (prev_data, id, update_data) => {
+      const updateData = prev_data.map((item) =>
+        item._id === id ? update_data : item
+      );
+
+      return updateData;
+    };
+
+    try {
+      dispatch({ type: ALERT_TYPES.ALERT, payload: { loading: true } });
+
+      const res = await axios.patch(`/review/${review._id}/unlike`, null, {
+        headers: { Authorization: auth.token },
+      });
+
+      const removeLike = {
+        ...review,
+        likes: removeReviewLike(review.likes, auth.user._id),
+      };
+      const newReviewArr = editReview(
+        detailCourse.review,
+        review._id,
+        removeLike
+      );
+      const updateCourse = { ...detailCourse, review: newReviewArr };
+
+      dispatch({ type: COURSE_TYPES.UPDATE_COURSE, payload: updateCourse });
+
+      dispatch({
+        type: ALERT_TYPES.ALERT,
+        payload: { loading: false, msg: res.data.msg },
+      });
+    } catch (err) {
+      dispatch({
+        type: ALERT_TYPES.ALERT,
+        payload: { msg: err.message, loading: false },
+      });
+    }
+  };

@@ -13,4 +13,10 @@ reviewRouter.patch("/", logged, reviewCtrl.updateReview);
 // 리뷰 삭제
 reviewRouter.delete("/", logged, reviewCtrl.deleteReview);
 
+// 리뷰 좋아요 활성화
+reviewRouter.patch("/:id/like", logged, reviewCtrl.likeReview);
+
+// 리뷰 좋아요 비활성화
+reviewRouter.patch("/:id/unlike", logged, reviewCtrl.unlikeReview);
+
 export default reviewRouter;

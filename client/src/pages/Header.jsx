@@ -101,7 +101,14 @@ const Header = () => {
           )}
           {auth.token && profileDropdown && (
             <div className="header__dropdown">
-              <div className="header__dropdown__item">내 프로필</div>
+              <Link to={`/profile/${auth.user.username}/edit`}>
+                <div
+                  className="header__dropdown__item"
+                  onClick={() => setProfileDropdown(false)}
+                >
+                  내 프로필
+                </div>
+              </Link>
               <div className="header__dropdown__item">내 활동</div>
               <div
                 className="header__dropdown__item"
@@ -217,6 +224,11 @@ const StyledHeader = styled.header`
         }
       }
 
+      img {
+        object-fit: cover;
+        border-radius: 3px;
+      }
+
       .login__link,
       .register__link {
         text-decoration: none;
@@ -261,6 +273,11 @@ const StyledHeader = styled.header`
       color: #ecebf6;
       background-color: #8a8ba1;
       overflow: hidden;
+
+      a {
+        text-decoration: none;
+        color: #ecebf6;
+      }
 
       &__item {
         line-height: 1.7;

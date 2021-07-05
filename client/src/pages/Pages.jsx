@@ -9,6 +9,8 @@ import About from "./about/About";
 import Admin from "./admin/Admin";
 import CourseDetail from "./detailCourse/CourseDetail";
 import { useSelector } from "react-redux";
+import Profile from "./profile/Profile";
+import EditProfile from "./profile/EditProfile";
 
 const Pages = () => {
   const { auth } = useSelector((state) => state);
@@ -26,6 +28,12 @@ const Pages = () => {
         path="/admin"
         exact
         component={auth.token && auth.user.role === 1 && Admin}
+      />
+      <Route path="/profile/:username" exact component={Profile} />
+      <Route
+        path="/profile/:username/edit"
+        exact
+        component={auth.token && EditProfile}
       />
     </Switch>
   );

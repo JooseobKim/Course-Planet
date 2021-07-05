@@ -61,6 +61,7 @@ const Register = () => {
               name="username"
               value={username}
               onChange={handleOnChange}
+              maxLength={25}
             />
             <label htmlFor="register__form__input-id">아이디 *</label>
             <input

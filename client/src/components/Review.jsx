@@ -1,23 +1,47 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Rating from "@material-ui/lab/Rating";
 import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
 import moment from "moment";
 import "moment/locale/ko";
-import { deleteReview } from "../redux/actions/reviewAction";
+import {
+  deleteReview,
+  likeReview,
+  unlikeReview,
+} from "../redux/actions/reviewAction";
 import { useDispatch } from "react-redux";
+import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
+import FavoriteIcon from "@material-ui/icons/Favorite";
 
 const Review = ({ review, detailCourse, myReview, auth, setReviewModal }) => {
   const { owner } = review;
   const dispatch = useDispatch();
 
   const [showMore, setShowMore] = useState(false);
+  const [likeState, setLikeState] = useState(false);
+
+  useEffect(() => {
+    const existReviewLike = review.likes.find(
+      (like) => like._id === auth.user._id
+    );
+    if (existReviewLike) setLikeState(true);
+  }, [auth.user._id, review.likes]);
 
   const difficultyValue = (value) => {
     if (value === "easy") return "쉬움";
     if (value === "normal") return "보통";
     if (value === "hard") return "어려움";
     if (value === "expert") return "전문가";
+  };
+
+  const handleLike = async () => {
+    dispatch(likeReview({ review, auth, detailCourse }));
+    setLikeState(true);
+  };
+
+  const handleUnLike = async () => {
+    dispatch(unlikeReview({ review, auth, detailCourse }));
+    setLikeState(false);
   };
 
   return (
@@ -37,7 +61,17 @@ const Review = ({ review, detailCourse, myReview, auth, setReviewModal }) => {
           </div>
           <div className="review__owner-info__likes-rating-difficulty">
             <div className="review__owner-info__likes-rating-difficulty__likes">
-              좋아요
+              {likeState ? (
+                <FavoriteIcon
+                  onClick={handleUnLike}
+                  style={{ cursor: "pointer" }}
+                />
+              ) : (
+                <FavoriteBorderIcon
+                  onClick={handleLike}
+                  style={{ cursor: "pointer" }}
+                />
+              )}
               <span>{review.likes.length}</span>
             </div>
             <div className="review__owner-info__likes-rating-difficulty-inner">

@@ -101,7 +101,45 @@ const reviewCtrl = {
       return res.status(500).json({ msg: err.message });
     }
   },
-  getReivew: async (req, res) => {},
+  likeReview: async (req, res) => {
+    try {
+      const existLike = await Review.find({
+        _id: req.params.id,
+        likes: req.user.id,
+      });
+      if (existLike.length > 0)
+        return res
+          .status(400)
+          .json({ msg: "이미 리뷰에 좋아요를 눌렀습니다." });
+
+      await Review.findOneAndUpdate(
+        { _id: req.params.id },
+        {
+          $push: { likes: req.user.id },
+        },
+        { new: true }
+      );
+
+      res.json({ msg: "좋아요를 눌렀습니다!" });
+    } catch (err) {
+      return res.status(500).json({ msg: err.message });
+    }
+  },
+  unlikeReview: async (req, res) => {
+    try {
+      await Review.findOneAndUpdate(
+        { _id: req.params.id },
+        {
+          $pull: { likes: req.user.id },
+        },
+        { new: true }
+      );
+
+      res.json({ msg: "좋아요를 취소했습니다." });
+    } catch (err) {
+      return res.status(500).json({ msg: err.message });
+    }
+  },
 };
 
 export default reviewCtrl;
