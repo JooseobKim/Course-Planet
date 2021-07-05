@@ -149,6 +149,7 @@ const StyledLogin = styled.div`
         }
 
         &:disabled {
+          background-color: #999;
           cursor: not-allowed;
 
           &:hover {

@@ -25,7 +25,7 @@ const Review = ({ review, detailCourse, myReview, auth, setReviewModal }) => {
       (like) => like._id === auth.user._id
     );
     if (existReviewLike) setLikeState(true);
-  }, [auth.user._id, review.likes]);
+  }, [auth.user?._id, review.likes]);
 
   const difficultyValue = (value) => {
     if (value === "easy") return "쉬움";
@@ -35,11 +35,15 @@ const Review = ({ review, detailCourse, myReview, auth, setReviewModal }) => {
   };
 
   const handleLike = async () => {
+    if (!auth.token) return;
+
     dispatch(likeReview({ review, auth, detailCourse }));
     setLikeState(true);
   };
 
   const handleUnLike = async () => {
+    if (!auth.token) return;
+
     dispatch(unlikeReview({ review, auth, detailCourse }));
     setLikeState(false);
   };
@@ -49,10 +53,16 @@ const Review = ({ review, detailCourse, myReview, auth, setReviewModal }) => {
       <div className="review">
         <div className="review__owner-info">
           <div className="review__owner-info-inner">
-            <img src={owner.avatar} alt="" />
+            <img
+              src={
+                owner?.avatar ||
+                "https://res.cloudinary.com/duw5jvlb4/image/upload/v1624383950/samples/no-image_dfpama.png"
+              }
+              alt=""
+            />
             <div className="review__owner-info-inner__nickname-createdAt">
               <div className="review__owner-info-inner__nickname-createdAt__nickname">
-                {owner.username}
+                {owner?.username || "탈퇴 유저"}
               </div>
               <div className="review__owner-info__nickname-createdAt__createdAt">
                 {moment(review.createdAt).fromNow()}

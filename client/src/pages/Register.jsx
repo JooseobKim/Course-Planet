@@ -92,6 +92,7 @@ const Register = () => {
               name="password"
               value={password}
               onChange={handleOnChange}
+              minLength={6}
             />
             <label htmlFor="register__form__input-confirm-pw">
               패스워드 확인 *
@@ -104,6 +105,7 @@ const Register = () => {
               name="cf_password"
               value={cf_password}
               onChange={handleOnChange}
+              minLength={6}
             />
             <button
               type="submit"
@@ -209,6 +211,7 @@ const StyledRgister = styled.div`
         &:disabled {
           cursor: not-allowed;
           opacity: 0.7;
+          background-color: #999;
         }
       }
     }

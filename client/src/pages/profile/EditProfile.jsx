@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useHistory, useParams } from "react-router-dom";
+import { useHistory, useLocation, useParams } from "react-router-dom";
 import styled from "styled-components";
 import { ALERT_TYPES } from "../../redux/actions/alertAction";
-import { updateProfile } from "../../redux/actions/userAction";
+import { deleteUser, updateProfile } from "../../redux/actions/userAction";
 
 const EditProfile = () => {
   const { auth } = useSelector((state) => state);
@@ -11,6 +11,8 @@ const EditProfile = () => {
   const history = useHistory();
   const dispatch = useDispatch();
   const fileInput = useRef();
+  const location = useLocation();
+  console.log({ location });
 
   const initialState = {
     username: auth.user.username,
@@ -44,6 +46,18 @@ const EditProfile = () => {
     }
 
     setUpdateUserData({ ...updateUserData, [name]: value });
+  };
+
+  const handleDeleteUser = () => {
+    const confirm = window.confirm(
+      "유저를 삭제하면 복구가 불가능합니다. 계속 진행하시겠습니까?"
+    );
+
+    if (confirm) {
+      dispatch(deleteUser({ username, auth }));
+      alert("유저가 삭제되었습니다.");
+      window.location.replace("/");
+    }
   };
 
   const changeAvatar = (e) => {
@@ -112,8 +126,15 @@ const EditProfile = () => {
 
   return (
     <StyledEditProfile>
-      <div className="profile-title">프로필 설정</div>
       <form onSubmit={handleOnSubmit}>
+        <button
+          type="button"
+          className="delete_user"
+          onClick={handleDeleteUser}
+        >
+          유저 삭제
+        </button>
+        <div className="profile-title">프로필 설정</div>
         <div className="profile-avatar">
           <img
             src={
@@ -246,17 +267,31 @@ const StyledEditProfile = styled.div`
   justify-content: center;
   align-items: center;
 
-  .profile-title {
-    font-size: 20px;
-    font-weight: 700;
-    letter-spacing: 2px;
-  }
-
   form {
+    position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+
+    .delete_user {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 30px;
+      padding: 0 10px;
+      background-color: #cc0000;
+      color: #fff;
+      border: none;
+      border-radius: 3px;
+      cursor: pointer;
+    }
+
+    .profile-title {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: 2px;
+    }
 
     .profile-avatar {
       display: flex;

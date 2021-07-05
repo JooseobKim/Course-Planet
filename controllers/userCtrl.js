@@ -52,6 +52,19 @@ const userCtrl = {
       return res.status(500).json({ msg: err.message });
     }
   },
+  deleteUser: async (req, res) => {
+    try {
+      const { id } = req.user;
+
+      await User.findByIdAndDelete(id);
+
+      res.clearCookie("refreshToken", { path: "/auth/refresh_token" });
+
+      res.json({ msg: "삭제 성공." });
+    } catch (err) {
+      return res.stauts(500).json({ msg: err.message });
+    }
+  },
 };
 
 export default userCtrl;

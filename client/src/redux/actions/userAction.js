@@ -113,3 +113,26 @@ export const updateProfile =
       });
     }
   };
+
+export const deleteUser =
+  ({ username, auth }) =>
+  async (dispatch) => {
+    if (username === auth.user.username) {
+      try {
+        dispatch({ type: ALERT_TYPES.ALERT, payload: { loading: true } });
+
+        localStorage.removeItem("LoggedIn");
+
+        const res = await axios.delete(`/user/${username}`, {
+          headers: { Authorization: auth.token },
+        });
+
+        dispatch({
+          type: ALERT_TYPES.ALERT,
+          payload: { msg: res.data.msg, loading: false },
+        });
+      } catch (err) {
+        dispatch({ type: ALERT_TYPES.ALERT, payload: { loading: false } });
+      }
+    }
+  };

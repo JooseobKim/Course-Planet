@@ -16,9 +16,7 @@ userRouter.patch("/:username", logged, userCtrl.updateUser);
 userRouter.post("/:username", logged, userCtrl.resetPassword);
 
 // 유저 삭제
-userRouter.delete("/:username", (req, res) => {
-  res.json("h w");
-});
+userRouter.delete("/:username", logged, userCtrl.deleteUser);
 
 // 유저 검색
 userRouter.get("/search", (req, res) => {
