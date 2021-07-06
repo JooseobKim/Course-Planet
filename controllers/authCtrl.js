@@ -80,6 +80,8 @@ const authCtrl = {
         password: passwordHash,
       });
 
+      console.log({ newUser });
+
       // token 발급
       const accessToken = createAccessToken({ id: newUser._id });
       const refreshToken = createRefreshToken({ id: newUser._id });

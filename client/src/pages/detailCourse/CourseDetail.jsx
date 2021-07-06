@@ -32,7 +32,7 @@ const CourseDetail = () => {
 
   useEffect(() => {
     const notExistReview = detailCourse.review?.every((review) => {
-      return auth.user && review.owner._id !== auth.user?._id;
+      return auth.user && review.owner?._id !== auth.user?._id;
     });
 
     if (notExistReview) setExistReview(false);
@@ -41,7 +41,7 @@ const CourseDetail = () => {
     if (detailCourse.review?.length === 0) return setMyReview();
 
     detailCourse.review?.forEach((review) => {
-      if (auth.user && review.owner._id === auth.user._id) {
+      if (auth.user && review.owner?._id === auth.user._id) {
         setMyReview({ ...review });
       }
     });

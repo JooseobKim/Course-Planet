@@ -111,29 +111,59 @@ const Review = ({ review, detailCourse, myReview, auth, setReviewModal }) => {
             style={{ cursor: "pointer" }}
           />
         </div>
-        {auth?.token && auth.user._id === review.owner._id && showMore && (
-          <div className="review__more__dropdown">
-            <div
-              className="review__more__dropdown__item"
-              onClick={() => {
-                setReviewModal(true);
-                setShowMore(false);
-              }}
-            >
-              리뷰 수정
-            </div>
-            <div
-              className="review__more__dropdown__item"
-              onClick={() =>
-                dispatch(
-                  deleteReview({ detailCourse, auth, reviewId: myReview._id })
-                )
-              }
-            >
-              리뷰 삭제
-            </div>
-          </div>
-        )}
+        {auth?.token
+          ? auth.user._id === review.owner?._id
+            ? showMore && (
+                <div className="review__more__dropdown">
+                  <div
+                    className="review__more__dropdown__item"
+                    onClick={() => {
+                      setReviewModal(true);
+                      setShowMore(false);
+                    }}
+                  >
+                    리뷰 수정
+                  </div>
+                  <div
+                    className="review__more__dropdown__item"
+                    onClick={() =>
+                      dispatch(
+                        deleteReview({
+                          detailCourse,
+                          auth,
+                          reviewId: myReview._id,
+                        })
+                      )
+                    }
+                  >
+                    리뷰 삭제
+                  </div>
+                </div>
+              )
+            : showMore && (
+                <div className="review__more__dropdown">
+                  <div
+                    className="review__more__dropdown__item"
+                    onClick={() => {
+                      setShowMore(false);
+                    }}
+                  >
+                    신고하기
+                  </div>
+                </div>
+              )
+          : showMore && (
+              <div className="review__more__dropdown">
+                <div
+                  className="review__more__dropdown__item"
+                  onClick={() => {
+                    setShowMore(false);
+                  }}
+                >
+                  신고하기
+                </div>
+              </div>
+            )}
       </div>
     </StyledReview>
   );

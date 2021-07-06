@@ -132,7 +132,10 @@ export const deleteUser =
           payload: { msg: res.data.msg, loading: false },
         });
       } catch (err) {
-        dispatch({ type: ALERT_TYPES.ALERT, payload: { loading: false } });
+        dispatch({
+          type: ALERT_TYPES.ALERT,
+          payload: { msg: err.message, loading: false },
+        });
       }
     }
   };

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Course from "./Course";
 import styled from "styled-components";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -11,18 +11,42 @@ import "swiper/components/navigation/navigation.scss";
 import "swiper/components/pagination/pagination.scss";
 import "swiper/components/scrollbar/scrollbar.scss";
 
-// dummyData [courses]
-import coursesData from "../_dummyData/courses.json";
-
 SwiperCore.use([Navigation, Pagination, Scrollbar, A11y]);
 
-const CourseView = ({ get_courses }) => {
+const CourseView = ({
+  get_courses,
+  most_review_courses,
+  recent_review_courses,
+}) => {
+  const sildesState = () => {
+    if (window.innerWidth > 1500) return 1500 / 375;
+    else return window.innerWidth / 375;
+  };
+  const [slidesPer, setSlidesPer] = useState(sildesState);
+
+  const handleResize = () => {
+    if (window.innerWidth > 1500) setSlidesPer(1500 / 375);
+    else setSlidesPer(window.innerWidth / 375);
+  };
+
+  useEffect(() => {
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
   return (
     <StyledCouresesView className="courses-wrapper">
       <div className="courses">
         <h3 className="courses-title">최근에 추가된 강의</h3>
         {get_courses.length === 0 && <Skeleton loading={alert.loading} />}
-        <Swiper slidesPerView={4} slidesPerGroup={4} navigation pagination>
+        <Swiper
+          slidesPerView={Math.floor(slidesPer)}
+          slidesPerGroup={Math.floor(slidesPer)}
+          navigation
+          pagination
+        >
           <div className="courses__data" style={{ display: "flex" }}>
             {get_courses.map((course) => (
               <SwiperSlide>
@@ -32,9 +56,15 @@ const CourseView = ({ get_courses }) => {
           </div>
         </Swiper>
         <h3 className="courses-title">리뷰가 최근에 작성된 강의</h3>
-        <Swiper slidesPerView={4} slidesPerGroup={4} navigation pagination>
+        {get_courses.length === 0 && <Skeleton loading={alert.loading} />}
+        <Swiper
+          slidesPerView={Math.floor(slidesPer)}
+          slidesPerGroup={Math.floor(slidesPer)}
+          navigation
+          pagination
+        >
           <div className="courses__data" style={{ display: "flex" }}>
-            {coursesData.map((course) => (
+            {recent_review_courses.map((course) => (
               <SwiperSlide>
                 <Course course={course} />
               </SwiperSlide>
@@ -42,9 +72,15 @@ const CourseView = ({ get_courses }) => {
           </div>
         </Swiper>
         <h3 className="courses-title">가장 리뷰가 많은 강의</h3>
-        <Swiper slidesPerView={4} slidesPerGroup={4} navigation pagination>
+        {get_courses.length === 0 && <Skeleton loading={alert.loading} />}
+        <Swiper
+          slidesPerView={Math.floor(slidesPer)}
+          slidesPerGroup={Math.floor(slidesPer)}
+          navigation
+          pagination
+        >
           <div className="courses__data">
-            {coursesData.map((course) => (
+            {most_review_courses.map((course) => (
               <SwiperSlide>
                 <Course course={course} />
               </SwiperSlide>
@@ -128,5 +164,10 @@ const StyledCouresesView = styled.div`
     &:hover {
       opacity: 1;
     }
+  }
+
+  .swiper-slide {
+    display: flex;
+    justify-content: center;
   }
 `;

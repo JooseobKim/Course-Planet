@@ -3,19 +3,36 @@ import styled from "styled-components";
 import SearchIcon from "@material-ui/icons/Search";
 import CoursesView from "../../components/CoursesView";
 import { useDispatch, useSelector } from "react-redux";
-import { getCourses } from "../../redux/actions/courseAction";
+import {
+  getCourses,
+  getMostReviewCourses,
+  getRecentReviewCourses,
+} from "../../redux/actions/courseAction";
 
 const Home = () => {
   const {
-    course: { get_courses },
+    course: { get_courses, most_review_courses, recent_review_courses },
   } = useSelector((state) => state);
   const dispatch = useDispatch();
 
-  const [searchValue, setSearchValue] = useState(null);
+  const [searchValue, setSearchValue] = useState("");
 
   useEffect(() => {
-    dispatch(getCourses());
-  }, [dispatch]);
+    if (
+      get_courses.length === 0 &&
+      most_review_courses.length === 0 &&
+      recent_review_courses.length === 0
+    ) {
+      dispatch(getCourses());
+      dispatch(getMostReviewCourses());
+      dispatch(getRecentReviewCourses());
+    }
+  }, [
+    dispatch,
+    get_courses.length,
+    most_review_courses.length,
+    recent_review_courses.length,
+  ]);
 
   const handleOnChnage = (e) => {
     setSearchValue(e.target.value);
@@ -48,7 +65,11 @@ const Home = () => {
         </StyledSearchContainer>
       </div>
       <div className="courses-view" style={{ margin: "20px 0" }}>
-        <CoursesView get_courses={get_courses} />
+        <CoursesView
+          get_courses={get_courses}
+          most_review_courses={most_review_courses}
+          recent_review_courses={recent_review_courses}
+        />
       </div>
     </>
   );

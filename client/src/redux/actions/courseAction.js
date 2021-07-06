@@ -8,6 +8,8 @@ export const COURSE_TYPES = {
   GET_COURSES: "GET_COURSES",
   GET_COURSE: "GET_COURSE",
   UPDATE_COURSE: "UPDATE_COURSE",
+  GET_MOST_REVIEW: "GET_MOST_REVIEW",
+  GET_RECENT_REVIEW: "GET_RECENT_REVIEW",
 };
 
 export const scrapingInflearnCourses =
@@ -247,3 +249,49 @@ export const getCourse =
       }
     }
   };
+
+export const getMostReviewCourses = () => async (dispatch) => {
+  try {
+    dispatch({ type: ALERT_TYPES.ALERT, payload: { loading: true } });
+
+    const res = await axios.get("/courses/most_review");
+
+    dispatch({
+      type: COURSE_TYPES.GET_MOST_REVIEW,
+      payload: res.data.courses,
+    });
+
+    dispatch({
+      type: ALERT_TYPES.ALERT,
+      payload: { loading: false, msg: res.data.msg },
+    });
+  } catch (err) {
+    dispatch({
+      type: ALERT_TYPES.ALERT,
+      payload: { loading: false, msg: err.message },
+    });
+  }
+};
+
+export const getRecentReviewCourses = () => async (dispatch) => {
+  try {
+    dispatch({ type: ALERT_TYPES.ALERT, payload: { loading: true } });
+
+    const res = await axios.get("/courses/recent_review");
+
+    dispatch({
+      type: COURSE_TYPES.GET_RECENT_REVIEW,
+      payload: res.data.courses,
+    });
+
+    dispatch({
+      type: ALERT_TYPES.ALERT,
+      payload: { loading: false, msg: res.data.msg },
+    });
+  } catch (err) {
+    dispatch({
+      type: ALERT_TYPES.ALERT,
+      payload: { loading: false, msg: err.message },
+    });
+  }
+};

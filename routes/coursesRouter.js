@@ -27,14 +27,14 @@ courseRouter.post("/admin/save_data", logged, admin, coursesCtrl.saveCourses);
 // 코스 검색
 courseRouter.get("/search", coursesCtrl.searchCourse);
 
-// 최근 리뷰 작성 강의 불러오기 [리뷰 파트 작성 후에 진행]
-// courseRouter.get("/recent_review", coursesCtrl.getRecentReview);
-
-// 최근 리뷰 작성 강의 불러오기 [리뷰 파트 작성 후에 진행]
-// courseRouter.get("/recent_review", coursesCtrl.getMostReview);
-
 // 강의 불러오기
 courseRouter.get("/", coursesCtrl.getCourses);
+
+// 리뷰가 가장 많이 작성된 강의 불러오기
+courseRouter.get("/most_review", coursesCtrl.getMostReviewCourses);
+
+// 최근 리뷰 작성 강의 불러오기
+courseRouter.get("/recent_review", coursesCtrl.getRecentReviewCourses);
 
 // 개별 강의 불러오기
 courseRouter.get("/:id", coursesCtrl.getCourse);

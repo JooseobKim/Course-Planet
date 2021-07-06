@@ -1,4 +1,5 @@
 import Courses from "../models/courseModel";
+import Review from "../models/reviewModel";
 import axios from "axios";
 import cheerio from "cheerio";
 import puppeteer from "puppeteer";
@@ -205,7 +206,7 @@ const coursesCtrl = {
     try {
       const courses = await Courses.find()
         .sort("-createdAt")
-        .limit(48)
+        .limit(20)
         .populate("review")
         .populate({
           path: "review",
@@ -259,15 +260,69 @@ const coursesCtrl = {
       return res.status(500).json({ msg: err.message });
     }
   },
-  // 리뷰 파트 작성 후에 진행
-  // getRecentReview: async (req, res) => {
-  //   try {
-  //     const courses = await Courses.find();
+  getMostReviewCourses: async (req, res) => {
+    try {
+      await Courses.aggregate([
+        { $unwind: "$review" },
+        {
+          $group: {
+            _id: "$_id",
+            length: { $sum: 1 },
+          },
+        },
+        { $sort: { length: -1 } },
+      ]).exec(async (err, docs) => {
+        let courses = [];
 
-  //     res.json({ courses });
-  //   } catch (err) {}
-  // },
-  // getMostReivew: async (req, res) => {},
+        for (const course of docs) {
+          const res = await Courses.findById(course._id)
+            .populate("review")
+            .populate({
+              path: "review",
+              populate: {
+                path: "owner likes",
+                select: "-password",
+              },
+            });
+          courses.push(res);
+        }
+
+        res.json({
+          msg: "데이터 불러오기 성공.",
+          courses,
+        });
+      });
+    } catch (err) {
+      return res.status(500).json({ msg: err.message });
+    }
+  },
+  getRecentReviewCourses: async (req, res) => {
+    try {
+      let courses = [];
+
+      const reviews = await Review.find().sort("-createdAt").limit(20);
+
+      for (const review of reviews) {
+        const res = await Courses.findById(review.courseId);
+        courses.push(res);
+      }
+      // .populate("review")
+      // .populate({
+      //   path: "review",
+      //   populate: {
+      //     path: "owner likes",
+      //     select: "-password",
+      //   },
+      // });
+
+      res.json({
+        msg: "데이터 불러오기 성공.",
+        courses,
+      });
+    } catch (err) {
+      return res.status(500).json({ msg: err.message });
+    }
+  },
 };
 
 export default coursesCtrl;

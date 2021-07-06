@@ -13,7 +13,7 @@ const Header = () => {
   const location = useLocation();
   const dispatch = useDispatch();
 
-  const [searchValue, setSearchValue] = useState(null);
+  const [searchValue, setSearchValue] = useState(undefined);
   const [profileDropdown, setProfileDropdown] = useState(false);
 
   const handleOnChnage = (e) => {

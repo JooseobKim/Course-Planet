@@ -7,7 +7,7 @@ const reviewCtrl = {
     try {
       const { difficulty, merit, demerit, rating, userId, courseId } = req.body;
 
-      const existReview = await Review.findOne({ owner: userId });
+      const existReview = await Review.findOne({ owner: userId, courseId });
       if (existReview)
         return res.status(400).json({ msg: "이미 리뷰를 작성하였습니다." });
 
