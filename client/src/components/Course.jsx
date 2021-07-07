@@ -6,8 +6,8 @@ const Course = ({ course }) => {
   let sliceDescription;
   let sliceTitle;
 
-  if (course.description.length > 125)
-    sliceDescription = course.description.slice(0, 125) + " ...";
+  if (course.description.length > 115)
+    sliceDescription = course.description.slice(0, 115) + " ...";
 
   if (course.title.length > 68) sliceTitle = course.title.slice(0, 68) + " ...";
 

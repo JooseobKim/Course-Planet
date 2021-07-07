@@ -36,6 +36,9 @@ courseRouter.get("/most_review", coursesCtrl.getMostReviewCourses);
 // 최근 리뷰 작성 강의 불러오기
 courseRouter.get("/recent_review", coursesCtrl.getRecentReviewCourses);
 
+// 최근 추가된 강의 불러오기
+courseRouter.get("/recent_add", coursesCtrl.getRecentAddCourses);
+
 // 개별 강의 불러오기
 courseRouter.get("/:id", coursesCtrl.getCourse);
 

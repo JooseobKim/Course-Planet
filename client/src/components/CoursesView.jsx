@@ -14,7 +14,7 @@ import "swiper/components/scrollbar/scrollbar.scss";
 SwiperCore.use([Navigation, Pagination, Scrollbar, A11y]);
 
 const CourseView = ({
-  get_courses,
+  get_recent_add_courses,
   most_review_courses,
   recent_review_courses,
 }) => {
@@ -40,7 +40,9 @@ const CourseView = ({
     <StyledCouresesView className="courses-wrapper">
       <div className="courses">
         <h3 className="courses-title">최근에 추가된 강의</h3>
-        {get_courses.length === 0 && <Skeleton loading={alert.loading} />}
+        {get_recent_add_courses.length === 0 && (
+          <Skeleton loading={alert.loading} />
+        )}
         <Swiper
           slidesPerView={Math.floor(slidesPer)}
           slidesPerGroup={Math.floor(slidesPer)}
@@ -48,7 +50,7 @@ const CourseView = ({
           pagination
         >
           <div className="courses__data" style={{ display: "flex" }}>
-            {get_courses.map((course) => (
+            {get_recent_add_courses.map((course) => (
               <SwiperSlide>
                 <Course course={course} />
               </SwiperSlide>
@@ -56,7 +58,9 @@ const CourseView = ({
           </div>
         </Swiper>
         <h3 className="courses-title">리뷰가 최근에 작성된 강의</h3>
-        {get_courses.length === 0 && <Skeleton loading={alert.loading} />}
+        {most_review_courses.length === 0 && (
+          <Skeleton loading={alert.loading} />
+        )}
         <Swiper
           slidesPerView={Math.floor(slidesPer)}
           slidesPerGroup={Math.floor(slidesPer)}
@@ -72,7 +76,9 @@ const CourseView = ({
           </div>
         </Swiper>
         <h3 className="courses-title">가장 리뷰가 많은 강의</h3>
-        {get_courses.length === 0 && <Skeleton loading={alert.loading} />}
+        {recent_review_courses.length === 0 && (
+          <Skeleton loading={alert.loading} />
+        )}
         <Swiper
           slidesPerView={Math.floor(slidesPer)}
           slidesPerGroup={Math.floor(slidesPer)}

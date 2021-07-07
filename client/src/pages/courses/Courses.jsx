@@ -1,25 +1,50 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Course from "../../components/Course";
 import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
+import { useLocation } from "react-router";
+import Pagination from "../../components/Pagination";
+import axios from "axios";
 
-// dummyData [courses]
-import coursesData from "../../_dummyData/courses.json";
+const pageRegex = (page) => {
+  const re = /[0-9]/g;
+  return page.match(re);
+};
 
 const Courses = () => {
+  const location = useLocation();
+
+  const [totalPage, setTotalPage] = useState(0);
+  const [pageNum, setPageNum] = useState(
+    parseInt(pageRegex(location.search)) || 1
+  );
+  const pages = new Array(totalPage).fill(null).map((v, i) => i);
   const [checkedState, setCheckedState] = useState({
-    inflearn: false,
-    fastcampus: false,
+    inflearn: true,
+    fastcampus: true,
   });
-  // console.log(checked);
+
+  const [coursesPerPage, setCoursesPerPage] = useState([]);
 
   const handleOnChange = (e) => {
     const { name, checked } = e.target;
-    console.log({ name, checked });
 
     setCheckedState({ ...checkedState, [name]: checked });
   };
+
+  useEffect(() => {
+    const getCourses = async () => {
+      const res = await axios.get(
+        `/courses?page=${pageNum}&platform=${JSON.stringify(checkedState)}`
+      );
+      setCoursesPerPage(res.data.courses);
+      setTotalPage(res.data.totalPage);
+    };
+    getCourses();
+
+    if (pageNum <= 0 || pageNum > totalPage) setPageNum(1);
+  }, [checkedState, pageNum, totalPage]);
 
   return (
     <StyledCourses>
@@ -46,12 +71,19 @@ const Courses = () => {
             }
             label="패스트캠퍼스"
           />
+          <div className="courses__navbar__pagination">
+            <div className="courses__navbar__pagination-text">
+              {pageNum} 페이지
+            </div>
+            <Pagination
+              pages={pages}
+              pageNum={pageNum}
+              setPageNum={setPageNum}
+            />
+          </div>
         </div>
         <div className="courses__list">
-          {coursesData.map((course) => (
-            <Course course={course} />
-          ))}
-          {coursesData.map((course) => (
+          {coursesPerPage.map((course) => (
             <Course course={course} />
           ))}
         </div>
@@ -63,11 +95,14 @@ const Courses = () => {
 export default Courses;
 
 const StyledCourses = styled.div`
+  font-family: "Noto Sans KR", sans-serif;
+  font-weight: 300;
   max-width: 1500px;
   margin: auto;
 
   .wrapper {
     display: flex;
+    justify-content: center;
   }
 
   .courses__navbar {
@@ -76,14 +111,25 @@ const StyledCourses = styled.div`
     width: 175px;
     height: 100%;
     padding: 5px 10px;
+    margin-right: 30px;
     background-color: #eee;
+
+    &__pagination {
+      margin: 5px 0;
+      text-align: center;
+
+      &-text {
+        font-size: 15px;
+        margin-bottom: 7px;
+      }
+    }
   }
 
   .courses__list {
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
-    flex: 1;
     flex-wrap: wrap;
+    flex: 0.9;
   }
 `;

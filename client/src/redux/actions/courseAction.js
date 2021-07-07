@@ -10,6 +10,8 @@ export const COURSE_TYPES = {
   UPDATE_COURSE: "UPDATE_COURSE",
   GET_MOST_REVIEW: "GET_MOST_REVIEW",
   GET_RECENT_REVIEW: "GET_RECENT_REVIEW",
+  GET_RECENT_ADD_COURSES: "GET_RECENT_ADD_COURSES",
+  GET_COURSES_PER_PAGE: "GET_COURSES_PER_PAGE",
 };
 
 export const scrapingInflearnCourses =
@@ -295,3 +297,52 @@ export const getRecentReviewCourses = () => async (dispatch) => {
     });
   }
 };
+
+export const getRecentAddCourses = () => async (dispatch) => {
+  try {
+    dispatch({ type: ALERT_TYPES.ALERT, payload: { loading: true } });
+
+    const res = await axios.get("/courses/recent_add");
+
+    dispatch({
+      type: COURSE_TYPES.GET_RECENT_ADD_COURSES,
+      payload: res.data.courses,
+    });
+
+    dispatch({
+      type: ALERT_TYPES.ALERT,
+      payload: { loading: false, msg: res.data.msg },
+    });
+  } catch (err) {
+    dispatch({
+      type: ALERT_TYPES.ALERT,
+      payload: { loading: false, msg: err.message },
+    });
+  }
+};
+
+export const getCoursesPerPage =
+  ({ page }) =>
+  async (dispatch) => {
+    try {
+      dispatch({ type: ALERT_TYPES.ALERT, payload: { loading: true } });
+
+      const res = await axios.get(`/courses?page=${page}`);
+      console.log({ res });
+
+      dispatch({
+        type: COURSE_TYPES.GET_COURSES_PER_PAGE,
+        payload: { courses: res.data.courses, totalPage: res.data.totalPage },
+      });
+
+      dispatch({
+        type: ALERT_TYPES.ALERT,
+        payload: { loading: false, msg: res.data.msg },
+      });
+    } catch (err) {
+      dispatch({
+        type: ALERT_TYPES.ALERT,
+        payload: { loading: false, msg: err.response?.data.msg || err.message },
+      });
+    }
+  };

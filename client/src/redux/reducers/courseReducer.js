@@ -7,6 +7,9 @@ const initialState = {
   get_course: [],
   most_review_courses: [],
   recent_review_courses: [],
+  get_recent_add_courses: [],
+  get_courses_per_page: [],
+  total_page: 0,
 };
 
 const editData = (prev_data, id, update_data) => {
@@ -36,7 +39,8 @@ const courseReducer = (state = initialState, action) => {
     case COURSE_TYPES.GET_COURSES:
       return {
         ...state,
-        get_courses: [...state.get_courses, ...action.payload].splice(0, 20),
+        get_courses: [...action.payload.courses],
+        total_page: action.payload.totalPage,
       };
     case COURSE_TYPES.GET_COURSE:
       return {
@@ -67,6 +71,20 @@ const courseReducer = (state = initialState, action) => {
           ...state.recent_review_courses,
           ...action.payload,
         ].splice(0, 20),
+      };
+    case COURSE_TYPES.GET_RECENT_ADD_COURSES:
+      return {
+        ...state,
+        get_recent_add_courses: [
+          ...state.get_recent_add_courses,
+          ...action.payload,
+        ].splice(0, 20),
+      };
+    case COURSE_TYPES.GET_COURSES_PER_PAGE:
+      return {
+        ...state,
+        get_courses_per_page: [...action.payload.courses],
+        total_page: action.payload.totalPage,
       };
     default:
       return state;

@@ -4,6 +4,37 @@ import axios from "axios";
 import cheerio from "cheerio";
 import puppeteer from "puppeteer";
 
+const DATA_PER_PAGE = 15;
+
+class QueryFeatures {
+  constructor(query, queryString) {
+    this.query = query;
+    this.queryString = queryString;
+  }
+
+  paginating() {
+    const page = this.queryString.page * 1 || 1;
+
+    this.query = this.query
+      .skip(DATA_PER_PAGE * (page - 1))
+      .limit(DATA_PER_PAGE);
+
+    return this;
+  }
+
+  filteringPlatform() {
+    const platform = this.queryString.platform;
+
+    if (platform.inflearn && !platform.fastcampus)
+      this.query = this.query.find({ platform: "inflearn" });
+    else if (!platform.inflearn && platform.fastcampus)
+      this.query = this.query.find({ platform: "fastcampus" });
+    else this.query = this.query.find();
+
+    return this;
+  }
+}
+
 const coursesCtrl = {
   scrapingInflearnCourses: async (req, res) => {
     const { order, pageFrom, pageTo } = req.body;
@@ -204,9 +235,31 @@ const coursesCtrl = {
   },
   getCourses: async (req, res) => {
     try {
-      const courses = await Courses.find()
+      req.query = { ...req.query, platform: JSON.parse(req.query.platform) };
+
+      let totalPage;
+
+      if (req.query.platform.inflearn && !req.query.platform.fastcampus) {
+        totalPage = await Courses.countDocuments({
+          platform: "inflearn",
+        });
+      } else if (
+        !req.query.platform.inflearn &&
+        req.query.platform.fastcampus
+      ) {
+        totalPage = await Courses.countDocuments({
+          platform: "fastcampus",
+        });
+      } else {
+        totalPage = await Courses.countDocuments();
+      }
+
+      const queryResult = new QueryFeatures(Courses.find(), req.query)
+        .paginating()
+        .filteringPlatform();
+
+      const courses = await queryResult.query
         .sort("-createdAt")
-        .limit(20)
         .populate("review")
         .populate({
           path: "review",
@@ -219,6 +272,7 @@ const coursesCtrl = {
       res.json({
         msg: "데이터 불러오기 성공.",
         courses,
+        totalPage: Math.ceil(totalPage / DATA_PER_PAGE),
       });
     } catch (err) {
       return res.status(500).json({ msg: err.message });
@@ -300,20 +354,43 @@ const coursesCtrl = {
     try {
       let courses = [];
 
-      const reviews = await Review.find().sort("-createdAt").limit(20);
+      const reviews = await Review.find()
+        .sort("-createdAt")
+        .limit(20)
+        .populate("review")
+        .populate({
+          path: "review",
+          populate: {
+            path: "owner likes",
+            select: "-password",
+          },
+        });
 
       for (const review of reviews) {
         const res = await Courses.findById(review.courseId);
         courses.push(res);
       }
-      // .populate("review")
-      // .populate({
-      //   path: "review",
-      //   populate: {
-      //     path: "owner likes",
-      //     select: "-password",
-      //   },
-      // });
+
+      res.json({
+        msg: "데이터 불러오기 성공.",
+        courses,
+      });
+    } catch (err) {
+      return res.status(500).json({ msg: err.message });
+    }
+  },
+  getRecentAddCourses: async (req, res) => {
+    try {
+      const courses = await Courses.find()
+        .sort("-createdAt")
+        .populate("review")
+        .populate({
+          path: "review",
+          populate: {
+            path: "owner likes",
+            select: "-password",
+          },
+        });
 
       res.json({
         msg: "데이터 불러오기 성공.",
