@@ -123,7 +123,7 @@ const Admin = () => {
           </div>
           <div className="fastcampus__scraping__courses">
             {fastcampus_courses.length === 0 && (
-              <Skeleton loading={alert.loading} />
+              <Skeleton loading={alert.loading} admin={true} />
             )}
             <Swiper slidesPerView={4} slidesPerGroup={4} navigation pagination>
               {fastcampus_courses.map((course, i) => (

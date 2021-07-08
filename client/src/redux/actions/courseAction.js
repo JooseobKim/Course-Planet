@@ -228,27 +228,25 @@ export const getCourses = () => async (dispatch) => {
 export const getCourse =
   ({ courses, id }) =>
   async (dispatch) => {
-    if (courses.every((course) => course._id !== id)) {
-      try {
-        dispatch({ type: ALERT_TYPES.ALERT, payload: { loading: true } });
+    try {
+      dispatch({ type: ALERT_TYPES.ALERT, payload: { loading: true } });
 
-        const res = await axios.get(`/courses/${id}`);
+      const res = await axios.get(`/courses/${id}`);
 
-        dispatch({
-          type: COURSE_TYPES.GET_COURSE,
-          payload: res.data.course,
-        });
+      dispatch({
+        type: COURSE_TYPES.GET_COURSE,
+        payload: res.data.course,
+      });
 
-        dispatch({
-          type: ALERT_TYPES.ALERT,
-          payload: { loading: false, msg: res.data.msg },
-        });
-      } catch (err) {
-        dispatch({
-          type: ALERT_TYPES.ALERT,
-          payload: { loading: false, msg: err.message },
-        });
-      }
+      dispatch({
+        type: ALERT_TYPES.ALERT,
+        payload: { loading: false, msg: res.data.msg },
+      });
+    } catch (err) {
+      dispatch({
+        type: ALERT_TYPES.ALERT,
+        payload: { loading: false, msg: err.message },
+      });
     }
   };
 

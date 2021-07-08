@@ -6,6 +6,9 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import { useLocation } from "react-router";
 import Pagination from "../../components/Pagination";
 import axios from "axios";
+import Skeleton from "../../components/Skeleton";
+import { useDispatch, useSelector } from "react-redux";
+import { ALERT_TYPES } from "../../redux/actions/alertAction";
 
 const pageRegex = (page) => {
   const re = /[0-9]/g;
@@ -13,7 +16,9 @@ const pageRegex = (page) => {
 };
 
 const Courses = () => {
+  const { alert } = useSelector((state) => state);
   const location = useLocation();
+  const dispatch = useDispatch();
 
   const [totalPage, setTotalPage] = useState(0);
   const [pageNum, setPageNum] = useState(
@@ -35,16 +40,20 @@ const Courses = () => {
 
   useEffect(() => {
     const getCourses = async () => {
+      dispatch({ type: ALERT_TYPES.ALERT, payload: { loading: true } });
+
       const res = await axios.get(
         `/courses?page=${pageNum}&platform=${JSON.stringify(checkedState)}`
       );
       setCoursesPerPage(res.data.courses);
       setTotalPage(res.data.totalPage);
+
+      dispatch({ type: ALERT_TYPES.ALERT, payload: { loading: false } });
     };
     getCourses();
 
     if (pageNum <= 0 || pageNum > totalPage) setPageNum(1);
-  }, [checkedState, pageNum, totalPage]);
+  }, [checkedState, pageNum, totalPage, dispatch]);
 
   return (
     <StyledCourses>
@@ -83,6 +92,9 @@ const Courses = () => {
           </div>
         </div>
         <div className="courses__list">
+          {coursesPerPage.length === 0 && (
+            <Skeleton length={9} loading={alert.loading} />
+          )}
           {coursesPerPage.map((course) => (
             <Course course={course} />
           ))}
@@ -99,6 +111,7 @@ const StyledCourses = styled.div`
   font-weight: 300;
   max-width: 1500px;
   margin: auto;
+  min-height: calc(100vh - 201px);
 
   .wrapper {
     display: flex;

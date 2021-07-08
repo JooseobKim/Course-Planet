@@ -6,10 +6,12 @@ import { getCourse } from "../../redux/actions/courseAction";
 import ReviewModal from "../../components/ReviewModal";
 
 import Review from "../../components/Review";
+import { getReviews } from "../../redux/actions/reviewAction";
 
 const CourseDetail = () => {
   const {
     course: { get_course },
+    review: { detail_course_reviews },
     auth,
   } = useSelector((state) => state);
   const { id } = useParams();
@@ -18,12 +20,13 @@ const CourseDetail = () => {
   const [detailCourse, setDetailCourse] = useState({});
   const [viewReview, setViewReview] = useState(false);
   const [reviewModal, setReviewModal] = useState(false);
-  const [existReview, setExistReview] = useState(true);
   const [myReview, setMyReview] = useState();
-  console.log(myReview);
+  const [sortCondition, setSortCondition] = useState("recent");
+  const [sliceNum, setSliceNum] = useState(1);
 
   useEffect(() => {
-    dispatch(getCourse({ courses: get_course, id }));
+    if (get_course.every((course) => course._id !== id))
+      dispatch(getCourse({ courses: get_course, id }));
 
     get_course.forEach((course) => {
       if (course._id === id) setDetailCourse(course);
@@ -31,21 +34,30 @@ const CourseDetail = () => {
   }, [dispatch, id, get_course]);
 
   useEffect(() => {
-    const notExistReview = detailCourse.review?.every((review) => {
-      return auth.user && review.owner?._id !== auth.user?._id;
-    });
+    dispatch(
+      getReviews({
+        courseId: id,
+        sort: sortCondition,
+      })
+    );
+  }, [dispatch, id, sortCondition]);
 
-    if (notExistReview) setExistReview(false);
-    else setExistReview(true);
+  useEffect(() => {
+    if (detail_course_reviews.length === 0) return setMyReview();
 
-    if (detailCourse.review?.length === 0) return setMyReview();
+    const notExistReview = detail_course_reviews.every(
+      (review) => auth.user && review.owner?._id !== auth.user?._id
+    );
 
-    detailCourse.review?.forEach((review) => {
-      if (auth.user && review.owner?._id === auth.user._id) {
-        setMyReview({ ...review });
-      }
-    });
-  }, [detailCourse.review, auth.user]);
+    if (!notExistReview) {
+      const myReview = detail_course_reviews.find(
+        (review) => review.owner?._id === auth.user?._id
+      );
+      setMyReview({ ...myReview });
+    } else {
+      setMyReview();
+    }
+  }, [detail_course_reviews, auth.user]);
 
   return (
     <StyledCourseDetail viewReview={viewReview}>
@@ -94,49 +106,66 @@ const CourseDetail = () => {
       </div>
       <div className="review-container">
         <div className="review-container__create-review">
-          <button
-            className="review-container__create-review__button"
-            onClick={() => setReviewModal(!reviewModal)}
-            disabled={
-              !auth.token ? true : existReview && existReview ? true : false
-            }
-          >
-            리뷰 작성하기
-          </button>
-          {viewReview && (
-            <span style={{ fontSize: "15px" }}>
-              {!auth.token
-                ? "* 리뷰는 로그인 후 작성하실 수 있습니다."
-                : existReview && existReview
-                ? "* 리뷰를 이미 작성하였습니다."
-                : ""}
-            </span>
-          )}
-          {!viewReview && (
+          <div className="review-container__create-review-wrapper">
             <button
-              className="review-container__create-review__view-button"
-              onClick={() => setViewReview(true)}
+              className="review-container__create-review__button"
+              onClick={() => setReviewModal(!reviewModal)}
+              disabled={!auth.token ? true : myReview ? true : false}
             >
-              리뷰 조회하기
+              리뷰 작성하기
             </button>
-          )}
+            {viewReview && (
+              <span style={{ fontSize: "15px", marginLeft: "3px" }}>
+                {!auth.token
+                  ? "* 리뷰는 로그인 후 작성하실 수 있습니다."
+                  : myReview
+                  ? "* 리뷰를 이미 작성하였습니다."
+                  : ""}
+              </span>
+            )}
+            {!viewReview && (
+              <button
+                className="review-container__create-review__view-button"
+                onClick={() => setViewReview(true)}
+              >
+                리뷰 조회하기
+              </button>
+            )}
+          </div>
         </div>
         <div className="review-container__sort">
-          <select className="review-container__sort__condition">
+          <select
+            className="review-container__sort__condition"
+            value={sortCondition}
+            onChange={(e) => setSortCondition(e.target.value)}
+          >
             <option value="recent">최신순</option>
             <option value="lastest">오래된순</option>
             <option value="likes">좋아요순</option>
           </select>
         </div>
-        {detailCourse.review?.map((item) => (
+        {detail_course_reviews.slice(0, sliceNum).map((item) => (
           <Review
+            key={item._id}
             review={item}
             detailCourse={detailCourse}
             auth={auth}
             setReviewModal={setReviewModal}
-            myReview={myReview}
           />
         ))}
+        <div className="review-container__more-inner">
+          {sliceNum < detail_course_reviews.length && (
+            <button
+              onClick={() => {
+                if (sliceNum >= detail_course_reviews.length) return;
+                setSliceNum(sliceNum + 1);
+              }}
+              className="review-container__more-inner__btn"
+            >
+              더보기
+            </button>
+          )}
+        </div>
       </div>
       {reviewModal && (
         <ReviewModal
@@ -264,6 +293,17 @@ const StyledCourseDetail = styled.div`
     flex: 1.8;
     position: relative;
 
+    &__create-review-wrapper {
+      position: ${(props) => !props.viewReview && "sticky"};
+      display: ${(props) => !props.viewReview && "flex"};
+      flex-direction: ${(props) => !props.viewReview && "column"};
+      justify-content: ${(props) => !props.viewReview && "center"};
+      align-items: ${(props) => !props.viewReview && "center"};
+      top: ${(props) => !props.viewReview && "74px"};
+      width: ${(props) => !props.viewReview && "100%"};
+      height: ${(props) => !props.viewReview && "100vh"};
+    }
+
     &__create-review {
       position: absolute;
       display: flex;
@@ -273,8 +313,8 @@ const StyledCourseDetail = styled.div`
       height: ${(props) => !props.viewReview && "100%"};
       margin-top: ${(props) => props.viewReview && "3px"};
       margin-left: ${(props) => props.viewReview && "10px"};
-      justify-content: ${(props) => (props.viewReview ? "flex-end" : "center")};
-      align-items: ${(props) => (props.viewReview ? "flex-start" : "center")};
+      justify-content: ${(props) => props.viewReview && "flex-end"};
+      align-items: ${(props) => props.viewReview && "flex-start"};
       z-index: 1;
 
       &__button,
@@ -324,6 +364,31 @@ const StyledCourseDetail = styled.div`
         border: none;
         outline: none;
         cursor: pointer;
+      }
+    }
+
+    &__more-inner {
+      display: flex;
+      justify-content: center;
+
+      &__btn {
+        font-family: "Noto Sans KR", sans-serif;
+        font-weight: 400;
+        padding: 7px 15px;
+        border: none;
+        outline: none;
+        border-radius: 5px;
+        background-color: #ecebf6;
+        transform: scale(0.95);
+        opacity: 0.8;
+        transition: all 0.3s;
+        cursor: pointer;
+
+        &:hover {
+          transform: scale(1);
+          opacity: 1;
+          box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+        }
       }
     }
   }

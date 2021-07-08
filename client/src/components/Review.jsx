@@ -13,7 +13,7 @@ import { useDispatch } from "react-redux";
 import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 
-const Review = ({ review, detailCourse, myReview, auth, setReviewModal }) => {
+const Review = ({ review, detailCourse, auth, setReviewModal }) => {
   const { owner } = review;
   const dispatch = useDispatch();
 
@@ -22,7 +22,7 @@ const Review = ({ review, detailCourse, myReview, auth, setReviewModal }) => {
 
   useEffect(() => {
     const existReviewLike = review.likes.find(
-      (like) => like._id === auth.user._id
+      (like) => like._id === auth.user?._id
     );
     if (existReviewLike) setLikeState(true);
   }, [auth.user?._id, review.likes]);
@@ -114,7 +114,11 @@ const Review = ({ review, detailCourse, myReview, auth, setReviewModal }) => {
         {auth?.token
           ? auth.user._id === review.owner?._id
             ? showMore && (
-                <div className="review__more__dropdown">
+                <div
+                  className="review__more__dropdown"
+                  onMouseOver={() => setShowMore(true)}
+                  onMouseLeave={() => setShowMore(false)}
+                >
                   <div
                     className="review__more__dropdown__item"
                     onClick={() => {
@@ -126,22 +130,27 @@ const Review = ({ review, detailCourse, myReview, auth, setReviewModal }) => {
                   </div>
                   <div
                     className="review__more__dropdown__item"
-                    onClick={() =>
-                      dispatch(
-                        deleteReview({
-                          detailCourse,
-                          auth,
-                          reviewId: myReview._id,
-                        })
-                      )
-                    }
+                    onClick={() => {
+                      if (window.confirm("리뷰를 삭제하시겠습니까?"))
+                        dispatch(
+                          deleteReview({
+                            detailCourse,
+                            auth,
+                            reviewId: review._id,
+                          })
+                        );
+                    }}
                   >
                     리뷰 삭제
                   </div>
                 </div>
               )
             : showMore && (
-                <div className="review__more__dropdown">
+                <div
+                  className="review__more__dropdown"
+                  onMouseOver={() => setShowMore(true)}
+                  onMouseLeave={() => setShowMore(false)}
+                >
                   <div
                     className="review__more__dropdown__item"
                     onClick={() => {
@@ -153,7 +162,11 @@ const Review = ({ review, detailCourse, myReview, auth, setReviewModal }) => {
                 </div>
               )
           : showMore && (
-              <div className="review__more__dropdown">
+              <div
+                className="review__more__dropdown"
+                onMouseOver={() => setShowMore(true)}
+                onMouseLeave={() => setShowMore(false)}
+              >
                 <div
                   className="review__more__dropdown__item"
                   onClick={() => {
@@ -284,7 +297,7 @@ const StyledReview = styled.div`
     &__more {
       position: absolute;
       top: 0;
-      right: 5px;
+      right: 10px;
 
       &__dropdown {
         position: absolute;

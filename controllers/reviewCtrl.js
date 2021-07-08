@@ -2,6 +2,31 @@ import User from "../models/userModel";
 import Course from "../models/courseModel";
 import Review from "../models/reviewModel";
 
+class QueryFeatures {
+  constructor(query, queryString) {
+    this.query = query;
+    this.queryString = queryString;
+  }
+
+  sort() {
+    switch (this.queryString.sort) {
+      case "recent":
+        this.query = this.query.sort("-createdAt");
+        break;
+      case "lastest":
+        this.query = this.query.sort("createdAt");
+        break;
+      case "likes":
+        this.query = this.query.sort("-likes");
+        break;
+      default:
+        break;
+    }
+
+    return this;
+  }
+}
+
 const reviewCtrl = {
   createReview: async (req, res) => {
     try {
@@ -136,6 +161,25 @@ const reviewCtrl = {
       );
 
       res.json({ msg: "좋아요를 취소했습니다." });
+    } catch (err) {
+      return res.status(500).json({ msg: err.message });
+    }
+  },
+  getReviews: async (req, res) => {
+    try {
+      const { courseId } = req.params;
+
+      const queryResult = new QueryFeatures(
+        Review.find({ courseId }),
+        req.query
+      ).sort();
+
+      const reviews = await queryResult.query.populate("owner likes");
+
+      res.json({
+        msg: "데이터 찾기 성공.",
+        reviews,
+      });
     } catch (err) {
       return res.status(500).json({ msg: err.message });
     }

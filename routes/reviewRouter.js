@@ -19,4 +19,7 @@ reviewRouter.patch("/:id/like", logged, reviewCtrl.likeReview);
 // 리뷰 좋아요 비활성화
 reviewRouter.patch("/:id/unlike", logged, reviewCtrl.unlikeReview);
 
+// 리뷰 가져오기
+reviewRouter.get("/:courseId", reviewCtrl.getReviews);
+
 export default reviewRouter;

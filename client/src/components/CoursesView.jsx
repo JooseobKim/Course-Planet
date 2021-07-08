@@ -3,7 +3,6 @@ import Course from "./Course";
 import styled from "styled-components";
 import { Swiper, SwiperSlide } from "swiper/react";
 import SwiperCore, { Navigation, Pagination, Scrollbar, A11y } from "swiper";
-
 import Skeleton from "./Skeleton";
 
 import "swiper/swiper.scss";

@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import Checkbox from "@material-ui/core/Checkbox";
 
-const Skeleton = ({ loading, admin }) => {
+const Skeleton = ({ loading, admin, length }) => {
   const skeletonFrom = (
     <>
       <StyledSkeleton loading={loading}>
@@ -35,11 +35,16 @@ const Skeleton = ({ loading, admin }) => {
     </>
   );
 
-  const formArray = new Array(4).fill(skeletonFrom);
+  let formArray;
+
+  if (length) formArray = new Array(length).fill(skeletonFrom);
+  else formArray = new Array(4).fill(skeletonFrom);
 
   return (
     <>
-      <div style={{ display: "flex" }}>{formArray.map((form) => form)}</div>
+      <div style={{ display: "flex", flexWrap: "wrap" }}>
+        {formArray.map((form) => form)}
+      </div>
     </>
   );
 };
