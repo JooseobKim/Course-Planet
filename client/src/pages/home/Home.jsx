@@ -7,7 +7,9 @@ import {
   getRecentAddCourses,
   getMostReviewCourses,
   getRecentReviewCourses,
+  searchCourses,
 } from "../../redux/actions/courseAction";
+import { useHistory } from "react-router-dom";
 
 const Home = () => {
   const {
@@ -18,6 +20,7 @@ const Home = () => {
     },
   } = useSelector((state) => state);
   const dispatch = useDispatch();
+  const history = useHistory();
 
   const [searchValue, setSearchValue] = useState("");
 
@@ -33,6 +36,14 @@ const Home = () => {
     }
   }, [dispatch, most_review_courses.length, recent_review_courses.length]);
 
+  const handleOnSubmit = (e) => {
+    e.preventDefault();
+    if (!searchValue) return;
+
+    dispatch(searchCourses({ searchValue }));
+    history.push("/courses");
+  };
+
   const handleOnChnage = (e) => {
     setSearchValue(e.target.value);
   };
@@ -44,7 +55,7 @@ const Home = () => {
           <h3 className="search-title">
             리뷰를 작성하고 싶은 강좌의 이름을 검색해주세요.
           </h3>
-          <form className="search">
+          <form className="search" onSubmit={handleOnSubmit}>
             <label htmlFor="search-input" className="search-input__label">
               <SearchIcon />
             </label>

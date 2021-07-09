@@ -1,23 +1,32 @@
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useHistory, useLocation } from "react-router-dom";
 import SearchIcon from "@material-ui/icons/Search";
 import ClearIcon from "@material-ui/icons/Clear";
 import Button from "@material-ui/core/Button";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../redux/actions/authAction";
+import { searchCourses } from "../redux/actions/courseAction";
 
 const Header = () => {
   const { auth } = useSelector((state) => state);
-  const searchInputRef = useRef();
   const location = useLocation();
   const dispatch = useDispatch();
+  const history = useHistory();
 
-  const [searchValue, setSearchValue] = useState(undefined);
+  const [searchValue, setSearchValue] = useState("");
   const [profileDropdown, setProfileDropdown] = useState(false);
 
   const handleOnChnage = (e) => {
     setSearchValue(e.target.value);
+  };
+
+  const handleOnSubmit = (e) => {
+    e.preventDefault();
+    if (!searchValue) return;
+
+    dispatch(searchCourses({ searchValue }));
+    history.push("/courses");
   };
 
   return (
@@ -33,7 +42,7 @@ const Header = () => {
         </div>
         <nav className="header__nav">
           <ul className="nav__list">
-            <Link to="/courses">
+            <Link to="/courses" onClick={() => window.scrollTo({ top: 0 })}>
               <li
                 className={`nav__item ${
                   location.pathname === "/courses" && "active"
@@ -42,7 +51,7 @@ const Header = () => {
                 강의
               </li>
             </Link>
-            <Link to="/community">
+            <Link to="/community" onClick={() => window.scrollTo({ top: 0 })}>
               <li
                 className={`nav__item ${
                   location.pathname === "/community" && "active"
@@ -51,7 +60,7 @@ const Header = () => {
                 커뮤니티
               </li>
             </Link>
-            <Link to="/about">
+            <Link to="/about" onClick={() => window.scrollTo({ top: 0 })}>
               <li
                 className={`nav__item ${
                   location.pathname === "/about" && "active"
@@ -63,9 +72,17 @@ const Header = () => {
           </ul>
         </nav>
         <div className="header__search-login">
-          <form className="search">
+          <form className="search" onSubmit={handleOnSubmit}>
             <label htmlFor="search-input" className="search-input__label">
-              {searchValue ? <ClearIcon /> : <SearchIcon />}
+              {searchValue ? (
+                <ClearIcon
+                  onClick={() => {
+                    setSearchValue("");
+                  }}
+                />
+              ) : (
+                <SearchIcon />
+              )}
               <span className="blind">Search</span>
             </label>
             <input
@@ -76,7 +93,6 @@ const Header = () => {
               value={searchValue}
               onChange={handleOnChnage}
               placeholder="검색어를 입력하세요."
-              ref={searchInputRef}
             />
             <button type="submit" className="search__button blind">
               검색
@@ -152,6 +168,10 @@ const StyledHeader = styled.header`
 
     &__logo {
       .logo__link {
+        font-family: "Roboto", sans-serif;
+        font-weight: 500;
+        font-size: 20px;
+        letter-spacing: -1.2px;
         color: #272c48;
         text-decoration: none;
       }

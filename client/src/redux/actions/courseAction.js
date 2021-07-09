@@ -7,6 +7,7 @@ export const COURSE_TYPES = {
   CLEAR_SCRAPING_DATA: "CLEAR_SCRAPING_DATA",
   GET_COURSES: "GET_COURSES",
   GET_COURSE: "GET_COURSE",
+  SEARCH_COURSES: "SEARCH_COURSES",
   UPDATE_COURSE: "UPDATE_COURSE",
   GET_MOST_REVIEW: "GET_MOST_REVIEW",
   GET_RECENT_REVIEW: "GET_RECENT_REVIEW",
@@ -15,7 +16,7 @@ export const COURSE_TYPES = {
 };
 
 export const scrapingInflearnCourses =
-  ({ order, pageFrom, pageTo, prev_courses, auth }) =>
+  ({ order, pageFrom, pageTo, prev_courses, auth, search }) =>
   async (dispatch) => {
     try {
       dispatch({
@@ -29,6 +30,7 @@ export const scrapingInflearnCourses =
           order,
           pageFrom,
           pageTo,
+          search,
         },
         {
           headers: { Authorization: auth.token },
@@ -331,6 +333,31 @@ export const getCoursesPerPage =
       dispatch({
         type: COURSE_TYPES.GET_COURSES_PER_PAGE,
         payload: { courses: res.data.courses, totalPage: res.data.totalPage },
+      });
+
+      dispatch({
+        type: ALERT_TYPES.ALERT,
+        payload: { loading: false, msg: res.data.msg },
+      });
+    } catch (err) {
+      dispatch({
+        type: ALERT_TYPES.ALERT,
+        payload: { loading: false, msg: err.response?.data.msg || err.message },
+      });
+    }
+  };
+
+export const searchCourses =
+  ({ searchValue }) =>
+  async (dispatch) => {
+    try {
+      dispatch({ type: ALERT_TYPES.ALERT, payload: { loading: true } });
+
+      const res = await axios.get(`/courses/search?title=${searchValue}`);
+
+      dispatch({
+        type: COURSE_TYPES.SEARCH_COURSES,
+        payload: res.data.searchCourses,
       });
 
       dispatch({

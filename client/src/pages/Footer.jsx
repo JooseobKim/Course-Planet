@@ -51,7 +51,9 @@ const Footer = () => {
           </div>
         </div>
         <div className="license">
-          <span>&copy; 2021 CoursePlanet All Rights Reserved</span>
+          <span>
+            &copy; 2021 <strong>CoursePlanet.</strong> All Rights Reserved
+          </span>
         </div>
       </div>
     </StyledFooter>
@@ -62,10 +64,11 @@ export default Footer;
 
 const StyledFooter = styled.footer`
   width: 100%;
-  background-color: #999;
-  font-family: "Noto Sans KR", sans-serif;
-  font-weight: 300;
+  background-color: #fff;
+  font-family: "Roboto", sans-serif;
+  font-weight: 500;
   font-size: 15px;
+  border-top: 1px solid #ecebf6;
 
   .blind {
     display: none;
@@ -91,18 +94,18 @@ const StyledFooter = styled.footer`
         display: flex;
         justify-content: center;
         align-items: flex-start;
-        color: #fff;
+        color: #111;
       }
 
       &-contact {
         flex: 4;
 
         &__button {
-          background-color: #272c48;
+          background-color: #111;
           opacity: 0.8;
 
           &:hover {
-            background-color: #272c48;
+            background-color: #111;
             opacity: 1;
           }
         }
@@ -121,7 +124,8 @@ const StyledFooter = styled.footer`
 
         &__list {
           font-size: 13px;
-          line-height: 1.4;
+          line-height: 1.8;
+          font-weight: 300;
         }
       }
 
@@ -135,7 +139,9 @@ const StyledFooter = styled.footer`
         &__mobile,
         &__email {
           span {
+            font-size: 14px;
             margin-left: 5px;
+            padding-right: 10px;
           }
         }
 
@@ -155,10 +161,16 @@ const StyledFooter = styled.footer`
     }
 
     .license {
-      color: white;
+      color: #111;
+      font-weight: 300;
+      font-size: 13px;
       text-align: end;
       margin-top: 10px;
       padding-right: 10px;
+
+      strong {
+        font-weight: 500;
+      }
     }
   }
 `;

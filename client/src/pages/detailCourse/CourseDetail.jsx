@@ -21,7 +21,7 @@ const CourseDetail = () => {
   const [viewReview, setViewReview] = useState(false);
   const [reviewModal, setReviewModal] = useState(false);
   const [myReview, setMyReview] = useState();
-  const [sortCondition, setSortCondition] = useState("recent");
+  const [sortCondition, setSortCondition] = useState("");
   const [sliceNum, setSliceNum] = useState(1);
 
   useEffect(() => {
@@ -34,13 +34,14 @@ const CourseDetail = () => {
   }, [dispatch, id, get_course]);
 
   useEffect(() => {
-    dispatch(
-      getReviews({
-        courseId: id,
-        sort: sortCondition,
-      })
-    );
-  }, [dispatch, id, sortCondition]);
+    if (detail_course_reviews.every((review) => review.courseId !== id))
+      dispatch(
+        getReviews({
+          courseId: id,
+          sort: sortCondition,
+        })
+      );
+  }, [dispatch, id, sortCondition, detail_course_reviews]);
 
   useEffect(() => {
     if (detail_course_reviews.length === 0) return setMyReview();
@@ -137,8 +138,17 @@ const CourseDetail = () => {
           <select
             className="review-container__sort__condition"
             value={sortCondition}
-            onChange={(e) => setSortCondition(e.target.value)}
+            onChange={(e) => {
+              setSortCondition(e.target.value);
+              dispatch(
+                getReviews({
+                  courseId: id,
+                  sort: e.target.value,
+                })
+              );
+            }}
           >
+            <option value="">정렬기준</option>
             <option value="recent">최신순</option>
             <option value="lastest">오래된순</option>
             <option value="likes">좋아요순</option>

@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import styled from "styled-components";
 
 const ScrapingCondition = ({ platform, condition, setCondition }) => {
-  const { pageTo, pageFrom, order, category } = condition;
+  const { pageTo, pageFrom, order, category, search } = condition;
 
   useEffect(() => {
     const pageGap = pageTo - pageFrom;
@@ -67,6 +67,11 @@ const ScrapingCondition = ({ platform, condition, setCondition }) => {
           <option className="select-order__list__item" value="famous">
             학생수순
           </option>
+          {search && (
+            <option className="select-order__list__item" value="search">
+              검색순
+            </option>
+          )}
         </select>
       </div>
     </StyledScrapingCondition>
@@ -182,6 +187,30 @@ const StyledScrapingCondition = styled.div`
       border-bottom: 1px solid #272c48;
       outline: none;
       cursor: pointer;
+    }
+  }
+
+  .search-keyword {
+    display: flex;
+    justify-content: center;
+    margin-left: 10px;
+
+    &__input {
+      background-color: #ecebf6;
+      border-radius: 3px;
+      padding: 7px 10px;
+      margin-right: 5px;
+      border: none;
+      outline: none;
+      opacity: 0.8;
+
+      &:hover {
+        opacity: 1;
+      }
+
+      &:focus {
+        opacity: 1;
+      }
     }
   }
 `;

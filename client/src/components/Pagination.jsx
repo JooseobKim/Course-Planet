@@ -6,9 +6,12 @@ const Pagination = ({ pages, pageNum, setPageNum }) => {
   return (
     <StyledPagination>
       {pages.map((pageIndex) => (
-        <Link to={`/courses?page=${pageIndex + 1}`}>
+        <Link key={pageIndex} to={`/courses?page=${pageIndex + 1}`}>
           <button
-            onClick={() => setPageNum(pageIndex + 1)}
+            onClick={() => {
+              setPageNum(pageIndex + 1);
+              window.scrollTo({ top: 0 });
+            }}
             className={`pagination__button ${
               pageNum === pageIndex + 1 ? "active" : ""
             }`}

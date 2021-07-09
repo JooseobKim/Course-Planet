@@ -1,5 +1,6 @@
 import User from "../models/userModel";
 import bcrypt from "bcrypt";
+import sendMail from "./sendMail";
 
 const userCtrl = {
   updateUser: async (req, res) => {
@@ -63,6 +64,20 @@ const userCtrl = {
       res.json({ msg: "삭제 성공." });
     } catch (err) {
       return res.stauts(500).json({ msg: err.message });
+    }
+  },
+  contactMeSendMail: async (req, res) => {
+    try {
+      const { fullname, email, message } = req.body;
+
+      if (!fullname || !email || !message)
+        return res.status(400).json({ msg: "모든 항목을 입력해주세요." });
+
+      sendMail({ from: email, fullname, message });
+
+      res.json({ msg: "메세지가 성공적으로 발송되었습니다." });
+    } catch (err) {
+      return res.status(500).json({ msg: err.message });
     }
   },
 };

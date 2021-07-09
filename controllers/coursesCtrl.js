@@ -37,14 +37,14 @@ class QueryFeatures {
 
 const coursesCtrl = {
   scrapingInflearnCourses: async (req, res) => {
-    const { order, pageFrom, pageTo } = req.body;
+    const { order, pageFrom, pageTo, search } = req.body;
 
     const getHtml = async (order, page) => {
       try {
         return await axios.get(
-          `https://www.inflearn.com/courses?order=${encodeURI(
-            order
-          )}&page=${page}`
+          `https://www.inflearn.com/courses?s=${encodeURI(
+            search
+          )}&order=${encodeURI(order)}&page=${page}`
         );
       } catch (err) {
         return res.status(500).json({ err: err.message });
@@ -303,8 +303,8 @@ const coursesCtrl = {
   searchCourse: async (req, res) => {
     try {
       const searchCourses = await Courses.find({
-        title: { $regex: req.query.course, $options: "i" },
-      }).limit(10);
+        title: { $regex: req.query.title, $options: "i" },
+      });
 
       res.json({
         msg: `${searchCourses.length}개의 강의 검색 성공`,

@@ -152,7 +152,7 @@ const StyledCourse = styled.div`
         opacity: 0.8;
 
         &:hover {
-          opacity: 0.9;
+          opacity: 0.98;
         }
       }
 

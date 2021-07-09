@@ -9,6 +9,7 @@ import axios from "axios";
 import Skeleton from "../../components/Skeleton";
 import { useDispatch, useSelector } from "react-redux";
 import { ALERT_TYPES } from "../../redux/actions/alertAction";
+import { COURSE_TYPES } from "../../redux/actions/courseAction";
 
 const pageRegex = (page) => {
   const re = /[0-9]/g;
@@ -16,9 +17,11 @@ const pageRegex = (page) => {
 };
 
 const Courses = () => {
-  const { alert } = useSelector((state) => state);
   const location = useLocation();
   const dispatch = useDispatch();
+  const {
+    course: { search_courses },
+  } = useSelector((state) => state);
 
   const [totalPage, setTotalPage] = useState(0);
   const [pageNum, setPageNum] = useState(
@@ -39,21 +42,39 @@ const Courses = () => {
   };
 
   useEffect(() => {
-    const getCourses = async () => {
-      dispatch({ type: ALERT_TYPES.ALERT, payload: { loading: true } });
+    if (!(search_courses.length === 0)) {
+      setTotalPage(Math.ceil(search_courses.length / 15));
 
-      const res = await axios.get(
-        `/courses?page=${pageNum}&platform=${JSON.stringify(checkedState)}`
-      );
-      setCoursesPerPage(res.data.courses);
-      setTotalPage(res.data.totalPage);
+      if (checkedState.inflearn && !checkedState.fastcampus) {
+        const filteredCourses = search_courses.filter(
+          (course) => course.platform !== "fastcampus"
+        );
+        setCoursesPerPage(filteredCourses);
+      } else if (!checkedState.inflearn && checkedState.fastcampus) {
+        const filteredCourses = search_courses.filter(
+          (course) => course.platform !== "inflearn"
+        );
+        setCoursesPerPage(filteredCourses);
+      } else {
+        setCoursesPerPage(search_courses);
+      }
+    } else {
+      const getCourses = async () => {
+        dispatch({ type: ALERT_TYPES.ALERT, payload: { loading: true } });
 
-      dispatch({ type: ALERT_TYPES.ALERT, payload: { loading: false } });
-    };
-    getCourses();
+        const res = await axios.get(
+          `/courses?page=${pageNum}&platform=${JSON.stringify(checkedState)}`
+        );
+        setCoursesPerPage(res.data.courses);
+        setTotalPage(res.data.totalPage);
+
+        dispatch({ type: ALERT_TYPES.ALERT, payload: { loading: false } });
+      };
+      getCourses();
+    }
 
     if (pageNum <= 0 || pageNum > totalPage) setPageNum(1);
-  }, [checkedState, pageNum, totalPage, dispatch]);
+  }, [checkedState, pageNum, totalPage, dispatch, search_courses]);
 
   return (
     <StyledCourses>
@@ -80,6 +101,21 @@ const Courses = () => {
             }
             label="패스트캠퍼스"
           />
+          {!(search_courses.length === 0) && (
+            <div className="courses__navbar__search-init">
+              <button
+                className="courses__navbar__search-init__btn"
+                onClick={() =>
+                  dispatch({
+                    type: COURSE_TYPES.SEARCH_COURSES,
+                    payload: [],
+                  })
+                }
+              >
+                검색 결과 초기화
+              </button>
+            </div>
+          )}
           <div className="courses__navbar__pagination">
             <div className="courses__navbar__pagination-text">
               {pageNum} 페이지
@@ -92,11 +128,9 @@ const Courses = () => {
           </div>
         </div>
         <div className="courses__list">
-          {coursesPerPage.length === 0 && (
-            <Skeleton length={9} loading={alert.loading} />
-          )}
+          {coursesPerPage.length === 0 && <Skeleton length={9} />}
           {coursesPerPage.map((course) => (
-            <Course course={course} />
+            <Course key={course._id} course={course} />
           ))}
         </div>
       </div>
@@ -111,7 +145,7 @@ const StyledCourses = styled.div`
   font-weight: 300;
   max-width: 1500px;
   margin: auto;
-  min-height: calc(100vh - 201px);
+  min-height: calc(100vh - 202px);
 
   .wrapper {
     display: flex;
@@ -126,6 +160,33 @@ const StyledCourses = styled.div`
     padding: 5px 10px;
     margin-right: 30px;
     background-color: #eee;
+
+    .MuiTypography-body1 {
+      font-family: "Noto Sans KR", sans-serif;
+      font-weight: 300;
+    }
+
+    &__search-init {
+      &__btn {
+        font-family: "Noto Sans KR", sans-serif;
+        font-weight: 300;
+        width: 100%;
+        color: #fff;
+        padding: 5px 15px;
+        margin: 10px 0;
+        border: none;
+        outline: none;
+        background-color: #272c48;
+        border-radius: 5px;
+        letter-spacing: 1.2px;
+        opacity: 0.8;
+        cursor: pointer;
+
+        &:hover {
+          opacity: 1;
+        }
+      }
+    }
 
     &__pagination {
       margin: 5px 0;

@@ -19,7 +19,7 @@ const ScrapingButton = ({
   const dispatch = useDispatch();
   const { alert } = useSelector((state) => state);
 
-  const { order, pageFrom, pageTo, category } = condition;
+  const { order, pageFrom, pageTo, category, search } = condition;
 
   const [timeoutProp, setTimeoutProp] = useState(false);
 
@@ -36,7 +36,7 @@ const ScrapingButton = ({
     }
   }, [alert.errMsg, timeoutId, courses.length]);
 
-  const handleScraping = ({ order, pageFrom, pageTo, category }) => {
+  const handleScraping = ({ order, pageFrom, pageTo, category, search }) => {
     setTimeoutProp(true);
 
     switch (platform) {
@@ -48,6 +48,7 @@ const ScrapingButton = ({
             pageTo,
             prev_courses: courses,
             auth,
+            search,
           })
         );
         break;
@@ -138,7 +139,9 @@ const ScrapingButton = ({
     <StyledScrapingButton>
       <div className="scraping">
         <button
-          onClick={() => handleScraping({ order, pageFrom, pageTo, category })}
+          onClick={() =>
+            handleScraping({ order, pageFrom, pageTo, category, search })
+          }
           disabled={handleDisabledScraping(platform)}
         >
           {`${

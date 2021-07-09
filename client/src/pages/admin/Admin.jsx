@@ -18,7 +18,6 @@ SwiperCore.use([Navigation, Pagination, Scrollbar, A11y]);
 
 const Admin = () => {
   const {
-    alert,
     auth,
     course: { inflearn_courses, fastcampus_courses },
   } = useSelector((state) => state);
@@ -32,10 +31,31 @@ const Admin = () => {
     pageFrom: 1,
     pageTo: 1,
     category: "category_dev_online",
+    search: "",
   });
+
+  console.log({ scrapingCondition });
 
   const [inflearnCheckState, setInflearnCheckState] = useState({});
   const [fastcampusCheckState, setFastcampusCheckState] = useState({});
+
+  const sildesState = () => {
+    if (window.innerWidth > 1500) return 1500 / 375;
+    else return window.innerWidth / 375;
+  };
+  const [slidesPer, setSlidesPer] = useState(sildesState);
+
+  const handleResize = () => {
+    if (window.innerWidth > 1500) setSlidesPer(1500 / 375);
+    else setSlidesPer(window.innerWidth / 375);
+  };
+
+  useEffect(() => {
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   useEffect(() => {
     createCheckboxObj(inflearn_courses, fastcampus_courses);
@@ -68,6 +88,24 @@ const Admin = () => {
                 condition={scrapingCondition}
                 setCondition={setScrapingCondition}
               />
+              {
+                <div className="inflearn__scraping__control__condition-search">
+                  <input
+                    type="text"
+                    className="inflearn__scraping__control__condition-search__input"
+                    placeholder="인프런 검색 키워드"
+                    name="search"
+                    value={scrapingCondition.search}
+                    onChange={(e) =>
+                      setScrapingCondition({
+                        ...scrapingCondition,
+                        order: `${scrapingCondition.search && "search"}`,
+                        search: e.target.value,
+                      })
+                    }
+                  />
+                </div>
+              }
             </div>
             <div className="inflearn__scraping__control__button">
               <ScrapingButton
@@ -82,9 +120,14 @@ const Admin = () => {
           </div>
           <div className="inflearn__scraping__courses">
             {inflearn_courses.length === 0 && (
-              <Skeleton loading={alert.loading} admin={true} />
+              <Skeleton length={Math.floor(slidesPer)} admin={true} />
             )}
-            <Swiper slidesPerView={4} slidesPerGroup={4} navigation pagination>
+            <Swiper
+              slidesPerView={Math.floor(slidesPer)}
+              slidesPerGroup={Math.floor(slidesPer)}
+              navigation
+              pagination
+            >
               {inflearn_courses.map((course, i) => (
                 <SwiperSlide>
                   <ScrapingDataCheckbox
@@ -123,9 +166,14 @@ const Admin = () => {
           </div>
           <div className="fastcampus__scraping__courses">
             {fastcampus_courses.length === 0 && (
-              <Skeleton loading={alert.loading} admin={true} />
+              <Skeleton length={Math.floor(slidesPer)} admin={true} />
             )}
-            <Swiper slidesPerView={4} slidesPerGroup={4} navigation pagination>
+            <Swiper
+              slidesPerView={Math.floor(slidesPer)}
+              slidesPerGroup={Math.floor(slidesPer)}
+              navigation
+              pagination
+            >
               {fastcampus_courses.map((course, i) => (
                 <SwiperSlide>
                   <ScrapingDataCheckbox
@@ -157,7 +205,35 @@ const StyledAdmin = styled.div`
 
     &__scraping {
       &__control {
+        &__condition {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+
+          &-search {
+            margin-left: 10px;
+
+            &__input {
+              background-color: #ecebf6;
+              border-radius: 3px;
+              padding: 7px 10px;
+              margin-right: 5px;
+              border: none;
+              outline: none;
+              opacity: 0.8;
+
+              &:hover {
+                opacity: 1;
+              }
+
+              &:focus {
+                opacity: 1;
+              }
+            }
+          }
+        }
       }
+
       &__courses {
         justify-content: center;
         margin: 15px 0;

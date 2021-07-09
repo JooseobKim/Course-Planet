@@ -1,8 +1,12 @@
 import express from "express";
+import sendMail from "../controllers/sendMail";
 import userCtrl from "../controllers/userCtrl";
 import logged from "../middleware/logged";
 
 const userRouter = express.Router();
+
+// Contact Me 메일 보내기
+userRouter.post("/send_mail", userCtrl.contactMeSendMail);
 
 // 유저 불러오기
 userRouter.get("/:username", (req, res) => {

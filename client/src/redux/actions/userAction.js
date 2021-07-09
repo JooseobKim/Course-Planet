@@ -139,3 +139,27 @@ export const deleteUser =
       }
     }
   };
+
+export const contactMeSendMail =
+  ({ fullname, email, message }) =>
+  async (dispatch) => {
+    try {
+      dispatch({ type: ALERT_TYPES.ALERT, payload: { loading: true } });
+
+      const res = await axios.post("/user/send_mail", {
+        fullname,
+        email,
+        message,
+      });
+
+      dispatch({
+        type: ALERT_TYPES.ALERT,
+        payload: { msg: res.data.msg, loading: false },
+      });
+    } catch (err) {
+      dispatch({
+        type: ALERT_TYPES.ALERT,
+        payload: { msg: err.message, loading: false },
+      });
+    }
+  };

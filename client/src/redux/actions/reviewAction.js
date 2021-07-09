@@ -246,6 +246,8 @@ export const unlikeReview =
 export const getReviews =
   ({ courseId, sort }) =>
   async (dispatch) => {
+    if (!sort) sort = "recent";
+
     try {
       dispatch({ type: ALERT_TYPES.ALERT, payload: { loading: true } });
 

@@ -1,49 +1,48 @@
 import React from "react";
 import styled from "styled-components";
 import Checkbox from "@material-ui/core/Checkbox";
+import { useSelector } from "react-redux";
 
-const Skeleton = ({ loading, admin, length }) => {
-  const skeletonFrom = (
-    <>
-      <StyledSkeleton loading={loading}>
-        <div className="skeleton">
-          {admin && <Checkbox size="small" color="primary" disabled />}
-          <div className="skeleton__image">
-            <div></div>
-          </div>
-          <div className="skeleton__title">
-            <div></div>
-          </div>
-          <div className="skeleton__description">
-            <div></div>
-          </div>
-          <div className="skeleton-content">
-            <div className="skeleton-content__instructor">
-              <div></div>
-            </div>
-            <div className="skeleton-content__price-review">
-              <div className="skeleton-content__price-review__price">
-                <div></div>
-              </div>
-              <div className="skeleton-content__price-review__review">
-                <div></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </StyledSkeleton>
-    </>
-  );
+const Skeleton = ({ admin, length }) => {
+  const { alert } = useSelector((state) => state);
 
   let formArray;
 
-  if (length) formArray = new Array(length).fill(skeletonFrom);
-  else formArray = new Array(4).fill(skeletonFrom);
+  if (length) formArray = new Array(length).fill(null);
+  else formArray = new Array(4).fill(null);
 
   return (
     <>
       <div style={{ display: "flex", flexWrap: "wrap" }}>
-        {formArray.map((form) => form)}
+        {formArray.map((_, index) => (
+          <StyledSkeleton key={index} loadingState={alert.loading}>
+            <div className="skeleton">
+              {admin && <Checkbox size="small" color="primary" disabled />}
+              <div className="skeleton__image">
+                <div></div>
+              </div>
+              <div className="skeleton__title">
+                <div></div>
+              </div>
+              <div className="skeleton__description">
+                <div></div>
+              </div>
+              <div className="skeleton-content">
+                <div className="skeleton-content__instructor">
+                  <div></div>
+                </div>
+                <div className="skeleton-content__price-review">
+                  <div className="skeleton-content__price-review__price">
+                    <div></div>
+                  </div>
+                  <div className="skeleton-content__price-review__review">
+                    <div></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </StyledSkeleton>
+        ))}
       </div>
     </>
   );
@@ -56,7 +55,7 @@ const StyledSkeleton = styled.div`
   height: 375px;
   opacity: 0.5;
   animation: ${(props) =>
-    props.loading && "skeleton 1s ease infinite alternate"};
+    props.loadingState && "skeleton 1s ease infinite alternate"};
 
   @keyframes skeleton {
     to {
