@@ -1,11 +1,18 @@
 import User from "../models/userModel";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import sendMailCtrl from "./sendMailCtrl";
 
 const validateEmail = (email) => {
   const re =
     /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   return re.test(email);
+};
+
+const createActivationToken = (payload) => {
+  return jwt.sign(payload, process.env.ACTIVATION_TOKEN_SECRET, {
+    expiresIn: "5m",
+  });
 };
 
 const createAccessToken = (payload) => {
@@ -21,7 +28,7 @@ const createRefreshToken = (payload) => {
 };
 
 const authCtrl = {
-  register: async (req, res) => {
+  registerSendMail: async (req, res) => {
     const { username, userId, email, password, cf_password } = req.body;
 
     try {
@@ -73,14 +80,50 @@ const authCtrl = {
       // password hash
       const passwordHash = await bcrypt.hash(password, 15);
 
-      const newUser = new User({
+      const newUser = {
         username: modifyUsername,
         userId: modifyUserId,
         email,
         password: passwordHash,
+      };
+
+      // token 발급
+      const activationToken = createActivationToken(newUser);
+      const url = `${process.env.CLIENT_URL}/auth/activate/${activationToken}`;
+
+      await sendMailCtrl.registerSendMail({
+        ...req,
+        body: {
+          to: email,
+          url,
+          text: "이메일 인증 확인",
+        },
       });
 
-      console.log({ newUser });
+      res.json({
+        msg: "이메일을 확인하여 인증 절차를 진행해주세요.",
+      });
+    } catch (err) {
+      return res.status(500).json({ msg: err.message });
+    }
+  },
+  registerActivateEmail: async (req, res) => {
+    try {
+      const { activationToken } = req.body;
+
+      const user = jwt.verify(
+        activationToken,
+        process.env.ACTIVATION_TOKEN_SECRET
+      );
+
+      const { username, userId, email, password } = user;
+
+      const newUser = new User({
+        username,
+        userId,
+        email,
+        password,
+      });
 
       // token 발급
       const accessToken = createAccessToken({ id: newUser._id });
@@ -161,6 +204,35 @@ const authCtrl = {
     try {
       res.clearCookie("refreshToken", { path: "/auth/refresh_token" });
       return res.json({ msg: "정상적으로 로그아웃이 되었습니다." });
+    } catch (err) {
+      return res.status(500).json({ msg: err.message });
+    }
+  },
+  sendMailResetPassword: async (req, res) => {
+    try {
+      const { email } = req.body;
+
+      if (!validateEmail(email))
+        return res
+          .status(400)
+          .json({ msg: "올바른 이메일 양식을 입력해주세요." });
+      const user = await User.findOne({ email });
+      if (!user)
+        return res.status(400).json({ msg: "이메일이 존재하지 않습니다." });
+
+      const accessToken = createAccessToken({ id: user._id });
+      const url = `${process.env.CLIENT_URL}/reset_pw/${accessToken}`;
+
+      await sendMailCtrl.registerSendMail({
+        ...req,
+        body: {
+          to: email,
+          url,
+          text: "비밀번호 재설정",
+        },
+      });
+
+      res.json({ msg: "메일이 전송되었습니다. 이메일을 확인해주세요." });
     } catch (err) {
       return res.status(500).json({ msg: err.message });
     }

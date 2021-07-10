@@ -64,8 +64,6 @@ export const register =
         payload: { token: res.data.accessToken, user: res.data.user },
       });
 
-      localStorage.setItem("LoggedIn", true);
-
       dispatch({
         type: ALERT_TYPES.ALERT,
         payload: { msg: res.data.msg, loading: false },
@@ -156,3 +154,71 @@ export const logout = () => async (dispatch) => {
     });
   }
 };
+
+export const activateEmail =
+  ({ activation_token }) =>
+  async (dispatch) => {
+    try {
+      dispatch({ type: ALERT_TYPES.ALERT, payload: { loading: true } });
+
+      const res = await axios.post("/auth/activate_email", {
+        activationToken: activation_token,
+      });
+
+      dispatch({
+        type: ALERT_TYPES.ALERT,
+        payload: { loading: false, msg: res.data.msg },
+      });
+    } catch (err) {
+      dispatch({
+        type: ALERT_TYPES.ALERT,
+        payload: { loading: false, msg: err.message },
+      });
+    }
+  };
+
+export const sendMailResetPassword =
+  ({ email }) =>
+  async (dispatch) => {
+    try {
+      dispatch({ type: ALERT_TYPES.ALERT, payload: { loading: true } });
+
+      const res = await axios.post("/auth/send_mail_reset_pw", { email });
+
+      dispatch({
+        type: ALERT_TYPES.ALERT,
+        payload: { loading: false, msg: res.data.msg },
+      });
+    } catch (err) {
+      dispatch({
+        type: ALERT_TYPES.ALERT,
+        payload: { msg: err.response?.data.msg || err.message, loading: false },
+      });
+    }
+  };
+
+export const resetPassword =
+  ({ password, cf_password, token }) =>
+  async (dispatch) => {
+    try {
+      dispatch({ type: ALERT_TYPES.ALERT, payload: { loading: true } });
+
+      const res = await axios.post(
+        "/user/reset_password",
+        { password, cf_password },
+        {
+          headers: { Authorization: token },
+        }
+      );
+
+      dispatch({
+        type: ALERT_TYPES.ALERT,
+        payload: { loading: false, msg: res.data.msg },
+      });
+    } catch (err) {
+      dispatch({
+        type: ALERT_TYPES.ALERT,
+        payload: { msg: err.response?.data.msg || err.message, loading: false },
+      });
+    }
+  };

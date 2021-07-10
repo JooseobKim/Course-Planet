@@ -1,6 +1,5 @@
 import User from "../models/userModel";
 import bcrypt from "bcrypt";
-import sendMail from "./sendMail";
 
 const userCtrl = {
   updateUser: async (req, res) => {
@@ -28,7 +27,7 @@ const userCtrl = {
         }
       );
 
-      res.json({ msg: "업데이트가 되었습니다." });
+      res.json({ msg: "유저 정보가 업데이트가 되었습니다." });
     } catch (err) {
       return res.status(500).json({ msg: err.message });
     }
@@ -36,7 +35,13 @@ const userCtrl = {
   resetPassword: async (req, res) => {
     try {
       const { password, cf_password } = req.body;
-      if (password !== cf_password)
+
+      if (password.length < 6)
+        return res
+          .status(400)
+          .json({ msg: "비밀번호는 최소 6 글자 이상이어야 합니다." });
+
+      if (cf_password !== password)
         return res
           .status(400)
           .json({ msg: "비밀번호와 비밀번호 확인이 일치하지 않습니다." });
@@ -48,7 +53,7 @@ const userCtrl = {
         { password: passwordHash }
       );
 
-      res.json({ msg: "비밀번호 변경이 성공하였습니다." });
+      res.json({ msg: "비밀번호가 변경되었습니다." });
     } catch (err) {
       return res.status(500).json({ msg: err.message });
     }
@@ -64,20 +69,6 @@ const userCtrl = {
       res.json({ msg: "삭제 성공." });
     } catch (err) {
       return res.stauts(500).json({ msg: err.message });
-    }
-  },
-  contactMeSendMail: async (req, res) => {
-    try {
-      const { fullname, email, message } = req.body;
-
-      if (!fullname || !email || !message)
-        return res.status(400).json({ msg: "모든 항목을 입력해주세요." });
-
-      sendMail({ from: email, fullname, message });
-
-      res.json({ msg: "메세지가 성공적으로 발송되었습니다." });
-    } catch (err) {
-      return res.status(500).json({ msg: err.message });
     }
   },
 };

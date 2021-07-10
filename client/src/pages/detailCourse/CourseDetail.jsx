@@ -34,14 +34,23 @@ const CourseDetail = () => {
   }, [dispatch, id, get_course]);
 
   useEffect(() => {
-    if (detail_course_reviews.every((review) => review.courseId !== id))
+    if (
+      detailCourse.review?.length !== 0 &&
+      detail_course_reviews.every((review) => review.courseId !== id)
+    )
       dispatch(
         getReviews({
           courseId: id,
           sort: sortCondition,
         })
       );
-  }, [dispatch, id, sortCondition, detail_course_reviews]);
+  }, [
+    dispatch,
+    id,
+    sortCondition,
+    detail_course_reviews,
+    detailCourse.review?.length,
+  ]);
 
   useEffect(() => {
     if (detail_course_reviews.length === 0) return setMyReview();

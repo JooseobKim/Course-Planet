@@ -4,7 +4,13 @@ import authCtrl from "../controllers/authCtrl";
 const authRouter = express.Router();
 
 // 회원가입
-authRouter.post("/register", authCtrl.register);
+authRouter.post("/register", authCtrl.registerSendMail);
+
+// 회원가입 이메일 인증
+authRouter.post("/activate_email", authCtrl.registerActivateEmail);
+
+// 패스워드 이메일 인증
+authRouter.post("/send_mail_reset_pw", authCtrl.sendMailResetPassword);
 
 // 로그인
 authRouter.post("/login", authCtrl.login);

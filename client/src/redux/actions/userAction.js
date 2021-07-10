@@ -56,8 +56,6 @@ export const updateProfile =
             },
           });
 
-        console.log({ password, cf_password });
-
         if (password !== cf_password)
           return dispatch({
             type: ALERT_TYPES.ALERT,
@@ -67,7 +65,7 @@ export const updateProfile =
           });
 
         pw_res = await axios.post(
-          `/user/${auth.user.username}`,
+          "/user/reset_password",
           { password, cf_password },
           {
             headers: { Authorization: auth.token },
@@ -102,7 +100,9 @@ export const updateProfile =
       dispatch({
         type: ALERT_TYPES.ALERT,
         payload: {
-          msg: `${res.data.msg} ${(pw_res && pw_res.data.msg) || ""}`,
+          msg: `${
+            pw_res ? `${res.data.msg} ${pw_res.data.msg}` : res.data.msg
+          }`,
           loading: false,
         },
       });
@@ -146,7 +146,7 @@ export const contactMeSendMail =
     try {
       dispatch({ type: ALERT_TYPES.ALERT, payload: { loading: true } });
 
-      const res = await axios.post("/user/send_mail", {
+      const res = await axios.post("/user/contact_send_mail", {
         fullname,
         email,
         message,

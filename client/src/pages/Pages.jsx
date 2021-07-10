@@ -11,6 +11,9 @@ import CourseDetail from "./detailCourse/CourseDetail";
 import { useSelector } from "react-redux";
 import Profile from "./profile/Profile";
 import EditProfile from "./profile/EditProfile";
+import ActivateEmail from "./auth/ActivateEmail";
+import SendMailResetPassword from "./auth/SendMailResetPassword";
+import ResetPassword from "./auth/ResetPassword";
 
 const Pages = () => {
   const { auth } = useSelector((state) => state);
@@ -35,6 +38,13 @@ const Pages = () => {
         exact
         component={auth.token && EditProfile}
       />
+      <Route
+        path="/auth/activate/:activation_token"
+        exact
+        component={ActivateEmail}
+      />
+      <Route path="/forgot_pw" exact component={SendMailResetPassword} />
+      <Route path="/reset_pw/:token" exact component={ResetPassword} />
     </Switch>
   );
 };

@@ -168,6 +168,10 @@ const StyledLogin = styled.div`
       a {
         text-decoration: none;
         color: #272c48;
+
+        &:hover {
+          text-decoration: underline;
+        }
       }
     }
   }

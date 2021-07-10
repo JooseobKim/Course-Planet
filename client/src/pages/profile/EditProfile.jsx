@@ -1,8 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useHistory, useLocation, useParams } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import styled from "styled-components";
 import { ALERT_TYPES } from "../../redux/actions/alertAction";
+import { sendMailResetPassword } from "../../redux/actions/authAction";
 import { deleteUser, updateProfile } from "../../redux/actions/userAction";
 
 const EditProfile = () => {
@@ -11,16 +12,12 @@ const EditProfile = () => {
   const history = useHistory();
   const dispatch = useDispatch();
   const fileInput = useRef();
-  const location = useLocation();
-  console.log({ location });
 
   const initialState = {
     username: auth.user.username,
     email: auth.user.email,
     address: auth.user.address,
     mobile: auth.user.mobile,
-    password: "",
-    cf_password: "",
   };
   const [updateUserData, setUpdateUserData] = useState(initialState);
   const [profileAvatar, setProfileAvatar] = useState("");
@@ -204,33 +201,7 @@ const EditProfile = () => {
             />
           </div>
           <div className="profile-container__item">
-            <label htmlFor="password">비밀번호</label>
-            <input
-              className="profile-container__item__input"
-              type="password"
-              placeholder="비밀번호를 입력해주세요."
-              id="password"
-              name="password"
-              value={updateUserData.password}
-              onChange={handleChangeInput}
-              minLength={6}
-            />
-          </div>
-          <div className="profile-container__item">
-            <label htmlFor="cf_password">비밀번호 확인</label>
-            <input
-              className="profile-container__item__input"
-              type="password"
-              placeholder="비밀번호를 다시 한 번 입력해주세요."
-              id="cf_password"
-              name="cf_password"
-              value={updateUserData.cf_password}
-              onChange={handleChangeInput}
-              minLength={6}
-            />
-          </div>
-          <div className="profile-container__item">
-            <label htmlFor="email">이메일</label>
+            <label htmlFor="email">이메일 ( 비밀번호 변경 인증 이메일 )</label>
             <input
               className="profile-container__item__input"
               type="email"
@@ -239,6 +210,26 @@ const EditProfile = () => {
               readOnly
               disabled
             />
+          </div>
+          <div className="profile-container__item">
+            <span>비밀번호 변경하기</span>
+            <button
+              type="button"
+              name="reset-pw"
+              className="profile-container__item__reset-pw"
+              onClick={() => {
+                if (
+                  window.confirm("비밀번호 변경 인증 메일을 발송하시겠습니까?")
+                )
+                  dispatch(
+                    sendMailResetPassword({ email: updateUserData.email })
+                  );
+              }}
+            >
+              비밀번호 변경
+              <br />
+              인증 메일 발송
+            </button>
           </div>
         </div>
         <button
@@ -261,13 +252,14 @@ export default EditProfile;
 const StyledEditProfile = styled.div`
   font-family: "Noto Sans KR", sans-serif;
   font-weight: 300;
-  min-height: calc(100vh - 201px);
+  min-height: calc(100vh - 202px);
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
 
   form {
+    margin: 20px 0;
     position: relative;
     display: flex;
     flex-direction: column;
@@ -348,7 +340,7 @@ const StyledEditProfile = styled.div`
 
     .profile-container {
       display: grid;
-      grid-template-columns: repeat(2, minmax(250px, 350px));
+      grid-template-columns: repeat(4, minmax(125px, 175px));
       justify-content: center;
       align-items: center;
       grid-gap: 15px;
@@ -359,7 +351,8 @@ const StyledEditProfile = styled.div`
         flex-direction: column;
         height: 75px;
 
-        label {
+        label,
+        span {
           margin-bottom: 10px;
           font-size: 15px;
         }
@@ -376,11 +369,38 @@ const StyledEditProfile = styled.div`
           }
         }
 
-        &:nth-child(3) {
+        &__reset-pw {
+          font-family: "Noto Sans KR", sans-serif;
+          font-weight: 300;
+          background-color: #999;
+          color: #fff;
+          border: none;
+          outline: none;
+          width: 100%;
+          height: 100%;
+          border-radius: 3px;
+          opacity: 0.7;
+          cursor: pointer;
+
+          &:hover {
+            opacity: 1;
+          }
+        }
+
+        &:nth-child(1) {
           grid-column: 1 / 3;
         }
-        &:nth-child(6) {
-          grid-column: 1 / 3;
+        &:nth-child(2) {
+          grid-column: 3 / 5;
+        }
+        &:nth-child(3) {
+          grid-column: 1 / 5;
+        }
+        &:nth-child(4) {
+          grid-column: 1 / 4;
+        }
+        &:nth-child(5) {
+          grid-column: 4 / 5;
         }
       }
     }
