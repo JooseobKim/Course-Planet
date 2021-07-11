@@ -21,4 +21,10 @@ authRouter.post("/logout", authCtrl.logout);
 // 토큰 재생성
 authRouter.post("/refresh_token", authCtrl.refreshToken);
 
+// 구글 로그인
+authRouter.post("/google_login", authCtrl.googleLogin);
+
+// 페이스북 로그인
+authRouter.post("/facebook_login", authCtrl.facebookLogin);
+
 export default authRouter;

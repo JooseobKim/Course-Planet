@@ -30,7 +30,7 @@ const Pages = () => {
       <Route
         path="/admin"
         exact
-        component={auth.token && auth.user.role === 1 && Admin}
+        component={auth.token && auth.user?.role === 1 && Admin}
       />
       <Route path="/profile/:username" exact component={Profile} />
       <Route

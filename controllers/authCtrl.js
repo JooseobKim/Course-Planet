@@ -51,10 +51,10 @@ const authCtrl = {
       const findUserId = await User.findOne({ userId: modifyUserId });
       if (findUserId)
         return res.status(400).json({ msg: "이미 사용중인 아이디입니다." });
-      if (modifyUserId.length > 20)
+      if (modifyUserId.length > 50)
         return res
           .status(400)
-          .json({ msg: "유저의 아이디는 20 글자 이하로 입력해주세요." });
+          .json({ msg: "유저의 아이디는 50 글자 이하로 입력해주세요." });
 
       // 4. email 검증
       if (!validateEmail(email))
@@ -233,6 +233,150 @@ const authCtrl = {
       });
 
       res.json({ msg: "메일이 전송되었습니다. 이메일을 확인해주세요." });
+    } catch (err) {
+      return res.status(500).json({ msg: err.message });
+    }
+  },
+  googleLogin: async (req, res) => {
+    try {
+      const { userInfo } = req.body;
+
+      const { email, imageUrl, name } = userInfo;
+
+      const randomNum = Math.random().toString().split(".")[1];
+      const username = name + randomNum;
+
+      const password = email + process.env.PASSWORD_SECRET;
+      const passwordHash = await bcrypt.hash(password, 15);
+
+      const user = await User.findOne({ email });
+
+      if (user) {
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch)
+          return res.status(400).json({ msg: "패스워드가 일치하지 않습니다." });
+
+        const accessToken = createAccessToken({ id: user._id });
+        const refreshToken = createRefreshToken({ id: user._id });
+
+        res.cookie("refreshToken", refreshToken, {
+          httpOnly: true,
+          path: "/auth/refresh_token",
+          maxAge: 1000 * 60 * 60 * 24 * 30,
+        });
+
+        res.json({
+          msg: "정상적으로 로그인이 되었습니다.",
+          accessToken,
+          user: {
+            ...user._doc,
+            password: "",
+          },
+        });
+      } else {
+        const newUser = new User({
+          username: username.toLowerCase().replace(/ /g, "").slice(0, 20),
+          userId: email,
+          email,
+          password: passwordHash,
+          avatar: imageUrl,
+        });
+
+        const accessToken = createAccessToken({ id: newUser._id });
+        const refreshToken = createRefreshToken({ id: newUser._id });
+
+        await newUser.save();
+
+        res.cookie("refreshToken", refreshToken, {
+          httpOnly: true,
+          path: "/auth/refresh_token",
+          maxAge: 1000 * 60 * 60 * 24 * 30,
+        });
+
+        res.json({
+          msg: "정상적으로 로그인이 되었습니다.",
+          accessToken,
+          user: {
+            ...newUser._doc,
+            password: "",
+          },
+        });
+      }
+    } catch (err) {
+      return res.status(500).json({ msg: err.message });
+    }
+  },
+  facebookLogin: async (req, res) => {
+    try {
+      const { userInfo } = req.body;
+
+      const {
+        email,
+        name,
+        picture: {
+          data: { url },
+        },
+      } = userInfo;
+
+      const randomNum = Math.random().toString().split(".")[1];
+      const username = name + randomNum;
+
+      const password = email + process.env.PASSWORD_SECRET;
+      const passwordHash = await bcrypt.hash(password, 15);
+
+      const user = await User.findOne({ email });
+
+      if (user) {
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch)
+          return res.status(400).json({ msg: "패스워드가 일치하지 않습니다." });
+
+        const accessToken = createAccessToken({ id: user._id });
+        const refreshToken = createRefreshToken({ id: user._id });
+
+        res.cookie("refreshToken", refreshToken, {
+          httpOnly: true,
+          path: "/auth/refresh_token",
+          maxAge: 1000 * 60 * 60 * 24 * 30,
+        });
+
+        res.json({
+          msg: "정상적으로 로그인이 되었습니다.",
+          accessToken,
+          user: {
+            ...user._doc,
+            password: "",
+          },
+        });
+      } else {
+        const newUser = new User({
+          username: username.toLowerCase().replace(/ /g, "").slice(0, 20),
+          userId: email,
+          email,
+          password: passwordHash,
+          avatar: url,
+        });
+
+        const accessToken = createAccessToken({ id: newUser._id });
+        const refreshToken = createRefreshToken({ id: newUser._id });
+
+        await newUser.save();
+
+        res.cookie("refreshToken", refreshToken, {
+          httpOnly: true,
+          path: "/auth/refresh_token",
+          maxAge: 1000 * 60 * 60 * 24 * 30,
+        });
+
+        res.json({
+          msg: "정상적으로 로그인이 되었습니다.",
+          accessToken,
+          user: {
+            ...newUser._doc,
+            password: "",
+          },
+        });
+      }
     } catch (err) {
       return res.status(500).json({ msg: err.message });
     }

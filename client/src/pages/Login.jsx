@@ -2,7 +2,9 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import { Link, useHistory } from "react-router-dom";
-import { login } from "../redux/actions/authAction";
+import { facebookLogin, googleLogin, login } from "../redux/actions/authAction";
+import GoogleLogin from "react-google-login";
+import FacebookLogin from "react-facebook-login";
 
 const Login = () => {
   const initialState = { userId: "", password: "" };
@@ -26,6 +28,14 @@ const Login = () => {
   const hadnleSubmit = (e) => {
     e.preventDefault();
     dispatch(login({ userId, password }));
+  };
+
+  const responseGoogle = (response) => {
+    dispatch(googleLogin({ userInfo: response.profileObj }));
+  };
+
+  const responseFacebook = (response) => {
+    dispatch(facebookLogin({ response }));
   };
 
   return (
@@ -62,6 +72,26 @@ const Login = () => {
               로그인
             </button>
           </form>
+          <div className="login__hr">
+            <span>or</span>
+          </div>
+          <div className="login__social-login">
+            <StyledGoogleLoginBtn
+              clientId={process.env.REACT_APP_GOOGLE_LOGIN_CLIENT_ID}
+              buttonText="구글 계정으로 로그인"
+              onSuccess={responseGoogle}
+              onFailure={responseGoogle}
+              cookiePolicy={"single_host_origin"}
+            />
+            <FacebookLogin
+              appId={process.env.REACT_APP_FACEBOOK_LOGIN_APP_ID}
+              autoLoad={false}
+              fields="name,email,picture"
+              callback={responseFacebook}
+              textButton="페이스북 계정으로 로그인"
+              size="medium"
+            />
+          </div>
           <div className="login__link">
             <Link to="/forgot_pw">
               <span className="login__link__forgot-password">
@@ -85,7 +115,10 @@ const StyledLogin = styled.div`
   font-weight: 300;
   color: #272c48;
   font-size: 17px;
-  height: calc(100vh - 201px);
+  min-height: calc(100vh - 202px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
   .wrapper {
     width: 100%;
@@ -93,11 +126,12 @@ const StyledLogin = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
+    margin: 20px 0;
   }
 
   .login {
     width: 500px;
-    height: 500px;
+    height: 550px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -159,6 +193,51 @@ const StyledLogin = styled.div`
       }
     }
 
+    &__hr {
+      position: relative;
+      width: 100%;
+      color: #999;
+      text-align: center;
+      margin: 10px 0;
+
+      span {
+        text-align: center;
+      }
+
+      &::before {
+        content: "";
+        position: absolute;
+        left: 25px;
+        top: 0;
+        bottom: 0;
+        margin: auto 0;
+        width: 200px;
+        height: 0;
+        border-top: 1px solid #999;
+      }
+
+      &::after {
+        content: "";
+        position: absolute;
+        right: 25px;
+        top: 0;
+        bottom: 0;
+        margin: auto 0;
+        width: 200px;
+        height: 0;
+        border-top: 1px solid #999;
+      }
+    }
+
+    &__social-login {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin: 5px 0 20px;
+    }
+
     &__link {
       display: flex;
       justify-content: space-between;
@@ -175,4 +254,13 @@ const StyledLogin = styled.div`
       }
     }
   }
+`;
+
+const StyledGoogleLoginBtn = styled(GoogleLogin)`
+  font-size: calc(0.27548vw + 12.71074px) !important;
+  padding: calc(0.34435vw + -2px) calc(0.34435vw + 1px) !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 10px;
 `;

@@ -1,5 +1,4 @@
 import express from "express";
-import sendMail from "../controllers/sendMailCtrl";
 import userCtrl from "../controllers/userCtrl";
 import logged from "../middleware/logged";
 import sendMailCtrl from "../controllers/sendMailCtrl";

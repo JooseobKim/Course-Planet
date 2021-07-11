@@ -222,3 +222,66 @@ export const resetPassword =
       });
     }
   };
+
+export const googleLogin =
+  ({ userInfo }) =>
+  async (dispatch) => {
+    if (userInfo)
+      try {
+        dispatch({ type: ALERT_TYPES.ALERT, payload: { loading: true } });
+
+        const res = await axios.post("/auth/google_login", { userInfo });
+
+        dispatch({
+          type: AUTH_TYPES.AUTH,
+          payload: { token: res.data.accessToken, user: res.data.user },
+        });
+
+        localStorage.setItem("LoggedIn", true);
+
+        dispatch({
+          type: ALERT_TYPES.ALERT,
+          payload: { msg: res.data.msg, loading: false },
+        });
+      } catch (err) {
+        dispatch({
+          type: ALERT_TYPES.ALERT,
+          payload: {
+            loading: false,
+            msg: err.response?.data.msg || err.message,
+          },
+        });
+      }
+  };
+
+export const facebookLogin =
+  ({ response }) =>
+  async (dispatch) => {
+    try {
+      dispatch({ type: ALERT_TYPES.ALERT, payload: { loading: true } });
+
+      const res = await axios.post("/auth/facebook_login", {
+        userInfo: response,
+      });
+
+      dispatch({
+        type: AUTH_TYPES.AUTH,
+        payload: { token: res.data.accessToken, user: res.data.user },
+      });
+
+      localStorage.setItem("LoggedIn", true);
+
+      dispatch({
+        type: ALERT_TYPES.ALERT,
+        payload: { msg: res.data.msg, loading: false },
+      });
+    } catch (err) {
+      dispatch({
+        type: ALERT_TYPES.ALERT,
+        payload: {
+          loading: false,
+          msg: err.response?.data.msg || err.message,
+        },
+      });
+    }
+  };
