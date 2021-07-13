@@ -12,6 +12,7 @@ import {
 import { useDispatch } from "react-redux";
 import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
 import FavoriteIcon from "@material-ui/icons/Favorite";
+import { Link } from "react-router-dom";
 
 const Review = ({ review, detailCourse, auth, setReviewModal }) => {
   const { owner } = review;
@@ -22,10 +23,10 @@ const Review = ({ review, detailCourse, auth, setReviewModal }) => {
 
   useEffect(() => {
     const existReviewLike = review.likes.find(
-      (like) => like._id === auth.user?._id
+      (like) => like._id === auth?.user._id
     );
     if (existReviewLike) setLikeState(true);
-  }, [auth.user?._id, review.likes]);
+  }, [auth?.user._id, review.likes]);
 
   const difficultyValue = (value) => {
     if (value === "easy") return "쉬움";
@@ -53,21 +54,25 @@ const Review = ({ review, detailCourse, auth, setReviewModal }) => {
       <div className="review">
         <div className="review__owner-info">
           <div className="review__owner-info-inner">
-            <img
-              src={
-                owner?.avatar ||
-                "https://res.cloudinary.com/duw5jvlb4/image/upload/v1624383950/samples/no-image_dfpama.png"
-              }
-              alt=""
-            />
-            <div className="review__owner-info-inner__nickname-createdAt">
-              <div className="review__owner-info-inner__nickname-createdAt__nickname">
-                {owner?.username || "탈퇴 유저"}
+            <Link
+              to={`/user/${owner?.username ? owner.username : "resigned_user"}`}
+            >
+              <img
+                src={
+                  owner?.avatar ||
+                  "https://res.cloudinary.com/duw5jvlb4/image/upload/v1624383950/samples/no-image_dfpama.png"
+                }
+                alt=""
+              />
+              <div className="review__owner-info-inner__nickname-createdAt">
+                <div className="review__owner-info-inner__nickname-createdAt__nickname">
+                  {owner?.username || "탈퇴 유저"}
+                </div>
+                <div className="review__owner-info__nickname-createdAt__createdAt">
+                  {moment(review.createdAt).fromNow()}
+                </div>
               </div>
-              <div className="review__owner-info__nickname-createdAt__createdAt">
-                {moment(review.createdAt).fromNow()}
-              </div>
-            </div>
+            </Link>
           </div>
           <div className="review__owner-info__likes-rating-difficulty">
             <div className="review__owner-info__likes-rating-difficulty__likes">
@@ -199,25 +204,34 @@ const StyledReview = styled.div`
       padding: 10px 5px 10px 10px;
 
       &-inner {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
         padding: 0 5px;
 
-        img {
-          width: 50px;
-          height: 50px;
-          border-radius: 5px;
-          object-fit: cover;
-        }
-
-        &__nickname-createdAt {
+        a {
           display: flex;
-          flex-direction: column;
-          align-items: flex-end;
+          justify-content: space-between;
+          align-items: center;
+          text-decoration: none;
+          color: #272c48;
 
-          &__nickname {
-            margin-bottom: 5px;
+          &:hover {
+            text-decoration: underline;
+          }
+
+          img {
+            width: 50px;
+            height: 50px;
+            border-radius: 5px;
+            object-fit: cover;
+          }
+
+          &__nickname-createdAt {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+
+            &__nickname {
+              margin-bottom: 5px;
+            }
           }
         }
       }

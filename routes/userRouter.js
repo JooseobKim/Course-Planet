@@ -11,10 +11,11 @@ userRouter.post("/contact_send_mail", sendMailCtrl.contactMeSendMail);
 // 유저 비밀번호 업데이트
 userRouter.post("/reset_password", logged, userCtrl.resetPassword);
 
+// 유저 작성 리뷰 불러오기
+userRouter.get("/:username/review", userCtrl.getReviewByUserId);
+
 // 유저 불러오기
-userRouter.get("/:username", (req, res) => {
-  res.json("h w");
-});
+userRouter.get("/:username", userCtrl.getDetailUser);
 
 // 유저 업데이트
 userRouter.patch("/:username", logged, userCtrl.updateUser);

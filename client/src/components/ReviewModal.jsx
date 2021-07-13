@@ -150,7 +150,11 @@ const Review = ({
               />
             </div>
           </div>
-          <button type="submit" className="modal__submit-review">
+          <button
+            type="submit"
+            className="modal__submit-review"
+            disabled={merit.length < 30 || demerit.length < 30 ? true : false}
+          >
             {myReview ? "리뷰 수정하기" : "리뷰 등록하기"}
           </button>
         </form>
@@ -276,6 +280,15 @@ const StyledReviewModal = styled.div`
 
       &:hover {
         opacity: 1;
+      }
+
+      &:disabled {
+        background-color: #999;
+        cursor: not-allowed;
+
+        &:hover {
+          opacity: 0.7;
+        }
       }
     }
   }

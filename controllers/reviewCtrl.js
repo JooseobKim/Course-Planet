@@ -87,7 +87,7 @@ const reviewCtrl = {
 
       await newReview.save();
 
-      res.json({ newReview, msg: "리뷰 저장 완료." });
+      res.json({ newReview, course, msg: "리뷰 저장 완료." });
     } catch (err) {
       return res.status(500).json({ msg: err.message });
     }

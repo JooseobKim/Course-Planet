@@ -116,8 +116,12 @@ const Header = () => {
             </>
           )}
           {auth.token && profileDropdown && (
-            <div className="header__dropdown">
-              <Link to={`/profile/${auth.user.username}/edit`}>
+            <div
+              className="header__dropdown"
+              onMouseOver={() => setProfileDropdown(true)}
+              onMouseLeave={() => setProfileDropdown(false)}
+            >
+              <Link to={`/user/${auth.user.username}/edit`}>
                 <div
                   className="header__dropdown__item"
                   onClick={() => setProfileDropdown(false)}
@@ -125,7 +129,9 @@ const Header = () => {
                   내 프로필
                 </div>
               </Link>
-              <div className="header__dropdown__item">내 활동</div>
+              <Link to={`/user/${auth.user.username}`}>
+                <div className="header__dropdown__item">내 활동</div>
+              </Link>
               <div
                 className="header__dropdown__item"
                 onClick={() => dispatch(logout())}

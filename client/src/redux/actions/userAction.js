@@ -1,6 +1,7 @@
 import axios from "axios";
 import { ALERT_TYPES } from "./alertAction";
 import { AUTH_TYPES } from "./authAction";
+import { REVIEW_TYPES } from "./reviewAction";
 
 export const USER_TYPES = {};
 
@@ -160,6 +161,33 @@ export const contactMeSendMail =
       dispatch({
         type: ALERT_TYPES.ALERT,
         payload: { msg: err.message, loading: false },
+      });
+    }
+  };
+
+export const getReviewsByUsername =
+  ({ username }) =>
+  async (dispatch) => {
+    try {
+      dispatch({ type: ALERT_TYPES.ALERT, payload: { loading: true } });
+
+      const res = await axios.get(`/user/${username}/review`);
+      console.log({ res });
+
+      if (res.data.reviews)
+        dispatch({
+          type: REVIEW_TYPES.GET_USER_REVIEWS,
+          payload: res.data.reviews,
+        });
+
+      dispatch({
+        type: ALERT_TYPES.ALERT,
+        payload: { msg: res.data.msg, loading: false },
+      });
+    } catch (err) {
+      dispatch({
+        type: ALERT_TYPES.ALERT,
+        payload: { msg: err.response?.data.msg || err.message },
       });
     }
   };

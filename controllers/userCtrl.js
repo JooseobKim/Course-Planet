@@ -1,4 +1,5 @@
 import User from "../models/userModel";
+import Review from "../models/reviewModel";
 import bcrypt from "bcrypt";
 
 const userCtrl = {
@@ -69,6 +70,45 @@ const userCtrl = {
       res.json({ msg: "삭제 성공." });
     } catch (err) {
       return res.stauts(500).json({ msg: err.message });
+    }
+  },
+  getDetailUser: async (req, res) => {
+    try {
+      const { username } = req.body;
+
+      const user = await User.findOne({ username });
+      if (!user)
+        return res.status(400).json({ msg: "유저가 존재하지 않습니다." });
+
+      res.json({ user });
+    } catch (err) {
+      return res.status(500).json({ msg: err.message });
+    }
+  },
+  getReviewByUserId: async (req, res) => {
+    try {
+      const { username } = req.params;
+
+      const user = await User.findOne({ username });
+      if (!user)
+        return res.status(400).json({ msg: "유저가 존재하지 않습니다." });
+
+      const reviews = await Review.find({ owner: user._id })
+        .sort("-createdAt")
+        .populate({
+          path: "owner likes courseId",
+          select: "-password",
+        });
+      if (!reviews) {
+        return res.json({ msg: "리뷰가 존재하지 않습니다." });
+      }
+
+      res.json({
+        reviews,
+        msg: "리뷰를 불러왔습니다.",
+      });
+    } catch (err) {
+      return res.status(500).json({ msg: err.message });
     }
   },
 };

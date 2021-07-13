@@ -14,6 +14,7 @@ import EditProfile from "./profile/EditProfile";
 import ActivateEmail from "./auth/ActivateEmail";
 import SendMailResetPassword from "./auth/SendMailResetPassword";
 import ResetPassword from "./auth/ResetPassword";
+import ResignedUser from "./profile/ResignedUser";
 
 const Pages = () => {
   const { auth } = useSelector((state) => state);
@@ -32,9 +33,10 @@ const Pages = () => {
         exact
         component={auth.token && auth.user?.role === 1 && Admin}
       />
-      <Route path="/profile/:username" exact component={Profile} />
+      <Route path="/user/resigned_user" exact component={ResignedUser} />
+      <Route path="/user/:username" exact component={Profile} />
       <Route
-        path="/profile/:username/edit"
+        path="/user/:username/edit"
         exact
         component={auth.token && EditProfile}
       />

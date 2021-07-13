@@ -394,6 +394,7 @@ const StyledCourseDetail = styled.div`
         font-family: "Noto Sans KR", sans-serif;
         font-weight: 400;
         padding: 7px 15px;
+        margin: 0 0 10px;
         border: none;
         outline: none;
         border-radius: 5px;

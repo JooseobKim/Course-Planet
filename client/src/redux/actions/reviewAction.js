@@ -9,6 +9,7 @@ export const REVIEW_TYPES = {
   UPDATE_REVIEWS: "UPDATE_REVIEWS",
   LIKE_REVIEW: "LIKE_REVIEW",
   UNLIKE_REVIEW: "UNLIKE_REVIEW",
+  GET_USER_REVIEWS: "GET_USER_REVIEWS",
 };
 
 export const createReview =
@@ -39,11 +40,17 @@ export const createReview =
         { headers: { Authorization: auth.token } }
       );
 
-      const newData = { ...res.data.newReview, owner: auth.user };
+      const newData = {
+        ...res.data.newReview,
+        course: res.data.course,
+        owner: auth.user,
+      };
       const updateCourse = {
         ...detailCourse,
         review: [...detailCourse.review, newData],
       };
+
+      console.log({ res, newData });
 
       dispatch({
         type: REVIEW_TYPES.CREATE_REVIEWS,
@@ -269,3 +276,5 @@ export const getReviews =
       });
     }
   };
+
+export const getMyReviews = () => async (dispatch) => {};
