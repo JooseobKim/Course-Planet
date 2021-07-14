@@ -89,6 +89,7 @@ const StyledContactModal = styled.div`
   left: 0;
   background-color: rgba(0, 0, 0, 0.6);
   z-index: 9;
+  min-width: 380px;
 
   .contact-modal {
     position: fixed;
@@ -100,7 +101,7 @@ const StyledContactModal = styled.div`
     bottom: 0;
     left: 0;
     margin: auto;
-    padding: 50px;
+    padding: 40px;
 
     .MuiSvgIcon-root {
       position: absolute;

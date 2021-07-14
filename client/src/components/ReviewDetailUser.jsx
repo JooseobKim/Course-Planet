@@ -58,16 +58,17 @@ export default ReviewDetailUser;
 
 const StyledReviewDetailUser = styled.div`
   .review-detail-user {
+    width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: 0 10px;
 
     &__course {
       display: flex;
 
       &__image {
         width: 100px;
+        margin-left: 7px;
 
         img {
           width: 100%;
@@ -93,7 +94,7 @@ const StyledReviewDetailUser = styled.div`
 
     &__review {
       width: 600px;
-      margin: 10px 0;
+      margin: 10px 5px 10px 0;
 
       &__merit {
         margin: 5px 0;
@@ -131,6 +132,55 @@ const StyledReviewDetailUser = styled.div`
         &__created-at {
         }
         &__rating {
+        }
+      }
+    }
+  }
+
+  @media (max-width: 1024px) {
+    .review-detail-user {
+      &__course {
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        margin-left: 5px;
+        flex: 0.4;
+
+        &__title {
+          width: 100%;
+          text-align: start;
+          margin: 5px 0;
+        }
+      }
+
+      &__review {
+        flex: 0.6;
+      }
+    }
+  }
+
+  @media (max-width: 768px) {
+    .review-detail-user {
+      flex-direction: column;
+
+      &__course {
+        padding: 15px 0 0;
+        width: 100%;
+
+        &__title {
+          justify-content: center;
+        }
+      }
+      &__review {
+        width: 100%;
+
+        &__merit,
+        &-inner {
+          margin: 0 5px;
+        }
+
+        &__demerit {
+          margin: 10px 5px;
         }
       }
     }

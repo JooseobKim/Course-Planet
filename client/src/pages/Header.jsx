@@ -42,6 +42,13 @@ const Header = () => {
         </div>
         <nav className="header__nav">
           <ul className="nav__list">
+            <Link to="/" onClick={() => window.scrollTo({ top: 0 })}>
+              <li
+                className={`nav__item ${location.pathname === "/" && "active"}`}
+              >
+                홈페이지
+              </li>
+            </Link>
             <Link to="/courses" onClick={() => window.scrollTo({ top: 0 })}>
               <li
                 className={`nav__item ${
@@ -49,15 +56,6 @@ const Header = () => {
                 }`}
               >
                 강의
-              </li>
-            </Link>
-            <Link to="/community" onClick={() => window.scrollTo({ top: 0 })}>
-              <li
-                className={`nav__item ${
-                  location.pathname === "/community" && "active"
-                }`}
-              >
-                커뮤니티
               </li>
             </Link>
             <Link to="/about" onClick={() => window.scrollTo({ top: 0 })}>
@@ -227,7 +225,7 @@ const StyledHeader = styled.header`
         position: relative;
         display: flex;
         align-items: center;
-        margin-right: 20px;
+        margin-right: 15px;
 
         .search-input__label {
           .MuiSvgIcon-root {
@@ -279,7 +277,7 @@ const StyledHeader = styled.header`
         .MuiButton-contained {
           color: #fff;
           background-color: #272c48;
-          border-radius: 10px;
+          border-radius: 5px;
           box-shadow: none;
         }
       }
@@ -299,6 +297,7 @@ const StyledHeader = styled.header`
       color: #ecebf6;
       background-color: #8a8ba1;
       overflow: hidden;
+      z-index: 3;
 
       a {
         text-decoration: none;
@@ -323,6 +322,48 @@ const StyledHeader = styled.header`
             background-color: #272c48;
           }
         }
+      }
+    }
+  }
+
+  @media (max-width: 1024px) {
+    .header {
+      justify-content: space-between;
+
+      &__nav {
+        position: static;
+      }
+    }
+  }
+
+  @media (max-width: 768px) {
+    position: static;
+
+    .header {
+      padding: 10px 0;
+      flex-direction: column;
+      height: 100%;
+
+      &__nav {
+        margin: 5px 0;
+      }
+    }
+  }
+
+  @media (max-width: 440px) {
+    min-width: 380px;
+
+    .header {
+      &__search-login {
+        .search {
+          display: none;
+        }
+      }
+
+      &__dropdown {
+        top: 0;
+        width: 84px;
+        right: -24px;
       }
     }
   }

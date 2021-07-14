@@ -125,7 +125,12 @@ const CourseDetail = () => {
               리뷰 작성하기
             </button>
             {viewReview && (
-              <span style={{ fontSize: "15px", marginLeft: "3px" }}>
+              <span
+                style={{
+                  fontSize: "15px",
+                  marginLeft: "3px",
+                }}
+              >
                 {!auth.token
                   ? "* 리뷰는 로그인 후 작성하실 수 있습니다."
                   : myReview
@@ -208,7 +213,8 @@ const StyledCourseDetail = styled.div`
   max-width: 1500px;
   margin: auto;
   display: flex;
-  min-height: calc(100vh - 201px);
+  min-height: calc(100vh - 202px);
+  min-width: 380px;
 
   .course-detail {
     position: sticky;
@@ -219,12 +225,13 @@ const StyledCourseDetail = styled.div`
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
+    padding: 0 20px;
 
     &__image {
-      margin: 20px;
+      width: 100%;
 
       img {
-        width: 560px;
+        width: 100%;
         height: 365px;
         object-fit: contain;
       }
@@ -311,6 +318,7 @@ const StyledCourseDetail = styled.div`
   .review-container {
     flex: 1.8;
     position: relative;
+    min-height: 100px;
 
     &__create-review-wrapper {
       position: ${(props) => !props.viewReview && "sticky"};
@@ -408,6 +416,43 @@ const StyledCourseDetail = styled.div`
           transform: scale(1);
           opacity: 1;
           box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+        }
+      }
+    }
+  }
+
+  @media (max-width: 1024px) {
+    flex-direction: column;
+
+    .course-detail {
+      position: static;
+      flex-direction: row;
+      justify-content: center;
+
+      &__image {
+        max-width: 400px;
+        min-width: 300px;
+
+        img {
+          height: 248px;
+        }
+      }
+    }
+  }
+
+  @media (max-width: 768px) {
+    .course-detail {
+      flex-direction: column;
+      margin-bottom: 10px;
+    }
+  }
+
+  @media (max-width: 420px) {
+    .review-container {
+      &__create-review-wrapper {
+        span {
+          display: inline-block;
+          max-width: 100px;
         }
       }
     }

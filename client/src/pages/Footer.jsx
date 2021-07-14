@@ -173,4 +173,21 @@ const StyledFooter = styled.footer`
       }
     }
   }
+
+  @media (max-width: 768px) {
+    min-width: 380px;
+
+    .wrapper {
+      height: 100%;
+
+      .footer {
+        height: 100%;
+        flex-direction: column;
+
+        &__sitemap {
+          margin: 10px 0;
+        }
+      }
+    }
+  }
 `;

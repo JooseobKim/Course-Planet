@@ -300,4 +300,15 @@ const StyledReviewModal = styled.div`
     right: 12px;
     cursor: pointer;
   }
+
+  @media (max-width: 768px) {
+    min-width: 380px;
+    width: 90%;
+
+    .modal {
+      form {
+        width: 90%;
+      }
+    }
+  }
 `;

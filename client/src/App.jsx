@@ -43,4 +43,5 @@ const TempStyle = styled.div`
   /* height: 5000px; */
   margin: auto;
   border-radius: 10px;
+  min-width: 380px;
 `;

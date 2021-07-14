@@ -431,4 +431,34 @@ const StyledEditProfile = styled.div`
       }
     }
   }
+
+  @media (max-width: 768px) {
+    min-width: 380px;
+
+    form {
+      width: 90%;
+
+      .profile-avatar__setting {
+        flex-direction: column;
+
+        button[type="button"] {
+          padding: 10px;
+
+          &:first-child {
+            margin-bottom: 5px;
+          }
+        }
+      }
+
+      .profile-container {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+
+        &__item {
+          width: 100%;
+        }
+      }
+    }
+  }
 `;

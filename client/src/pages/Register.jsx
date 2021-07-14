@@ -142,7 +142,8 @@ const StyledRgister = styled.div`
   font-weight: 300;
   color: #272c48;
   font-size: 17px;
-  height: calc(100vh - 201px);
+  height: calc(100vh - 202px);
+  min-height: 600px;
 
   .wrapper {
     width: 100%;
@@ -229,6 +230,22 @@ const StyledRgister = styled.div`
         &:hover {
           text-decoration: underline;
         }
+      }
+    }
+  }
+
+  @media (max-width: 768px) {
+    min-width: 380px;
+    .wrapper {
+      .register {
+      }
+    }
+  }
+
+  @media (max-width: 450px) {
+    .wrapper {
+      .register {
+        box-shadow: none;
       }
     }
   }

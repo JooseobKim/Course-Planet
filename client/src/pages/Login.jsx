@@ -211,7 +211,7 @@ const StyledLogin = styled.div`
         top: 0;
         bottom: 0;
         margin: auto 0;
-        width: 200px;
+        width: 39%;
         height: 0;
         border-top: 1px solid #999;
       }
@@ -223,7 +223,7 @@ const StyledLogin = styled.div`
         top: 0;
         bottom: 0;
         margin: auto 0;
-        width: 200px;
+        width: 39%;
         height: 0;
         border-top: 1px solid #999;
       }
@@ -251,6 +251,26 @@ const StyledLogin = styled.div`
         &:hover {
           text-decoration: underline;
         }
+      }
+    }
+  }
+
+  @media (max-width: 768px) {
+    min-width: 380px;
+    .wrapper {
+      .login {
+        &__hr {
+          &::after {
+          }
+        }
+      }
+    }
+  }
+
+  @media (max-width: 450px) {
+    .wrapper {
+      .login {
+        box-shadow: none;
       }
     }
   }

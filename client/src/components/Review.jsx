@@ -23,10 +23,10 @@ const Review = ({ review, detailCourse, auth, setReviewModal }) => {
 
   useEffect(() => {
     const existReviewLike = review.likes.find(
-      (like) => like._id === auth?.user._id
+      (like) => like._id === auth.user?._id
     );
     if (existReviewLike) setLikeState(true);
-  }, [auth?.user._id, review.likes]);
+  }, [auth.user?._id, review.likes]);
 
   const difficultyValue = (value) => {
     if (value === "easy") return "쉬움";
@@ -337,6 +337,12 @@ const StyledReview = styled.div`
           }
         }
       }
+    }
+  }
+
+  @media (max-width: 768px) {
+    .review {
+      flex-direction: column;
     }
   }
 `;

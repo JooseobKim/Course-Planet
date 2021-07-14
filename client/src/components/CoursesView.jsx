@@ -19,12 +19,14 @@ const CourseView = ({
 }) => {
   const sildesState = () => {
     if (window.innerWidth > 1500) return 1500 / 375;
+    else if (window.innerWidth < 380) return 1;
     else return window.innerWidth / 375;
   };
   const [slidesPer, setSlidesPer] = useState(sildesState);
 
   const handleResize = () => {
     if (window.innerWidth > 1500) setSlidesPer(1500 / 375);
+    else if (window.innerWidth < 380) setSlidesPer(1);
     else setSlidesPer(window.innerWidth / 375);
   };
 
@@ -104,6 +106,7 @@ const StyledCouresesView = styled.div`
   font-weight: 500;
   max-width: 1500px;
   margin: auto;
+  min-width: 380px;
 
   .courses {
     &-title {
@@ -168,6 +171,10 @@ const StyledCouresesView = styled.div`
 
     &:hover {
       opacity: 1;
+    }
+
+    @media (max-width: 1500px) {
+      margin: 0 10px;
     }
   }
 

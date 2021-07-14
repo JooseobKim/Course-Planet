@@ -13,7 +13,9 @@ const Skeleton = ({ admin, length }) => {
 
   return (
     <>
-      <div style={{ display: "flex", flexWrap: "wrap" }}>
+      <div
+        style={{ display: "flex", flexWrap: "wrap", justifyContent: "center" }}
+      >
         {formArray.map((_, index) => (
           <StyledSkeleton key={index} loadingState={alert.loading}>
             <div className="skeleton">

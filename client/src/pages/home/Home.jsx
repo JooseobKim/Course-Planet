@@ -50,7 +50,7 @@ const Home = () => {
 
   return (
     <>
-      <div style={{ backgroundColor: "#ecebf6" }}>
+      <div style={{ backgroundColor: "#ecebf6", minWidth: "380px" }}>
         <StyledSearchContainer>
           <h3 className="search-title">
             리뷰를 작성하고 싶은 강좌의 이름을 검색해주세요.
@@ -148,6 +148,14 @@ const StyledSearchContainer = styled.section`
       border-top-right-radius: 5px;
       border-bottom-right-radius: 5px;
       cursor: pointer;
+    }
+  }
+
+  @media (max-width: 768px) {
+    min-width: 380px;
+
+    .search {
+      width: 100%;
     }
   }
 `;

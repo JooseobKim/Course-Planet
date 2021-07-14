@@ -80,7 +80,6 @@ const Courses = () => {
     <StyledCourses>
       <div className="wrapper">
         <div className="courses__navbar">
-          <label htmlFor="courses__navbar__select"></label>
           <FormControlLabel
             control={
               <Checkbox
@@ -158,7 +157,7 @@ const StyledCourses = styled.div`
     width: 175px;
     height: 100%;
     padding: 5px 10px;
-    margin-right: 30px;
+    margin-right: 10px;
     background-color: #eee;
 
     .MuiTypography-body1 {
@@ -204,6 +203,42 @@ const StyledCourses = styled.div`
     justify-content: flex-start;
     align-items: center;
     flex-wrap: wrap;
-    flex: 0.9;
+    flex: 0.94;
+  }
+
+  @media (max-width: 1024px) {
+    min-width: 380px;
+
+    .wrapper {
+      flex-direction: column;
+      align-items: center;
+
+      .courses__navbar {
+        top: 0px;
+        z-index: 2;
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        margin-right: 0;
+        padding: 10px 0;
+
+        &__pagination {
+          margin-right: 10px;
+        }
+      }
+
+      .MuiFormControlLabel-root {
+        flex-direction: column;
+        margin: 0;
+
+        &:first-child {
+          margin-left: 10px;
+        }
+      }
+
+      .courses__list {
+        justify-content: center;
+      }
+    }
   }
 `;

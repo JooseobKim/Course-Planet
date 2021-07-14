@@ -133,4 +133,20 @@ const StyledProfile = styled.div`
       }
     }
   }
+
+  @media (max-width: 1024px) {
+    .profile {
+      &-review {
+        width: 100%;
+
+        &-inner {
+          min-width: 380px;
+          width: 97%;
+          margin: 20px auto;
+          left: 0;
+          right: 0;
+        }
+      }
+    }
+  }
 `;
