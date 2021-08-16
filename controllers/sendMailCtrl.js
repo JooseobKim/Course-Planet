@@ -1,5 +1,5 @@
-import nodemailer from "nodemailer";
-import { google } from "googleapis";
+const nodemailer = require("nodemailer");
+const { google } = require("googleapis");
 
 const REDIRECT_URI = "https://developers.google.com/oauthplayground";
 
@@ -97,4 +97,4 @@ const sendMailCtrl = {
   },
 };
 
-export default sendMailCtrl;
+module.exports = sendMailCtrl;

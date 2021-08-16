@@ -1,5 +1,5 @@
-import express from "express";
-import authCtrl from "../controllers/authCtrl";
+const express = require("express");
+const authCtrl = require("../controllers/authCtrl");
 
 const authRouter = express.Router();
 
@@ -27,4 +27,4 @@ authRouter.post("/google_login", authCtrl.googleLogin);
 // 페이스북 로그인
 authRouter.post("/facebook_login", authCtrl.facebookLogin);
 
-export default authRouter;
+module.exports = authRouter;

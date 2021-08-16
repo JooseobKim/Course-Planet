@@ -1,6 +1,6 @@
-import User from "../models/userModel";
-import Review from "../models/reviewModel";
-import bcrypt from "bcrypt";
+const User = require("../models/userModel");
+const Review = require("../models/reviewModel");
+const bcrypt = require("bcrypt");
 
 const userCtrl = {
   updateUser: async (req, res) => {
@@ -113,4 +113,4 @@ const userCtrl = {
   },
 };
 
-export default userCtrl;
+module.exports = userCtrl;

@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "babel-node init.js",
-    "server": "nodemon",
+    "start": "node server.js",
+    "server": "nodemon server.js",
     "client": "cd client && npm run start",
     "server-install": "npm install",
     "client-install": "cd client && npm install",
@@ -29,13 +29,9 @@
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.13.0",
     "nodemailer": "^6.6.2",
-    "puppeteer": "^10.1.0",
-    "@babel/core": "^7.14.6",
-    "@babel/node": "^7.14.7",
-    "@babel/preset-env": "^7.14.7",
-    "nodemon": "^2.0.7"
+    "puppeteer": "^10.1.0"
   },
   "devDependencies": {
-    "@babel/cli": "^7.14.5"
+    "nodemon": "^2.0.7"
   }
 }

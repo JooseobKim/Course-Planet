@@ -1,7 +1,7 @@
-import express from "express";
-import coursesCtrl from "../controllers/coursesCtrl";
-import admin from "../middleware/admin";
-import logged from "../middleware/logged";
+const express = require("express");
+const coursesCtrl = require("../controllers/coursesCtrl");
+const admin = require("../middleware/admin");
+const logged = require("../middleware/logged");
 
 const courseRouter = express.Router();
 
@@ -42,4 +42,4 @@ courseRouter.get("/recent_add", coursesCtrl.getRecentAddCourses);
 // 개별 강의 불러오기
 courseRouter.get("/:id", coursesCtrl.getCourse);
 
-export default courseRouter;
+module.exports = courseRouter;

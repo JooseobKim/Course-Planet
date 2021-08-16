@@ -1,4 +1,4 @@
-import jwt from "jsonwebtoken";
+const jwt = require("jsonwebtoken");
 
 const logged = async (req, res, next) => {
   try {
@@ -15,4 +15,4 @@ const logged = async (req, res, next) => {
   }
 };
 
-export default logged;
+module.exports = logged;

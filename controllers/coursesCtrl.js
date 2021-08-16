@@ -1,8 +1,7 @@
-import Courses from "../models/courseModel";
-import Review from "../models/reviewModel";
-import axios from "axios";
-import cheerio from "cheerio";
-import puppeteer from "puppeteer";
+const Courses = require("../models/courseModel");
+const axios = require("axios");
+const cheerio = require("cheerio");
+const puppeteer = require("puppeteer");
 
 const DATA_PER_PAGE = 12;
 
@@ -389,4 +388,4 @@ const coursesCtrl = {
   },
 };
 
-export default coursesCtrl;
+module.exports = coursesCtrl;

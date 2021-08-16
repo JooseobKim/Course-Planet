@@ -1,11 +1,13 @@
-import express from "express";
-import cookieParser from "cookie-parser";
-import cors from "cors";
-import coursesRouter from "./routes/coursesRouter";
-import authRouter from "./routes/authRouter";
-import userRouter from "./routes/userRouter";
-import reviewRouter from "./routes/reviewRouter";
-import path from "path";
+require("dotenv").config();
+const express = require("express");
+const cookieParser = require("cookie-parser");
+const cors = require("cors");
+const mongoose = require("mongoose");
+const coursesRouter = require("./routes/coursesRouter");
+const authRouter = require("./routes/authRouter");
+const userRouter = require("./routes/userRouter");
+const reviewRouter = require("./routes/reviewRouter");
+const path = require("path");
 
 const app = express();
 
@@ -18,6 +20,23 @@ app.use("/user", userRouter);
 app.use("/courses", coursesRouter);
 app.use("/review", reviewRouter);
 
+const URI = process.env.MONGODB_URL;
+
+mongoose.connect(
+  URI,
+  {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useFindAndModify: false,
+    useCreateIndex: true,
+  },
+  (err) => {
+    if (err) throw err;
+
+    console.log("Connected to MongoDB");
+  }
+);
+
 if (process.env.NODE_ENV === "production") {
   app.use(express.static("client/build"));
   app.get("*", (req, res) => {
@@ -25,4 +44,8 @@ if (process.env.NODE_ENV === "production") {
   });
 }
 
-export default app;
+const PORT = process.env.PORT || 4250;
+
+app.listen(PORT, () => {
+  console.log("Server is running on port", PORT);
+});

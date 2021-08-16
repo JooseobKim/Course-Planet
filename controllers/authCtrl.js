@@ -1,7 +1,7 @@
-import User from "../models/userModel";
-import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
-import sendMailCtrl from "./sendMailCtrl";
+const User = require("../models/userModel");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+const sendMailCtrl = require("../controllers/sendMailCtrl");
 
 const validateEmail = (email) => {
   const re =
@@ -384,4 +384,4 @@ const authCtrl = {
   },
 };
 
-export default authCtrl;
+module.exports = authCtrl;

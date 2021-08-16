@@ -1,7 +1,7 @@
-import express from "express";
-import userCtrl from "../controllers/userCtrl";
-import logged from "../middleware/logged";
-import sendMailCtrl from "../controllers/sendMailCtrl";
+const express = require("express");
+const userCtrl = require("../controllers/userCtrl");
+const logged = require("../middleware/logged");
+const sendMailCtrl = require("../controllers/sendMailCtrl");
 
 const userRouter = express.Router();
 
@@ -14,13 +14,11 @@ userRouter.post("/reset_password", logged, userCtrl.resetPassword);
 // 유저 작성 리뷰 불러오기
 userRouter.get("/:username/review", userCtrl.getReviewByUserId);
 
-// 유저 불러오기
-userRouter.get("/:username", userCtrl.getDetailUser);
+// 유저 불러오기, 업데이트, 삭제
+userRouter
+  .route("/:username")
+  .get(userCtrl.getDetailUser)
+  .patch(logged, userCtrl.updateUser)
+  .delete(logged, userCtrl.deleteUser);
 
-// 유저 업데이트
-userRouter.patch("/:username", logged, userCtrl.updateUser);
-
-// 유저 삭제
-userRouter.delete("/:username", logged, userCtrl.deleteUser);
-
-export default userRouter;
+module.exports = userRouter;

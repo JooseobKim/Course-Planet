@@ -1,6 +1,6 @@
-import User from "../models/userModel";
-import Course from "../models/courseModel";
-import Review from "../models/reviewModel";
+const User = require("../models/userModel");
+const Course = require("../models/courseModel");
+const Review = require("../models/reviewModel");
 
 class QueryFeatures {
   constructor(query, queryString) {
@@ -186,4 +186,4 @@ const reviewCtrl = {
   },
 };
 
-export default reviewCtrl;
+module.exports = reviewCtrl;

@@ -1,4 +1,4 @@
-import User from "../models/userModel";
+const User = require("../models/userModel");
 
 const admin = async (req, res, next) => {
   try {
@@ -13,4 +13,4 @@ const admin = async (req, res, next) => {
   }
 };
 
-export default admin;
+module.exports = admin;
