@@ -138,7 +138,6 @@ const Register = () => {
 export default Register;
 
 const StyledRgister = styled.div`
-  font-family: "Noto Sans KR", sans-serif;
   font-weight: 300;
   color: #272c48;
   font-size: 17px;

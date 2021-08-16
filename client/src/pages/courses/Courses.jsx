@@ -6,10 +6,9 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import { useLocation } from "react-router";
 import Pagination from "../../components/Pagination";
 import axios from "axios";
-import Skeleton from "../../components/Skeleton";
 import { useDispatch, useSelector } from "react-redux";
-import { ALERT_TYPES } from "../../redux/actions/alertAction";
 import { COURSE_TYPES } from "../../redux/actions/courseAction";
+import Skeleton from "../../components/Skeleton";
 
 const pageRegex = (page) => {
   const re = /[0-9]/g;
@@ -21,6 +20,7 @@ const Courses = () => {
   const dispatch = useDispatch();
   const {
     course: { search_courses },
+    alert,
   } = useSelector((state) => state);
 
   const [totalPage, setTotalPage] = useState(0);
@@ -42,39 +42,39 @@ const Courses = () => {
   };
 
   useEffect(() => {
-    if (!(search_courses.length === 0)) {
-      setTotalPage(Math.ceil(search_courses.length / 15));
+    if (pageNum <= 0 || (totalPage !== 0 && pageNum > totalPage)) setPageNum(1);
+  }, [pageNum, totalPage]);
 
-      if (checkedState.inflearn && !checkedState.fastcampus) {
-        const filteredCourses = search_courses.filter(
-          (course) => course.platform !== "fastcampus"
-        );
-        setCoursesPerPage(filteredCourses);
-      } else if (!checkedState.inflearn && checkedState.fastcampus) {
-        const filteredCourses = search_courses.filter(
-          (course) => course.platform !== "inflearn"
-        );
-        setCoursesPerPage(filteredCourses);
+  useEffect(() => {
+    if (!alert.loading) {
+      if (search_courses.length === 0) {
+        const getCourses = async () => {
+          const res = await axios.get(
+            `/courses?page=${pageNum}&platform=${JSON.stringify(checkedState)}`
+          );
+          setCoursesPerPage(res.data.courses);
+          setTotalPage(res.data.totalPage);
+        };
+        getCourses();
       } else {
-        setCoursesPerPage(search_courses);
+        setTotalPage(Math.ceil(search_courses.length / 12));
+
+        if (checkedState.inflearn && !checkedState.fastcampus) {
+          const filteredCourses = search_courses.filter(
+            (course) => course.platform !== "fastcampus"
+          );
+          setCoursesPerPage(filteredCourses);
+        } else if (!checkedState.inflearn && checkedState.fastcampus) {
+          const filteredCourses = search_courses.filter(
+            (course) => course.platform !== "inflearn"
+          );
+          setCoursesPerPage(filteredCourses);
+        } else {
+          setCoursesPerPage(search_courses);
+        }
       }
-    } else {
-      const getCourses = async () => {
-        dispatch({ type: ALERT_TYPES.ALERT, payload: { loading: true } });
-
-        const res = await axios.get(
-          `/courses?page=${pageNum}&platform=${JSON.stringify(checkedState)}`
-        );
-        setCoursesPerPage(res.data.courses);
-        setTotalPage(res.data.totalPage);
-
-        dispatch({ type: ALERT_TYPES.ALERT, payload: { loading: false } });
-      };
-      getCourses();
     }
-
-    if (pageNum <= 0 || pageNum > totalPage) setPageNum(1);
-  }, [checkedState, pageNum, totalPage, dispatch, search_courses]);
+  }, [checkedState, pageNum, search_courses, alert.loading]);
 
   return (
     <StyledCourses>
@@ -100,7 +100,7 @@ const Courses = () => {
             }
             label="패스트캠퍼스"
           />
-          {!(search_courses.length === 0) && (
+          {search_courses.length !== 0 && (
             <div className="courses__navbar__search-init">
               <button
                 className="courses__navbar__search-init__btn"
@@ -127,10 +127,13 @@ const Courses = () => {
           </div>
         </div>
         <div className="courses__list">
-          {coursesPerPage.length === 0 && <Skeleton length={9} />}
-          {coursesPerPage.map((course) => (
-            <Course key={course._id} course={course} />
-          ))}
+          {coursesPerPage.length === 0 ? (
+            <Skeleton loadingProp={true} length={12} gridResponsive={true} />
+          ) : (
+            coursesPerPage.map((course) => (
+              <Course key={course._id} course={course} gridResponsive={true} />
+            ))
+          )}
         </div>
       </div>
     </StyledCourses>
@@ -140,7 +143,6 @@ const Courses = () => {
 export default Courses;
 
 const StyledCourses = styled.div`
-  font-family: "Noto Sans KR", sans-serif;
   font-weight: 300;
   max-width: 1500px;
   margin: auto;
@@ -148,17 +150,19 @@ const StyledCourses = styled.div`
 
   .wrapper {
     display: flex;
-    justify-content: center;
   }
 
   .courses__navbar {
     position: sticky;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
     top: 71px;
     width: 175px;
     height: 100%;
     padding: 5px 10px;
-    margin-right: 10px;
-    background-color: #eee;
+    background-color: #fff;
 
     .MuiTypography-body1 {
       font-family: "Noto Sans KR", sans-serif;
@@ -199,11 +203,12 @@ const StyledCourses = styled.div`
   }
 
   .courses__list {
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    flex-wrap: wrap;
-    flex: 0.94;
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: 10px;
+    width: 100%;
+    margin: 5px 0;
   }
 
   @media (max-width: 1024px) {
@@ -214,13 +219,14 @@ const StyledCourses = styled.div`
       align-items: center;
 
       .courses__navbar {
-        top: 0px;
         z-index: 2;
         display: flex;
+        flex-direction: row;
         justify-content: space-between;
         width: 100%;
         margin-right: 0;
         padding: 10px 0;
+        top: 71px;
 
         &__pagination {
           margin-right: 10px;
@@ -238,6 +244,20 @@ const StyledCourses = styled.div`
 
       .courses__list {
         justify-content: center;
+      }
+    }
+  }
+
+  @media (max-width: 768px) {
+    .wrapper {
+      .courses__navbar {
+        top: 0px;
+      }
+    }
+
+    .courses__navbar {
+      &__pagination {
+        max-width: 315px;
       }
     }
   }

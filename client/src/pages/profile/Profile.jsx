@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import { getReviewsByUsername } from "../../redux/actions/userAction";
 import ReviewDetailUser from "../../components/ReviewDetailUser";
 import styled from "styled-components";
+import ReviewSkeleton from "../../components/ReviewSkeleton";
 
 const Profile = () => {
   const dispatch = useDispatch();
@@ -27,39 +28,43 @@ const Profile = () => {
 
   return (
     <StyledProfile>
-      <div className="profile">
-        <div className="profile-info">
-          <span className="profile-info__username">
-            {userReviews[0]?.owner.username} 님의 리뷰
-          </span>
-          <div className="profile-info__avatar">
-            <img
-              src={userReviews[0]?.owner.avatar}
-              alt={`${userReviews[0]?.owner.username} avatar`}
-            />
-          </div>
-        </div>
-        <div className="profile-review">
-          {userReviews.slice(0, sliceNum).map((review) => (
-            <div className="profile-review-inner">
-              <ReviewDetailUser review={review} />
+      {userReviews[0]?.owner.avatar ? (
+        <div className="profile">
+          <div className="profile-info">
+            <span className="profile-info__username">
+              {userReviews[0]?.owner.username} 님의 리뷰
+            </span>
+            <div className="profile-info__avatar">
+              <img
+                src={userReviews[0]?.owner.avatar}
+                alt={`${userReviews[0]?.owner.username} avatar`}
+              />
             </div>
-          ))}
-          <div className="profile-review__more-inner">
-            {sliceNum < userReviews.length && (
-              <button
-                onClick={() => {
-                  if (sliceNum >= userReviews.length) return;
-                  setSliceNum(sliceNum + 1);
-                }}
-                className="profile-review__more-inner__btn"
-              >
-                더보기
-              </button>
-            )}
+          </div>
+          <div className="profile-review">
+            {userReviews.slice(0, sliceNum).map((review) => (
+              <div className="profile-review-inner" key={review._id}>
+                <ReviewDetailUser review={review} />
+              </div>
+            ))}
+            <div className="profile-review__more-inner">
+              {sliceNum < userReviews.length && (
+                <button
+                  onClick={() => {
+                    if (sliceNum >= userReviews.length) return;
+                    setSliceNum(sliceNum + 1);
+                  }}
+                  className="profile-review__more-inner__btn"
+                >
+                  더보기
+                </button>
+              )}
+            </div>
           </div>
         </div>
-      </div>
+      ) : (
+        <ReviewSkeleton />
+      )}
     </StyledProfile>
   );
 };
@@ -67,7 +72,6 @@ const Profile = () => {
 export default Profile;
 
 const StyledProfile = styled.div`
-  font-family: "Noto Sans KR", sans-serif;
   font-weight: 400;
   max-width: 1500px;
   min-height: calc(100vh - 202px);

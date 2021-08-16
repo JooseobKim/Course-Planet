@@ -43,7 +43,6 @@ const SendMailResetPassword = () => {
 export default SendMailResetPassword;
 
 const StyledSendMailResetPassword = styled.div`
-  font-family: "Noto Sans KR", sans-serif;
   font-weight: 300;
   max-width: 1500px;
   min-height: calc(100vh - 202px);

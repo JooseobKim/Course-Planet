@@ -88,7 +88,6 @@ const Home = () => {
 export default Home;
 
 const StyledSearchContainer = styled.section`
-  font-family: "Noto Sans KR", sans-serif;
   max-width: 1500px;
   width: 100%;
   height: 300px;

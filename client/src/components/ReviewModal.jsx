@@ -117,7 +117,7 @@ const Review = ({
           <div className="modal__merit-demerit">
             <div className="modal__merit-demerit__merit">
               <span className="modal__merit-demerit__merit__merit-text">
-                장점
+                장점 {merit.length} / 500
               </span>
               <textarea
                 type="text"
@@ -125,7 +125,7 @@ const Review = ({
                 minLength="30"
                 rows={7}
                 cols={70}
-                placeholder="장점을 최소 30 글자 이상 입력해주세요."
+                placeholder="장점을 최소 30 글자 이상 500 글자 이하로 입력해주세요."
                 className="modal__merit-demerit__merit__merit-input"
                 name="merit"
                 value={merit}
@@ -134,7 +134,7 @@ const Review = ({
             </div>
             <div className="modal__merit-demerit__demerit">
               <span className="modal__merit-demerit__demerit__demerit-text">
-                단점
+                단점 {demerit.length} / 500
               </span>
               <textarea
                 type="text"
@@ -142,7 +142,7 @@ const Review = ({
                 minLength="30"
                 rows={7}
                 cols={70}
-                placeholder="단점을 최소 30 글자 이상 입력해주세요."
+                placeholder="단점을 최소 30 글자 이상 500 글자 이하로 입력해주세요."
                 className="modal__merit-demerit__demerit__demerit-input"
                 name="demerit"
                 value={demerit}

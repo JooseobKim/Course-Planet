@@ -5,8 +5,9 @@ import CloseIcon from "@material-ui/icons/Close";
 import { useDispatch } from "react-redux";
 import { alertReset } from "../redux/actions/alertAction";
 
-const Alert = ({ loading, msg }) => {
+const Alert = ({ auth, alert }) => {
   const dispatch = useDispatch();
+  const { loading, msg, successMsg, errMsg } = alert;
 
   const handleResetMsg = () => {
     dispatch(alertReset());
@@ -19,11 +20,23 @@ const Alert = ({ loading, msg }) => {
           <PropagateLoader color="#ffffff" loading={loading} size={20} />
         </StyledLoading>
       )}
-      {msg && (
+      {auth.token && auth.user?.role === 1 && msg && (
         <StyledMessage>
           <span>{msg}</span>
           <CloseIcon onClick={handleResetMsg} fontSize="small" />
         </StyledMessage>
+      )}
+      {successMsg && (
+        <StyledSuccessMessage>
+          <span>{successMsg}</span>
+          <CloseIcon onClick={handleResetMsg} fontSize="small" />
+        </StyledSuccessMessage>
+      )}
+      {errMsg && (
+        <StyledErrMessage>
+          <span>{errMsg}</span>
+          <CloseIcon onClick={handleResetMsg} fontSize="small" />
+        </StyledErrMessage>
       )}
     </>
   );
@@ -47,21 +60,17 @@ const StyledMessage = styled.div`
   font-family: "Noto Sans KR", sans-serif;
   font-weight: 300;
   letter-spacing: 1.1px;
-  z-index: 99999;
+  z-index: 10;
   position: fixed;
-  top: 80px;
-  right: 10px;
-  max-width: 200px;
-  min-height: 40px;
-  max-height: 60px;
-  padding: 5px 30px 5px 15px;
+  top: 70px;
+  width: 100%;
+  padding: 7px 0;
   display: flex;
   justify-content: center;
   align-items: center;
-  color: #ecebf6;
-  background-color: #272c48;
-  border-radius: 5px;
-  opacity: 0.8;
+  color: #00529b;
+  background-color: #bde5f8;
+  opacity: 0.9;
 
   .MuiSvgIcon-root {
     position: absolute;
@@ -70,7 +79,63 @@ const StyledMessage = styled.div`
     cursor: pointer;
   }
 
-  &:hover {
-    opacity: 1;
+  @media (max-width: 768px) {
+    top: 125px;
+  }
+`;
+
+const StyledSuccessMessage = styled.div`
+  font-family: "Noto Sans KR", sans-serif;
+  font-weight: 300;
+  letter-spacing: 1.1px;
+  z-index: 10;
+  position: fixed;
+  top: 70px;
+  width: 100%;
+  padding: 7px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #dff2bf;
+  background-color: #4f8a10;
+  opacity: 0.9;
+
+  .MuiSvgIcon-root {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    cursor: pointer;
+  }
+
+  @media (max-width: 768px) {
+    top: 125px;
+  }
+`;
+
+const StyledErrMessage = styled.div`
+  font-family: "Noto Sans KR", sans-serif;
+  font-weight: 300;
+  letter-spacing: 1.1px;
+  z-index: 10;
+  position: fixed;
+  top: 70px;
+  width: 100%;
+  padding: 7px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #ffd2d2;
+  background-color: #d8000c;
+  opacity: 0.9;
+
+  .MuiSvgIcon-root {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    cursor: pointer;
+  }
+
+  @media (max-width: 768px) {
+    top: 125px;
   }
 `;

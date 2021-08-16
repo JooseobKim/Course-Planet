@@ -50,8 +50,6 @@ export const createReview =
         review: [...detailCourse.review, newData],
       };
 
-      console.log({ res, newData });
-
       dispatch({
         type: REVIEW_TYPES.CREATE_REVIEWS,
         payload: newData,
@@ -64,12 +62,15 @@ export const createReview =
 
       dispatch({
         type: ALERT_TYPES.ALERT,
-        payload: { loading: false, msg: res.data.msg },
+        payload: { loading: false, successMsg: res.data.msg },
       });
     } catch (err) {
       dispatch({
         type: ALERT_TYPES.ALERT,
-        payload: { err: err.response.data.msg || err.message, loading: false },
+        payload: {
+          errMsg: err.response.data.msg || err.message,
+          loading: false,
+        },
       });
     }
   };
@@ -109,12 +110,15 @@ export const updateReview =
 
       dispatch({
         type: ALERT_TYPES.ALERT,
-        payload: { msg: res.data.msg, loading: false },
+        payload: { successMsg: res.data.msg, loading: false },
       });
     } catch (err) {
       dispatch({
         type: ALERT_TYPES.ALERT,
-        payload: { msg: err.message, loading: false },
+        payload: {
+          errMsg: err.response?.data.msg || err.message,
+          loading: false,
+        },
       });
     }
   };
@@ -138,12 +142,12 @@ export const deleteReview =
 
       dispatch({
         type: ALERT_TYPES.ALERT,
-        payload: { msg: res.data.msg, loading: false },
+        payload: { successMsg: res.data.msg, loading: false },
       });
     } catch (err) {
       dispatch({
         type: ALERT_TYPES.ALERT,
-        payload: { msg: err.message },
+        payload: { errMsg: err.response?.data.msg || err.message },
       });
     }
   };
@@ -182,12 +186,15 @@ export const likeReview =
 
       dispatch({
         type: ALERT_TYPES.ALERT,
-        payload: { loading: false, msg: res.data.msg },
+        payload: { loading: false, successMsg: res.data.msg },
       });
     } catch (err) {
       dispatch({
         type: ALERT_TYPES.ALERT,
-        payload: { msg: err.response.data.msg || err.message, loading: false },
+        payload: {
+          errMsg: err.response.data.msg || err.message,
+          loading: false,
+        },
       });
     }
   };
@@ -240,12 +247,15 @@ export const unlikeReview =
 
       dispatch({
         type: ALERT_TYPES.ALERT,
-        payload: { loading: false, msg: res.data.msg },
+        payload: { loading: false, successMsg: res.data.msg },
       });
     } catch (err) {
       dispatch({
         type: ALERT_TYPES.ALERT,
-        payload: { msg: err.message, loading: false },
+        payload: {
+          errMsg: err.response?.data.msg || err.message,
+          loading: false,
+        },
       });
     }
   };
@@ -256,8 +266,6 @@ export const getReviews =
     if (!sort) sort = "recent";
 
     try {
-      dispatch({ type: ALERT_TYPES.ALERT, payload: { loading: true } });
-
       const res = await axios.get(`/review/${courseId}?sort=${sort}`);
 
       dispatch({
@@ -267,14 +275,15 @@ export const getReviews =
 
       dispatch({
         type: ALERT_TYPES.ALERT,
-        payload: { loading: false, msg: res.data.msg },
+        payload: { msg: res.data.msg },
       });
     } catch (err) {
       dispatch({
         type: ALERT_TYPES.ALERT,
-        payload: { loading: false, msg: err.message },
+        payload: {
+          loading: false,
+          errMsg: err.response?.data.msg || err.message,
+        },
       });
     }
   };
-
-export const getMyReviews = () => async (dispatch) => {};

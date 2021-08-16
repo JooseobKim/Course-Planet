@@ -135,7 +135,6 @@ const ScrapingCondition = ({ platform, condition, setCondition }) => {
 export default ScrapingCondition;
 
 const StyledScrapingCondition = styled.div`
-  font-family: "Noto Sans KR", sans-serif;
   color: #272c48;
   display: flex;
   justify-content: center;

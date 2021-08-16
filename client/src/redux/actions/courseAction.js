@@ -71,7 +71,10 @@ export const scrapingInflearnCourses =
     } catch (err) {
       dispatch({
         type: ALERT_TYPES.ALERT,
-        payload: { loading: false, errMsg: err.message },
+        payload: {
+          loading: false,
+          errMsg: err.response?.data.msg || err.message,
+        },
       });
     }
   };
@@ -131,7 +134,7 @@ export const scrapingFastcampusCourses =
         type: ALERT_TYPES.ALERT,
         payload: {
           loading: false,
-          errMsg: err.message,
+          errMsg: err.response?.data.msg || err.message,
         },
       });
     }
@@ -163,7 +166,7 @@ export const scrapingDataSave =
         type: ALERT_TYPES.ALERT,
         payload: {
           loading: false,
-          errMsg: err.message,
+          errMsg: err.response?.data.msg || err.message,
         },
       });
     }
@@ -199,7 +202,10 @@ export const clearScrapingData =
     } catch (err) {
       dispatch({
         type: ALERT_TYPES.ALERT,
-        payload: { loading: false, msg: err.message },
+        payload: {
+          loading: false,
+          errMsg: err.response?.data.msg || err.message,
+        },
       });
     }
   };
@@ -222,17 +228,18 @@ export const getCourses = () => async (dispatch) => {
   } catch (err) {
     dispatch({
       type: ALERT_TYPES.ALERT,
-      payload: { loading: false, msg: err.message },
+      payload: {
+        loading: false,
+        errMsg: err.response?.data.msg || err.message,
+      },
     });
   }
 };
 
 export const getCourse =
-  ({ courses, id }) =>
+  ({ id }) =>
   async (dispatch) => {
     try {
-      dispatch({ type: ALERT_TYPES.ALERT, payload: { loading: true } });
-
       const res = await axios.get(`/courses/${id}`);
 
       dispatch({
@@ -242,20 +249,21 @@ export const getCourse =
 
       dispatch({
         type: ALERT_TYPES.ALERT,
-        payload: { loading: false, msg: res.data.msg },
+        payload: { msg: res.data.msg },
       });
     } catch (err) {
       dispatch({
         type: ALERT_TYPES.ALERT,
-        payload: { loading: false, msg: err.message },
+        payload: {
+          loading: false,
+          errMsg: err.response?.data.msg || err.message,
+        },
       });
     }
   };
 
 export const getMostReviewCourses = () => async (dispatch) => {
   try {
-    dispatch({ type: ALERT_TYPES.ALERT, payload: { loading: true } });
-
     const res = await axios.get("/courses/most_review");
 
     dispatch({
@@ -265,20 +273,21 @@ export const getMostReviewCourses = () => async (dispatch) => {
 
     dispatch({
       type: ALERT_TYPES.ALERT,
-      payload: { loading: false, msg: res.data.msg },
+      payload: { msg: res.data.msg },
     });
   } catch (err) {
     dispatch({
       type: ALERT_TYPES.ALERT,
-      payload: { loading: false, msg: err.message },
+      payload: {
+        loading: false,
+        errMsg: err.response?.data.msg || err.message,
+      },
     });
   }
 };
 
 export const getRecentReviewCourses = () => async (dispatch) => {
   try {
-    dispatch({ type: ALERT_TYPES.ALERT, payload: { loading: true } });
-
     const res = await axios.get("/courses/recent_review");
 
     dispatch({
@@ -288,20 +297,21 @@ export const getRecentReviewCourses = () => async (dispatch) => {
 
     dispatch({
       type: ALERT_TYPES.ALERT,
-      payload: { loading: false, msg: res.data.msg },
+      payload: { msg: res.data.msg },
     });
   } catch (err) {
     dispatch({
       type: ALERT_TYPES.ALERT,
-      payload: { loading: false, msg: err.message },
+      payload: {
+        loading: false,
+        errMsg: err.response?.data.msg || err.message,
+      },
     });
   }
 };
 
 export const getRecentAddCourses = () => async (dispatch) => {
   try {
-    dispatch({ type: ALERT_TYPES.ALERT, payload: { loading: true } });
-
     const res = await axios.get("/courses/recent_add");
 
     dispatch({
@@ -311,12 +321,15 @@ export const getRecentAddCourses = () => async (dispatch) => {
 
     dispatch({
       type: ALERT_TYPES.ALERT,
-      payload: { loading: false, msg: res.data.msg },
+      payload: { msg: res.data.msg },
     });
   } catch (err) {
     dispatch({
       type: ALERT_TYPES.ALERT,
-      payload: { loading: false, msg: err.message },
+      payload: {
+        loading: false,
+        errMsg: err.response?.data.msg || err.message,
+      },
     });
   }
 };
@@ -328,7 +341,6 @@ export const getCoursesPerPage =
       dispatch({ type: ALERT_TYPES.ALERT, payload: { loading: true } });
 
       const res = await axios.get(`/courses?page=${page}`);
-      console.log({ res });
 
       dispatch({
         type: COURSE_TYPES.GET_COURSES_PER_PAGE,
@@ -342,7 +354,10 @@ export const getCoursesPerPage =
     } catch (err) {
       dispatch({
         type: ALERT_TYPES.ALERT,
-        payload: { loading: false, msg: err.response?.data.msg || err.message },
+        payload: {
+          loading: false,
+          errMsg: err.response?.data.msg || err.message,
+        },
       });
     }
   };
@@ -355,19 +370,24 @@ export const searchCourses =
 
       const res = await axios.get(`/courses/search?title=${searchValue}`);
 
-      dispatch({
-        type: COURSE_TYPES.SEARCH_COURSES,
-        payload: res.data.searchCourses,
-      });
+      if (res.data.searchCourses !== null) {
+        dispatch({
+          type: COURSE_TYPES.SEARCH_COURSES,
+          payload: res.data.searchCourses,
+        });
+      }
 
       dispatch({
         type: ALERT_TYPES.ALERT,
-        payload: { loading: false, msg: res.data.msg },
+        payload: { loading: false, successMsg: res.data.msg },
       });
     } catch (err) {
       dispatch({
         type: ALERT_TYPES.ALERT,
-        payload: { loading: false, msg: err.response?.data.msg || err.message },
+        payload: {
+          loading: false,
+          errMsg: err.response?.data.msg || err.message,
+        },
       });
     }
   };

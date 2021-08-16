@@ -111,7 +111,6 @@ const Login = () => {
 export default Login;
 
 const StyledLogin = styled.div`
-  font-family: "Noto Sans KR", sans-serif;
   font-weight: 300;
   color: #272c48;
   font-size: 17px;

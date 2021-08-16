@@ -4,7 +4,7 @@ import axios from "axios";
 import cheerio from "cheerio";
 import puppeteer from "puppeteer";
 
-const DATA_PER_PAGE = 15;
+const DATA_PER_PAGE = 12;
 
 class QueryFeatures {
   constructor(query, queryString) {
@@ -306,6 +306,12 @@ const coursesCtrl = {
         title: { $regex: req.query.title, $options: "i" },
       });
 
+      if (searchCourses.length === 0)
+        return res.json({
+          msg: "찾으시는 강의가 존재하지 않습니다.",
+          searchCourses: null,
+        });
+
       res.json({
         msg: `${searchCourses.length}개의 강의 검색 성공`,
         searchCourses,
@@ -315,60 +321,40 @@ const coursesCtrl = {
     }
   },
   getMostReviewCourses: async (req, res) => {
-    try {
-      await Courses.aggregate([
-        { $unwind: "$review" },
-        {
-          $group: {
-            _id: "$_id",
-            length: { $sum: 1 },
-          },
+    await Courses.aggregate([
+      { $unwind: "$review" },
+      {
+        $group: {
+          _id: "$_id",
+          length: { $sum: 1 },
         },
-        { $sort: { length: -1 } },
-      ]).exec(async (err, docs) => {
-        let courses = [];
+      },
+      { $sort: { length: -1 } },
+    ]).exec(async (err, docs) => {
+      if (err) return res.status(500).json({ msg: err.message });
 
-        for (const course of docs) {
-          const res = await Courses.findById(course._id)
-            .populate("review")
-            .populate({
-              path: "review",
-              populate: {
-                path: "owner likes",
-                select: "-password",
-              },
-            });
-          courses.push(res);
-        }
+      let courses = [];
 
-        res.json({
-          msg: "데이터 불러오기 성공.",
-          courses,
-        });
+      for (const course of docs) {
+        const res = await Courses.findById(course._id);
+        courses.push(res);
+      }
+
+      res.json({
+        msg: "데이터 불러오기 성공.",
+        courses,
       });
-    } catch (err) {
-      return res.status(500).json({ msg: err.message });
-    }
+    });
   },
   getRecentReviewCourses: async (req, res) => {
     try {
       let courses = [];
 
-      const reviews = await Review.find()
-        .sort("-createdAt")
-        .limit(20)
-        .populate("review")
-        .populate({
-          path: "review",
-          populate: {
-            path: "owner likes",
-            select: "-password",
-          },
-        });
+      const coursesRes = await Courses.find().sort("-review").limit(15);
 
-      for (const review of reviews) {
-        const res = await Courses.findById(review.courseId);
-        courses.push(res);
+      for (const course of coursesRes) {
+        if (course.review.length === 0) continue;
+        courses.push(course);
       }
 
       res.json({
@@ -383,6 +369,7 @@ const coursesCtrl = {
     try {
       const courses = await Courses.find()
         .sort("-createdAt")
+        .limit(15)
         .populate("review")
         .populate({
           path: "review",

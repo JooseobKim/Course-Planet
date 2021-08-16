@@ -1,13 +1,13 @@
 import React from "react";
 import styled from "styled-components";
 
-const ResignedUser = () => {
-  return <StyledResignedUser>탈퇴 유저입니다.</StyledResignedUser>;
+const NotFound = () => {
+  return <StyledNotFound>존재하지 않는 페이지입니다.</StyledNotFound>;
 };
 
-export default ResignedUser;
+export default NotFound;
 
-const StyledResignedUser = styled.div`
+const StyledNotFound = styled.div`
   min-height: calc(100vh - 202px);
   display: flex;
   justify-content: center;

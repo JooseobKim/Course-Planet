@@ -192,7 +192,7 @@ const StyledScrapingButton = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 35px;
+  min-height: 35px;
 
   .scraping {
     button {

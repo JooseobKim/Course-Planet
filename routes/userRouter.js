@@ -23,9 +23,4 @@ userRouter.patch("/:username", logged, userCtrl.updateUser);
 // 유저 삭제
 userRouter.delete("/:username", logged, userCtrl.deleteUser);
 
-// 유저 검색
-userRouter.get("/search", (req, res) => {
-  res.json("h w");
-});
-
 export default userRouter;

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { Link, useHistory, useLocation } from "react-router-dom";
 import SearchIcon from "@material-ui/icons/Search";
@@ -16,6 +16,13 @@ const Header = () => {
 
   const [searchValue, setSearchValue] = useState("");
   const [profileDropdown, setProfileDropdown] = useState(false);
+
+  useEffect(() => {
+    if (auth.user === null) {
+      localStorage.removeItem("LoggedIn");
+      window.location.replace("/");
+    }
+  }, [auth.user]);
 
   const handleOnChnage = (e) => {
     setSearchValue(e.target.value);
@@ -99,7 +106,7 @@ const Header = () => {
           {auth.token ? (
             <img
               src={auth.user && auth.user.avatar}
-              alt={`${auth.user.username} avatar`}
+              alt={`${auth.user?.username} avatar`}
               className="header__user-avatar"
               onClick={() => setProfileDropdown(!profileDropdown)}
             />
@@ -147,7 +154,6 @@ const Header = () => {
 export default Header;
 
 const StyledHeader = styled.header`
-  font-family: "Noto Sans KR", sans-serif;
   font-weight: 300;
   box-sizing: border-box;
   position: sticky;
@@ -156,7 +162,7 @@ const StyledHeader = styled.header`
   padding: 0 15px;
   border-bottom: 1px solid #ecebf6;
   background-color: #fff;
-  z-index: 9;
+  z-index: 11;
 
   .blind {
     display: none;
@@ -297,7 +303,7 @@ const StyledHeader = styled.header`
       color: #ecebf6;
       background-color: #8a8ba1;
       overflow: hidden;
-      z-index: 3;
+      z-index: 11;
 
       a {
         text-decoration: none;
@@ -346,24 +352,6 @@ const StyledHeader = styled.header`
 
       &__nav {
         margin: 5px 0;
-      }
-    }
-  }
-
-  @media (max-width: 440px) {
-    min-width: 380px;
-
-    .header {
-      &__search-login {
-        .search {
-          display: none;
-        }
-      }
-
-      &__dropdown {
-        top: 0;
-        width: 84px;
-        right: -24px;
       }
     }
   }

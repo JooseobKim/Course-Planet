@@ -14,6 +14,7 @@ import ActivateEmail from "./auth/ActivateEmail";
 import SendMailResetPassword from "./auth/SendMailResetPassword";
 import ResetPassword from "./auth/ResetPassword";
 import ResignedUser from "./profile/ResignedUser";
+import NotFound from "./NotFound";
 
 const Pages = () => {
   const { auth } = useSelector((state) => state);
@@ -29,7 +30,7 @@ const Pages = () => {
       <Route
         path="/admin"
         exact
-        component={auth.token && auth.user?.role === 1 && Admin}
+        component={auth.token && auth.user?.role === 1 ? Admin : NotFound}
       />
       <Route path="/user/resigned_user" exact component={ResignedUser} />
       <Route path="/user/:username" exact component={Profile} />
@@ -45,6 +46,7 @@ const Pages = () => {
       />
       <Route path="/forgot_pw" exact component={SendMailResetPassword} />
       <Route path="/reset_pw/:token" exact component={ResetPassword} />
+      <Route path="*" exact component={NotFound} />
     </Switch>
   );
 };

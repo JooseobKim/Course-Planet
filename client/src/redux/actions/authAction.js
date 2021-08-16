@@ -42,7 +42,7 @@ export const register =
       if (condition)
         return dispatch({
           type: ALERT_TYPES.ALERT,
-          payload: { msg },
+          payload: { errMsg: msg },
         });
     };
 
@@ -66,12 +66,12 @@ export const register =
 
       dispatch({
         type: ALERT_TYPES.ALERT,
-        payload: { msg: res.data.msg, loading: false },
+        payload: { successMsg: res.data.msg, loading: false },
       });
     } catch (err) {
       dispatch({
         type: ALERT_TYPES.ALERT,
-        payload: { loading: false, msg: err.response.data.msg },
+        payload: { loading: false, errMsg: err.response.data.msg },
       });
     }
   };
@@ -91,11 +91,14 @@ export const login =
 
       localStorage.setItem("LoggedIn", true);
 
-      dispatch({ type: ALERT_TYPES.ALERT, payload: { loading: false } });
+      dispatch({
+        type: ALERT_TYPES.ALERT,
+        payload: { successMsg: res.data.msg, loading: false },
+      });
     } catch (err) {
       dispatch({
         type: ALERT_TYPES.ALERT,
-        payload: { loading: false, error: err.response.data.msg },
+        payload: { loading: false, errMsg: err.response.data.msg },
       });
     }
   };
@@ -103,7 +106,7 @@ export const login =
 export const refreshToken = () => async (dispatch) => {
   const LoggedIn = localStorage.getItem("LoggedIn");
   if (LoggedIn) {
-    dispatch({ type: ALERT_TYPES.ALERT, payload: { loading: true } });
+    dispatch({ type: ALERT_TYPES.ALERT });
 
     try {
       const res = await axios.post("/auth/refresh_token");
@@ -116,13 +119,13 @@ export const refreshToken = () => async (dispatch) => {
         },
       });
 
-      dispatch({ type: ALERT_TYPES.ALERT, payload: { loading: false } });
+      dispatch({ type: ALERT_TYPES.ALERT });
     } catch (err) {
       dispatch({
         type: ALERT_TYPES.ALERT,
         payload: {
           loading: false,
-          error: err.message,
+          errMsg: err.response?.data.msg || err.message,
         },
       });
     }
@@ -142,14 +145,14 @@ export const logout = () => async (dispatch) => {
     dispatch({
       type: ALERT_TYPES.ALERT,
       payload: {
-        msg: res.data.msg,
+        successMsg: res.data.msg,
       },
     });
   } catch (err) {
     dispatch({
       type: ALERT_TYPES.ALERT,
       payload: {
-        error: err.message,
+        errMsg: err.response?.data.msg || err.message,
       },
     });
   }
@@ -167,12 +170,15 @@ export const activateEmail =
 
       dispatch({
         type: ALERT_TYPES.ALERT,
-        payload: { loading: false, msg: res.data.msg },
+        payload: { loading: false, successMsg: res.data.msg },
       });
     } catch (err) {
       dispatch({
         type: ALERT_TYPES.ALERT,
-        payload: { loading: false, msg: err.message },
+        payload: {
+          loading: false,
+          errMsg: err.response?.data.msg || err.message,
+        },
       });
     }
   };
@@ -187,12 +193,15 @@ export const sendMailResetPassword =
 
       dispatch({
         type: ALERT_TYPES.ALERT,
-        payload: { loading: false, msg: res.data.msg },
+        payload: { loading: false, successMsg: res.data.msg },
       });
     } catch (err) {
       dispatch({
         type: ALERT_TYPES.ALERT,
-        payload: { msg: err.response?.data.msg || err.message, loading: false },
+        payload: {
+          errMsg: err.response?.data.msg || err.message,
+          loading: false,
+        },
       });
     }
   };
@@ -213,12 +222,15 @@ export const resetPassword =
 
       dispatch({
         type: ALERT_TYPES.ALERT,
-        payload: { loading: false, msg: res.data.msg },
+        payload: { loading: false, successMsg: res.data.msg },
       });
     } catch (err) {
       dispatch({
         type: ALERT_TYPES.ALERT,
-        payload: { msg: err.response?.data.msg || err.message, loading: false },
+        payload: {
+          errMsg: err.response?.data.msg || err.message,
+          loading: false,
+        },
       });
     }
   };
@@ -241,14 +253,14 @@ export const googleLogin =
 
         dispatch({
           type: ALERT_TYPES.ALERT,
-          payload: { msg: res.data.msg, loading: false },
+          payload: { successMsg: res.data.msg, loading: false },
         });
       } catch (err) {
         dispatch({
           type: ALERT_TYPES.ALERT,
           payload: {
             loading: false,
-            msg: err.response?.data.msg || err.message,
+            errMsg: err.response?.data.msg || err.message,
           },
         });
       }
@@ -273,14 +285,14 @@ export const facebookLogin =
 
       dispatch({
         type: ALERT_TYPES.ALERT,
-        payload: { msg: res.data.msg, loading: false },
+        payload: { successMsg: res.data.msg, loading: false },
       });
     } catch (err) {
       dispatch({
         type: ALERT_TYPES.ALERT,
         payload: {
           loading: false,
-          msg: err.response?.data.msg || err.message,
+          errMsg: err.response?.data.msg || err.message,
         },
       });
     }

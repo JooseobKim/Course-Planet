@@ -63,20 +63,20 @@ const EditProfile = () => {
     if (!file)
       return dispatch({
         type: ALERT_TYPES.ALERT,
-        payload: { msg: "파일이 존재하지 않습니다." },
+        payload: { errMsg: "파일이 존재하지 않습니다." },
       });
 
     if (file.size > 1024 * 1024 * 10)
       // 10mb
       return dispatch({
         type: ALERT_TYPES.ALERT,
-        payload: { msg: "파일의 용량은 10MB 이하만 업로드가 가능합니다." },
+        payload: { errMsg: "파일의 용량은 10MB 이하만 업로드가 가능합니다." },
       });
 
     if (file.type !== "image/jpeg" && file.type !== "image/png")
       return dispatch({
         type: ALERT_TYPES.ALERT,
-        payload: { msg: "사진 파일만 업로드가 가능합니다." },
+        payload: { errMsg: "사진 파일만 업로드가 가능합니다." },
       });
 
     setProfileAvatar(file);
@@ -88,7 +88,10 @@ const EditProfile = () => {
     let notChanged = true;
 
     for (const [key, value] of Object.entries(updateUserData)) {
-      if (initialState[key] !== value) notChanged = false;
+      if (initialState[key] !== value) {
+        notChanged = false;
+        break;
+      }
     }
 
     if (notChanged && !profileAvatar) return;
@@ -250,7 +253,6 @@ const EditProfile = () => {
 export default EditProfile;
 
 const StyledEditProfile = styled.div`
-  font-family: "Noto Sans KR", sans-serif;
   font-weight: 300;
   min-height: calc(100vh - 202px);
   display: flex;

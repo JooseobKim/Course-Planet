@@ -157,9 +157,10 @@ const authCtrl = {
       const user = await User.findOne({ userId });
       const userPassword =
         user && (await bcrypt.compare(password, user.password));
+
       if (!user || !userPassword)
         return res
-          .status(400)
+          .status(401)
           .json({ msg: "아이디 혹은 비밀번호가 틀립니다." });
 
       const accessToken = createAccessToken({ id: user._id });
@@ -187,7 +188,7 @@ const authCtrl = {
     try {
       const rf_token = req.cookies.refreshToken;
       if (!rf_token)
-        return res.status(400).json({ msg: "로그인을 해주시기 바랍니다." });
+        return res.status(401).json({ msg: "로그인을 해주시기 바랍니다." });
 
       const userId = jwt.verify(rf_token, process.env.REFRESH_TOKEN_SECRET);
 
@@ -254,7 +255,7 @@ const authCtrl = {
       if (user) {
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch)
-          return res.status(400).json({ msg: "패스워드가 일치하지 않습니다." });
+          return res.status(401).json({ msg: "패스워드가 일치하지 않습니다." });
 
         const accessToken = createAccessToken({ id: user._id });
         const refreshToken = createRefreshToken({ id: user._id });
@@ -329,7 +330,7 @@ const authCtrl = {
       if (user) {
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch)
-          return res.status(400).json({ msg: "패스워드가 일치하지 않습니다." });
+          return res.status(401).json({ msg: "패스워드가 일치하지 않습니다." });
 
         const accessToken = createAccessToken({ id: user._id });
         const refreshToken = createRefreshToken({ id: user._id });

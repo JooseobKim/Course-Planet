@@ -7,6 +7,7 @@ import ReviewModal from "../../components/ReviewModal";
 
 import Review from "../../components/Review";
 import { getReviews } from "../../redux/actions/reviewAction";
+import CourseSkeleton from "../../components/CourseSkeleton";
 
 const CourseDetail = () => {
   const {
@@ -71,49 +72,55 @@ const CourseDetail = () => {
 
   return (
     <StyledCourseDetail viewReview={viewReview}>
-      <div className="course-detail">
-        <div className="course-detail__image">
-          <img src={detailCourse.image} alt={`${detailCourse.title} img`} />
-        </div>
-        <div className="course-detail__info">
-          <div className="course-detail__info__title">{detailCourse.title}</div>
-          <div className="course-detail__info__description">
-            {detailCourse.description}
+      {Object.keys(detailCourse).length === 0 ? (
+        <CourseSkeleton />
+      ) : (
+        <div className="course-detail">
+          <div className="course-detail__image">
+            <img src={detailCourse.image} alt={`${detailCourse.title} img`} />
           </div>
-          <div className="course-detail__info-inner">
-            <div className="course-detail__info-inner__instructor">
-              {detailCourse.instructor}
+          <div className="course-detail__info">
+            <div className="course-detail__info__title">
+              {detailCourse.title}
             </div>
-            <div className="course-detail__info-inner__price-review">
-              <div className="course-detail__info-inner__price-review__price">
-                {detailCourse.price}
+            <div className="course-detail__info__description">
+              {detailCourse.description}
+            </div>
+            <div className="course-detail__info-inner">
+              <div className="course-detail__info-inner__instructor">
+                {detailCourse.instructor}
               </div>
-              <div className="course-detail__info-inner__price-review__review">
-                강의 리뷰
-                <span>{detailCourse.review?.length}</span>
+              <div className="course-detail__info-inner__price-review">
+                <div className="course-detail__info-inner__price-review__price">
+                  {detailCourse.price}
+                </div>
+                <div className="course-detail__info-inner__price-review__review">
+                  강의 리뷰
+                  <span>{detailCourse.review?.length}</span>
+                </div>
               </div>
             </div>
-          </div>
-          <div className="course-detail__info__link">
-            강의 링크
-            <a href={detailCourse.url}>{detailCourse.url}</a>
-          </div>
-          <div className="course-detail__info__platform">
-            강의 플랫폼
-            {detailCourse.platform === "inflearn" ? (
-              <span className="course-detail__info__platform__inflearn">
-                인프런
-              </span>
-            ) : (
-              detailCourse.platform === "fastcampus" && (
-                <span className="course-detail__info__platform__fastcampus">
-                  패스트캠퍼스
+            <div className="course-detail__info__link">
+              강의 링크
+              <a href={detailCourse.url}>{detailCourse.url}</a>
+            </div>
+            <div className="course-detail__info__platform">
+              강의 플랫폼
+              {detailCourse.platform === "inflearn" ? (
+                <span className="course-detail__info__platform__inflearn">
+                  인프런
                 </span>
-              )
-            )}
+              ) : (
+                detailCourse.platform === "fastcampus" && (
+                  <span className="course-detail__info__platform__fastcampus">
+                    패스트캠퍼스
+                  </span>
+                )
+              )}
+            </div>
           </div>
         </div>
-      </div>
+      )}
       <div className="review-container">
         <div className="review-container__create-review">
           <div className="review-container__create-review-wrapper">
@@ -124,7 +131,7 @@ const CourseDetail = () => {
             >
               리뷰 작성하기
             </button>
-            {viewReview && (
+            {viewReview ? (
               <span
                 style={{
                   fontSize: "15px",
@@ -137,8 +144,7 @@ const CourseDetail = () => {
                   ? "* 리뷰를 이미 작성하였습니다."
                   : ""}
               </span>
-            )}
-            {!viewReview && (
+            ) : (
               <button
                 className="review-container__create-review__view-button"
                 onClick={() => setViewReview(true)}
@@ -168,6 +174,11 @@ const CourseDetail = () => {
             <option value="likes">좋아요순</option>
           </select>
         </div>
+        {detail_course_reviews.length === 0 && (
+          <div className="review-container__no-review">
+            <span>첫 번째 리뷰를 작성해보세요!</span>
+          </div>
+        )}
         {detail_course_reviews.slice(0, sliceNum).map((item) => (
           <Review
             key={item._id}
@@ -208,7 +219,6 @@ const CourseDetail = () => {
 export default CourseDetail;
 
 const StyledCourseDetail = styled.div`
-  font-family: "Noto Sans KR", sans-serif;
   font-weight: 300;
   max-width: 1500px;
   margin: auto;
@@ -391,6 +401,21 @@ const StyledCourseDetail = styled.div`
         border: none;
         outline: none;
         cursor: pointer;
+      }
+    }
+
+    &__no-review {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+
+      span {
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
       }
     }
 

@@ -34,8 +34,6 @@ const Admin = () => {
     search: "",
   });
 
-  console.log({ scrapingCondition });
-
   const [inflearnCheckState, setInflearnCheckState] = useState({});
   const [fastcampusCheckState, setFastcampusCheckState] = useState({});
 
@@ -88,24 +86,22 @@ const Admin = () => {
                 condition={scrapingCondition}
                 setCondition={setScrapingCondition}
               />
-              {
-                <div className="inflearn__scraping__control__condition-search">
-                  <input
-                    type="text"
-                    className="inflearn__scraping__control__condition-search__input"
-                    placeholder="인프런 검색 키워드"
-                    name="search"
-                    value={scrapingCondition.search}
-                    onChange={(e) =>
-                      setScrapingCondition({
-                        ...scrapingCondition,
-                        order: `${scrapingCondition.search && "search"}`,
-                        search: e.target.value,
-                      })
-                    }
-                  />
-                </div>
-              }
+              <div className="inflearn__scraping__control__condition-search">
+                <input
+                  type="text"
+                  className="inflearn__scraping__control__condition-search__input"
+                  placeholder="인프런 검색 키워드"
+                  name="search"
+                  value={scrapingCondition.search}
+                  onChange={(e) =>
+                    setScrapingCondition({
+                      ...scrapingCondition,
+                      order: `${scrapingCondition.search && "search"}`,
+                      search: e.target.value,
+                    })
+                  }
+                />
+              </div>
             </div>
             <div className="inflearn__scraping__control__button">
               <ScrapingButton

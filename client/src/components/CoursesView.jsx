@@ -42,7 +42,7 @@ const CourseView = ({
       <div className="courses">
         <h3 className="courses-title">최근에 추가된 강의</h3>
         {get_recent_add_courses.length === 0 && (
-          <Skeleton loading={alert.loading} />
+          <Skeleton loadingProp={true} length={Math.floor(slidesPer)} />
         )}
         <Swiper
           slidesPerView={Math.floor(slidesPer)}
@@ -52,7 +52,7 @@ const CourseView = ({
         >
           <div className="courses__data" style={{ display: "flex" }}>
             {get_recent_add_courses.map((course) => (
-              <SwiperSlide>
+              <SwiperSlide key={course._id}>
                 <Course course={course} />
               </SwiperSlide>
             ))}
@@ -60,7 +60,7 @@ const CourseView = ({
         </Swiper>
         <h3 className="courses-title">리뷰가 최근에 작성된 강의</h3>
         {most_review_courses.length === 0 && (
-          <Skeleton loading={alert.loading} />
+          <Skeleton loadingProp={true} length={Math.floor(slidesPer)} />
         )}
         <Swiper
           slidesPerView={Math.floor(slidesPer)}
@@ -70,7 +70,7 @@ const CourseView = ({
         >
           <div className="courses__data" style={{ display: "flex" }}>
             {recent_review_courses.map((course) => (
-              <SwiperSlide>
+              <SwiperSlide key={course._id}>
                 <Course course={course} />
               </SwiperSlide>
             ))}
@@ -78,7 +78,7 @@ const CourseView = ({
         </Swiper>
         <h3 className="courses-title">가장 리뷰가 많은 강의</h3>
         {recent_review_courses.length === 0 && (
-          <Skeleton loading={alert.loading} />
+          <Skeleton loadingProp={true} length={Math.floor(slidesPer)} />
         )}
         <Swiper
           slidesPerView={Math.floor(slidesPer)}
@@ -88,7 +88,7 @@ const CourseView = ({
         >
           <div className="courses__data">
             {most_review_courses.map((course) => (
-              <SwiperSlide>
+              <SwiperSlide key={course._id}>
                 <Course course={course} />
               </SwiperSlide>
             ))}
@@ -102,7 +102,6 @@ const CourseView = ({
 export default CourseView;
 
 const StyledCouresesView = styled.div`
-  font-family: "Noto Sans KR", sans-serif;
   font-weight: 500;
   max-width: 1500px;
   margin: auto;

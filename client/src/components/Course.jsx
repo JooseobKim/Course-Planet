@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 
-const Course = ({ course }) => {
+const Course = ({ course, gridResponsive }) => {
   let sliceDescription;
   let sliceTitle;
 
@@ -12,7 +12,7 @@ const Course = ({ course }) => {
   if (course.title.length > 68) sliceTitle = course.title.slice(0, 68) + " ...";
 
   return (
-    <StyledCourse>
+    <StyledCourse gridResponsive={gridResponsive}>
       <div className="course">
         <div className="course__image">
           <img src={course.image} alt={`${course.title} img`} />
@@ -65,11 +65,12 @@ export default Course;
 
 const StyledCourse = styled.div`
   font-weight: 300;
+  grid-column: ${(props) => props.gridResponsive && "span 3 / span 3"};
 
   .course {
     position: relative;
-    width: 375px;
-    height: 375px;
+    width: ${(props) => (props.gridResponsive ? "100%" : "375px")};
+    min-height: 375px;
     font-size: 15px;
     overflow: hidden;
 
@@ -94,7 +95,7 @@ const StyledCourse = styled.div`
     }
 
     &__description {
-      height: 72px;
+      min-height: 72px;
       padding: 5px 7px;
       line-height: 1.2;
     }
@@ -124,58 +125,42 @@ const StyledCourse = styled.div`
       position: absolute;
       top: 0;
       left: 0;
-      width: 375px;
+      display: flex;
+      width: ${(props) => (props.gridResponsive ? "100%" : "375px")};
       height: 189px;
       background-color: rgba(0, 0, 0, 0.4);
+      border-radius: 7px;
+      overflow: hidden;
       opacity: 0;
 
       &__move-homepage {
-        position: absolute;
+        flex: 1;
         display: flex;
         justify-content: center;
         align-items: center;
-        text-align: center;
-        width: 80px;
-        height: 80px;
-        padding: 10px;
-        border-radius: 50%;
-        top: 0;
-        left: 0;
-        bottom: 0;
-        margin: auto;
-        transform: translateX(50%);
+        background-color: #242424;
+        opacity: 0.6;
         text-decoration: none;
         font-weight: 400;
-        font-size: 13px;
+        font-size: 14px;
         color: #e5e5e5;
-        background-color: #242424;
-        opacity: 0.8;
 
         &:hover {
-          opacity: 0.98;
+          opacity: 0.9;
         }
       }
 
       &__move-review {
-        position: absolute;
+        flex: 1;
         display: flex;
         justify-content: center;
         align-items: center;
-        text-align: center;
-        width: 100px;
-        height: 100px;
-        border-radius: 50%;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        margin: auto;
-        transform: translateX(-50%);
+        background-color: #242424;
+        opacity: 0.6;
         text-decoration: none;
         font-weight: 400;
-        font-size: 13px;
+        font-size: 14px;
         color: #e5e5e5;
-        background-color: #242424;
-        opacity: 0.8;
 
         &:hover {
           opacity: 0.9;
@@ -186,5 +171,15 @@ const StyledCourse = styled.div`
         opacity: 1;
       }
     }
+  }
+
+  @media (max-width: 1536px) {
+    grid-column: ${(props) => props.gridResponsive && "span 4 / span 4"};
+  }
+  @media (max-width: 1024px) {
+    grid-column: ${(props) => props.gridResponsive && "span 6 / span 6"};
+  }
+  @media (max-width: 768px) {
+    grid-column: ${(props) => props.gridResponsive && "span 12 / span 12"};
   }
 `;
