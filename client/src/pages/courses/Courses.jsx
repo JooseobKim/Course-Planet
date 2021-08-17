@@ -50,7 +50,9 @@ const Courses = () => {
       if (search_courses.length === 0) {
         const getCourses = async () => {
           const res = await axios.get(
-            `/courses?page=${pageNum}&platform=${JSON.stringify(checkedState)}`
+            `/api/courses?page=${pageNum}&platform=${JSON.stringify(
+              checkedState
+            )}`
           );
           setCoursesPerPage(res.data.courses);
           setTotalPage(res.data.totalPage);

@@ -44,38 +44,8 @@ export const updateProfile =
         media = { public_id: data.public_id, url: data.secure_url };
       }
 
-      // let pw_res;
-
-      // if (updateUserData.password && updateUserData.cf_password) {
-      //   const { password, cf_password } = updateUserData;
-
-      //   if (password.length < 6)
-      //     return dispatch({
-      //       type: ALERT_TYPES.ALERT,
-      //       payload: {
-      //         errMsg: "비밀번호는 최소 6 글자 이상이어야 합니다.",
-      //       },
-      //     });
-
-      //   if (password !== cf_password)
-      //     return dispatch({
-      //       type: ALERT_TYPES.ALERT,
-      //       payload: {
-      //         errMsg: "비밀번호와 비밀번호 확인이 일치하지 않습니다.",
-      //       },
-      //     });
-
-      //   pw_res = await axios.post(
-      //     "/user/reset_password",
-      //     { password, cf_password },
-      //     {
-      //       headers: { Authorization: auth.token },
-      //     }
-      //   );
-      // }
-
       const res = await axios.patch(
-        `/user/${auth.user.username}`,
+        `/api/user/${auth.user.username}`,
         {
           ...updateUserData,
           avatar: profileAvatar ? media.url : auth.user.avatar,
@@ -125,7 +95,7 @@ export const deleteUser =
 
         localStorage.removeItem("LoggedIn");
 
-        const res = await axios.delete(`/user/${username}`, {
+        const res = await axios.delete(`/api/user/${username}`, {
           headers: { Authorization: auth.token },
         });
 
@@ -151,7 +121,7 @@ export const contactMeSendMail =
     try {
       dispatch({ type: ALERT_TYPES.ALERT, payload: { loading: true } });
 
-      const res = await axios.post("/user/contact_send_mail", {
+      const res = await axios.post("/api/user/contact_send_mail", {
         fullname,
         email,
         message,
@@ -178,7 +148,7 @@ export const getReviewsByUsername =
     try {
       dispatch({ type: ALERT_TYPES.ALERT });
 
-      const res = await axios.get(`/user/${username}/review`);
+      const res = await axios.get(`/api/user/${username}/review`);
 
       if (res.data.reviews)
         dispatch({

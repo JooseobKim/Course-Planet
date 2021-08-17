@@ -28,7 +28,7 @@ export const createReview =
       dispatch({ type: ALERT_TYPES.ALERT, payload: { loading: true } });
 
       const res = await axios.post(
-        "/review",
+        "/api/review",
         {
           difficulty,
           merit,
@@ -88,7 +88,7 @@ export const updateReview =
 
     try {
       const res = await axios.patch(
-        "/review",
+        "/api/review",
         { merit, demerit, userId: auth.user._id },
         { headers: { Authorization: auth.token } }
       );
@@ -127,7 +127,7 @@ export const deleteReview =
   ({ detailCourse, auth, reviewId }) =>
   async (dispatch) => {
     try {
-      const res = await axios.delete("/review", {
+      const res = await axios.delete("/api/review", {
         headers: { Authorization: auth.token },
       });
 
@@ -166,7 +166,7 @@ export const likeReview =
     try {
       dispatch({ type: ALERT_TYPES.ALERT, payload: { loading: true } });
 
-      const res = await axios.patch(`/review/${review._id}/like`, null, {
+      const res = await axios.patch(`/api/review/${review._id}/like`, null, {
         headers: { Authorization: auth.token },
       });
 
@@ -219,7 +219,7 @@ export const unlikeReview =
     try {
       dispatch({ type: ALERT_TYPES.ALERT, payload: { loading: true } });
 
-      const res = await axios.patch(`/review/${review._id}/unlike`, null, {
+      const res = await axios.patch(`/api/review/${review._id}/unlike`, null, {
         headers: { Authorization: auth.token },
       });
 
@@ -266,7 +266,7 @@ export const getReviews =
     if (!sort) sort = "recent";
 
     try {
-      const res = await axios.get(`/review/${courseId}?sort=${sort}`);
+      const res = await axios.get(`/api/review/${courseId}?sort=${sort}`);
 
       dispatch({
         type: REVIEW_TYPES.GET_DETAIL_COURSE_REVIEWS,

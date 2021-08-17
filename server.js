@@ -15,10 +15,10 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(cors());
 
-app.use("/auth", authRouter);
-app.use("/user", userRouter);
-app.use("/courses", coursesRouter);
-app.use("/review", reviewRouter);
+app.use("/api/auth", authRouter);
+app.use("/api/user", userRouter);
+app.use("/api/courses", coursesRouter);
+app.use("/api/review", reviewRouter);
 
 const URI = process.env.MONGODB_URL;
 

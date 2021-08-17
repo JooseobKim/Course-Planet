@@ -46,7 +46,7 @@ const Pages = () => {
       />
       <Route path="/forgot_pw" exact component={SendMailResetPassword} />
       <Route path="/reset_pw/:token" exact component={ResetPassword} />
-      {/* <Route path="*" exact component={NotFound} /> */}
+      <Route path="*" exact component={NotFound} />
     </Switch>
   );
 };

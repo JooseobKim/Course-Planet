@@ -134,7 +134,7 @@ const authCtrl = {
 
       res.cookie("refreshToken", refreshToken, {
         httpOnly: true,
-        path: "/auth/refresh_token",
+        path: "/api/auth/refresh_token",
         maxAge: 1000 * 60 * 60 * 24 * 7,
       });
 
@@ -168,7 +168,7 @@ const authCtrl = {
 
       res.cookie("refreshToken", refreshToken, {
         httpOnly: true,
-        path: "/auth/refresh_token",
+        path: "/api/auth/refresh_token",
         maxAge: 1000 * 60 * 60 * 24 * 30,
       });
 
@@ -203,7 +203,7 @@ const authCtrl = {
   },
   logout: async (req, res) => {
     try {
-      res.clearCookie("refreshToken", { path: "/auth/refresh_token" });
+      res.clearCookie("refreshToken", { path: "/api/auth/refresh_token" });
       return res.json({ msg: "정상적으로 로그아웃이 되었습니다." });
     } catch (err) {
       return res.status(500).json({ msg: err.message });
@@ -262,7 +262,7 @@ const authCtrl = {
 
         res.cookie("refreshToken", refreshToken, {
           httpOnly: true,
-          path: "/auth/refresh_token",
+          path: "/api/auth/refresh_token",
           maxAge: 1000 * 60 * 60 * 24 * 30,
         });
 
@@ -290,7 +290,7 @@ const authCtrl = {
 
         res.cookie("refreshToken", refreshToken, {
           httpOnly: true,
-          path: "/auth/refresh_token",
+          path: "/api/auth/refresh_token",
           maxAge: 1000 * 60 * 60 * 24 * 30,
         });
 
@@ -337,7 +337,7 @@ const authCtrl = {
 
         res.cookie("refreshToken", refreshToken, {
           httpOnly: true,
-          path: "/auth/refresh_token",
+          path: "/api/auth/refresh_token",
           maxAge: 1000 * 60 * 60 * 24 * 30,
         });
 
@@ -365,7 +365,7 @@ const authCtrl = {
 
         res.cookie("refreshToken", refreshToken, {
           httpOnly: true,
-          path: "/auth/refresh_token",
+          path: "/api/auth/refresh_token",
           maxAge: 1000 * 60 * 60 * 24 * 30,
         });
 

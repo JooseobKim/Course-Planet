@@ -51,7 +51,7 @@ export const register =
     try {
       dispatch({ type: ALERT_TYPES.ALERT, payload: { loading: true } });
 
-      const res = await axios.post("/auth/register", {
+      const res = await axios.post("/api/auth/register", {
         username,
         userId,
         email,
@@ -82,7 +82,7 @@ export const login =
     try {
       dispatch({ type: ALERT_TYPES.ALERT, payload: { loading: true } });
 
-      const res = await axios.post("/auth/login", { userId, password });
+      const res = await axios.post("/api/auth/login", { userId, password });
 
       dispatch({
         type: AUTH_TYPES.AUTH,
@@ -109,7 +109,7 @@ export const refreshToken = () => async (dispatch) => {
     dispatch({ type: ALERT_TYPES.ALERT });
 
     try {
-      const res = await axios.post("/auth/refresh_token");
+      const res = await axios.post("/api/auth/refresh_token");
 
       dispatch({
         type: AUTH_TYPES.AUTH,
@@ -136,7 +136,7 @@ export const logout = () => async (dispatch) => {
   try {
     localStorage.removeItem("LoggedIn");
 
-    const res = await axios.post("/auth/logout");
+    const res = await axios.post("/api/auth/logout");
 
     setTimeout(() => {
       window.location.href = "/";
@@ -164,7 +164,7 @@ export const activateEmail =
     try {
       dispatch({ type: ALERT_TYPES.ALERT, payload: { loading: true } });
 
-      const res = await axios.post("/auth/activate_email", {
+      const res = await axios.post("/api/auth/activate_email", {
         activationToken: activation_token,
       });
 
@@ -189,7 +189,7 @@ export const sendMailResetPassword =
     try {
       dispatch({ type: ALERT_TYPES.ALERT, payload: { loading: true } });
 
-      const res = await axios.post("/auth/send_mail_reset_pw", { email });
+      const res = await axios.post("/api/auth/send_mail_reset_pw", { email });
 
       dispatch({
         type: ALERT_TYPES.ALERT,
@@ -213,7 +213,7 @@ export const resetPassword =
       dispatch({ type: ALERT_TYPES.ALERT, payload: { loading: true } });
 
       const res = await axios.post(
-        "/user/reset_password",
+        "/api/user/reset_password",
         { password, cf_password },
         {
           headers: { Authorization: token },
@@ -242,7 +242,7 @@ export const googleLogin =
       try {
         dispatch({ type: ALERT_TYPES.ALERT, payload: { loading: true } });
 
-        const res = await axios.post("/auth/google_login", { userInfo });
+        const res = await axios.post("/api/auth/google_login", { userInfo });
 
         dispatch({
           type: AUTH_TYPES.AUTH,
@@ -272,7 +272,7 @@ export const facebookLogin =
     try {
       dispatch({ type: ALERT_TYPES.ALERT, payload: { loading: true } });
 
-      const res = await axios.post("/auth/facebook_login", {
+      const res = await axios.post("/api/auth/facebook_login", {
         userInfo: response,
       });
 

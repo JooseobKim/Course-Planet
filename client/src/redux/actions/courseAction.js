@@ -25,7 +25,7 @@ export const scrapingInflearnCourses =
       });
 
       const res = await axios.post(
-        "/courses/admin/inflearn",
+        "/api/courses/admin/inflearn",
         {
           order,
           pageFrom,
@@ -89,7 +89,7 @@ export const scrapingFastcampusCourses =
       });
 
       const res = await axios.post(
-        "/courses/admin/fastcampus",
+        "/api/courses/admin/fastcampus",
         {
           category,
         },
@@ -147,7 +147,7 @@ export const scrapingDataSave =
       dispatch({ type: ALERT_TYPES.ALERT, payload: { loading: true } });
 
       const res = await axios.post(
-        "/courses/admin/save_data",
+        "/api/courses/admin/save_data",
         { data },
         {
           headers: { Authorization: auth.token },
@@ -214,7 +214,7 @@ export const getCourses = () => async (dispatch) => {
   try {
     dispatch({ type: ALERT_TYPES.ALERT, payload: { loading: true } });
 
-    const res = await axios.get("/courses");
+    const res = await axios.get("/api/courses");
 
     dispatch({
       type: COURSE_TYPES.GET_COURSES,
@@ -240,7 +240,7 @@ export const getCourse =
   ({ id }) =>
   async (dispatch) => {
     try {
-      const res = await axios.get(`/courses/${id}`);
+      const res = await axios.get(`/api/courses/${id}`);
 
       dispatch({
         type: COURSE_TYPES.GET_COURSE,
@@ -264,7 +264,7 @@ export const getCourse =
 
 export const getMostReviewCourses = () => async (dispatch) => {
   try {
-    const res = await axios.get("/courses/most_review");
+    const res = await axios.get("/api/courses/most_review");
 
     dispatch({
       type: COURSE_TYPES.GET_MOST_REVIEW,
@@ -288,7 +288,7 @@ export const getMostReviewCourses = () => async (dispatch) => {
 
 export const getRecentReviewCourses = () => async (dispatch) => {
   try {
-    const res = await axios.get("/courses/recent_review");
+    const res = await axios.get("/api/courses/recent_review");
 
     dispatch({
       type: COURSE_TYPES.GET_RECENT_REVIEW,
@@ -312,7 +312,7 @@ export const getRecentReviewCourses = () => async (dispatch) => {
 
 export const getRecentAddCourses = () => async (dispatch) => {
   try {
-    const res = await axios.get("/courses/recent_add");
+    const res = await axios.get("/api/courses/recent_add");
 
     dispatch({
       type: COURSE_TYPES.GET_RECENT_ADD_COURSES,
@@ -340,7 +340,7 @@ export const getCoursesPerPage =
     try {
       dispatch({ type: ALERT_TYPES.ALERT, payload: { loading: true } });
 
-      const res = await axios.get(`/courses?page=${page}`);
+      const res = await axios.get(`/api/courses?page=${page}`);
 
       dispatch({
         type: COURSE_TYPES.GET_COURSES_PER_PAGE,
@@ -368,7 +368,7 @@ export const searchCourses =
     try {
       dispatch({ type: ALERT_TYPES.ALERT, payload: { loading: true } });
 
-      const res = await axios.get(`/courses/search?title=${searchValue}`);
+      const res = await axios.get(`/api/courses/search?title=${searchValue}`);
 
       if (res.data.searchCourses !== null) {
         dispatch({
