@@ -24,7 +24,7 @@ const EditProfile = () => {
 
   useEffect(() => {
     if (auth.user.username !== username)
-      history.push(`/profile/${auth.user.username}/edit`);
+      history.push(`/user/${auth.user.username}/edit`);
   }, [history, username, auth.user.username]);
 
   const handleChangeInput = (e) => {
