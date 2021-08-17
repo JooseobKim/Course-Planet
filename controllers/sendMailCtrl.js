@@ -46,22 +46,6 @@ const sendMailCtrl = {
   registerSendMail: async (req, res) => {
     try {
       const { to, url, text } = req.body;
-      console.log("to: ", to);
-      console.log("url: ", url);
-      console.log("text: ", text);
-      console.log("SENDER_EMAIL_ADDRESS: ", process.env.SENDER_EMAIL_ADDRESS);
-      console.log(
-        "MAILING_SERVICE_CLIENT_ID: ",
-        process.env.MAILING_SERVICE_CLIENT_ID
-      );
-      console.log(
-        "MAILING_SERVICE_CLIENT_SECRET: ",
-        process.env.MAILING_SERVICE_CLIENT_SECRET
-      );
-      console.log(
-        "MAILING_SERVICE_REFRESH_TOKEN: ",
-        process.env.MAILING_SERVICE_REFRESH_TOKEN
-      );
 
       oAuth2Client.setCredentials({
         refresh_token: process.env.MAILING_SERVICE_REFRESH_TOKEN,
@@ -81,7 +65,6 @@ const sendMailCtrl = {
           accessToken,
         },
       });
-      console.log("transporter: ", transporter);
 
       let mailOptions = {
         from: process.env.SENDER_EMAIL_ADDRESS,
@@ -108,9 +91,7 @@ const sendMailCtrl = {
         </div>
       `,
       };
-      console.log("mailOptions: ", mailOptions);
       const result = await transporter.sendMail(mailOptions);
-      console.log("result: ", result);
 
       return result;
     } catch (err) {
