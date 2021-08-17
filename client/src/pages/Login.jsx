@@ -5,6 +5,7 @@ import { Link, useHistory } from "react-router-dom";
 import { facebookLogin, googleLogin, login } from "../redux/actions/authAction";
 import GoogleLogin from "react-google-login";
 import FacebookLogin from "react-facebook-login";
+import * as config from "../config";
 
 const Login = () => {
   const initialState = { userId: "", password: "" };
@@ -77,14 +78,14 @@ const Login = () => {
           </div>
           <div className="login__social-login">
             <StyledGoogleLoginBtn
-              clientId={process.env.REACT_APP_GOOGLE_LOGIN_CLIENT_ID}
+              clientId={config.GOOGLE_LOGIN_CLIENT_ID}
               buttonText="구글 계정으로 로그인"
               onSuccess={responseGoogle}
               onFailure={responseGoogle}
               cookiePolicy={"single_host_origin"}
             />
             <FacebookLogin
-              appId={process.env.REACT_APP_FACEBOOK_LOGIN_APP_ID}
+              appId={config.FACEBOOK_LOGIN_APP_ID}
               autoLoad={false}
               fields="name,email,picture"
               callback={responseFacebook}
