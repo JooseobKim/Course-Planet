@@ -59,7 +59,7 @@ const CourseView = ({
           </div>
         </Swiper>
         <h3 className="courses-title">리뷰가 최근에 작성된 강의</h3>
-        {most_review_courses.length === 0 && (
+        {recent_review_courses.length === 0 && (
           <Skeleton loadingProp={true} length={Math.floor(slidesPer)} />
         )}
         <Swiper
@@ -77,7 +77,7 @@ const CourseView = ({
           </div>
         </Swiper>
         <h3 className="courses-title">가장 리뷰가 많은 강의</h3>
-        {recent_review_courses.length === 0 && (
+        {most_review_courses.length === 0 && (
           <Skeleton loadingProp={true} length={Math.floor(slidesPer)} />
         )}
         <Swiper
