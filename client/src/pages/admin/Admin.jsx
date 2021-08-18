@@ -30,7 +30,7 @@ const Admin = () => {
     order: "recent",
     pageFrom: 1,
     pageTo: 1,
-    category: "category_dev_online",
+    category: "category_online_programming",
     search: "",
   });
 

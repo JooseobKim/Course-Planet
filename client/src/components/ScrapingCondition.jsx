@@ -89,39 +89,51 @@ const ScrapingCondition = ({ platform, condition, setCondition }) => {
         >
           <option
             className="select-category__list__item"
-            value="category_dev_online"
+            value="category_online_programming"
           >
             프로그래밍 강의
           </option>
           <option
             className="select-category__list__item"
-            value="category_data_online"
+            value="category_online_datascience"
           >
             데이터 분석 강의
           </option>
           <option
             className="select-category__list__item"
-            value="category_dgn_online"
+            value="category_online_dgn"
           >
-            영상&#47;디자인 강의
+            디자인 강의
           </option>
           <option
             className="select-category__list__item"
-            value="category_mktg_online"
+            value="category_online_video"
+          >
+            영상&#47;3D 강의
+          </option>
+          <option
+            className="select-category__list__item"
+            value="category_online_finance"
+          >
+            부동산&#47;금융 강의
+          </option>
+          <option
+            className="select-category__list__item"
+            value="category_online_marketing"
           >
             마케팅 강의
           </option>
           <option
             className="select-category__list__item"
-            value="category_fin_online"
+            value="category_online_biz"
           >
-            파이낸스 강의
+            업무 생산성 강의
           </option>
           <option
             className="select-category__list__item"
-            value="category_biz_online"
+            value="category_online_invest"
           >
-            직장인 필수 스킬 강의
+            투자&#47;재테크 강의
           </option>
         </select>
       </div>
