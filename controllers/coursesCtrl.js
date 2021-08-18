@@ -115,9 +115,15 @@ const coursesCtrl = {
     const fastcampusScraping = async (category) => {
       const url = `https://fastcampus.co.kr/${category}`;
 
-      const browser = await puppeteer.launch();
+      const browser = await puppeteer.launch({
+        headless: false,
+      });
 
       const page = await browser.newPage();
+      await page.setViewport({
+        width: 1366,
+        height: 768,
+      });
       await page.goto(url);
 
       const html = await page.content();
@@ -135,6 +141,7 @@ const coursesCtrl = {
 
           return urlData;
         };
+        console.log("로그 9");
 
         const title = $(node).find(".card__title").text();
         const description = $(node).find(".card__content").text();
