@@ -111,37 +111,20 @@ const coursesCtrl = {
   },
   scrapingFastcampusCourses: async (req, res) => {
     const { category } = req.body;
-    console.log(category);
 
     const fastcampusScraping = async (category) => {
       const url = `https://fastcampus.co.kr/${category}`;
-      console.log("url: ", url);
-      console.log("로그 1");
 
-      const browser = await puppeteer.launch({
-        headless: false,
-      });
-      console.log("로그 2");
+      const browser = await puppeteer.launch();
 
       const page = await browser.newPage();
-      console.log("로그 3");
-      await page.setViewport({
-        width: 1366,
-        height: 768,
-      });
-      console.log("로그 3.5");
       await page.goto(url);
-      console.log("로그 4");
 
       const html = await page.content();
-      console.log("로그 5");
       const $ = cheerio.load(html);
-      console.log("로그 6");
-      const $courseList = $(".container__card");
-      console.log("로그 7");
+      const $courseList = $(".card__container");
 
       let courses = [];
-      console.log("로그 8");
 
       $courseList.each((i, node) => {
         const BASE_URL = "https://fastcampus.co.kr";
@@ -152,14 +135,13 @@ const coursesCtrl = {
 
           return urlData;
         };
-        console.log("로그 9");
 
         const title = $(node).find(".card__title").text();
         const description = $(node).find(".card__content").text();
         const img = $(node).find(".card__image").css("background-image");
         const imgUrl = urlRegex(img);
-        const url = BASE_URL + $(node).find(".card__container").attr("href");
-        console.log("로그 10");
+        // const url = BASE_URL + $(node).find(".card__container").attr("href");
+        const url = BASE_URL;
 
         courses.push({
           title,
@@ -170,12 +152,10 @@ const coursesCtrl = {
         });
       });
 
-      console.log("로그 11");
       return courses;
     };
 
     const fastcampusCourses = await fastcampusScraping(category);
-    console.log("로그 12");
 
     res.json({
       fastcampusCourses,
