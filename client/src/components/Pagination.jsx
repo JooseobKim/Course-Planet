@@ -1,15 +1,19 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
+import { COURSE_TYPES } from "../redux/actions/courseAction";
 
-const Pagination = ({ pages, pageNum, setPageNum }) => {
+const Pagination = ({ pages, pageNum, dispatch }) => {
   return (
     <StyledPagination>
       {pages.map((pageIndex) => (
         <Link key={pageIndex} to={`/courses?page=${pageIndex + 1}`}>
           <button
             onClick={() => {
-              setPageNum(pageIndex + 1);
+              dispatch({
+                type: COURSE_TYPES.PAGE,
+                payload: pageIndex + 1,
+              });
               window.scrollTo({ top: 0 });
             }}
             className={`pagination__button ${

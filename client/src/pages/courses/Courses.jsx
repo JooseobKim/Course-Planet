@@ -3,7 +3,6 @@ import styled from "styled-components";
 import Course from "../../components/Course";
 import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
-import { useLocation } from "react-router";
 import Pagination from "../../components/Pagination";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
@@ -11,25 +10,18 @@ import { COURSE_TYPES } from "../../redux/actions/courseAction";
 import Skeleton from "../../components/Skeleton";
 import { ALERT_TYPES } from "../../redux/actions/alertAction";
 
-const pageRegex = (page) => {
-  const re = /[0-9]/g;
-  return page.match(re);
-};
-
 const Courses = () => {
-  const location = useLocation();
   const dispatch = useDispatch();
   const {
     course: {
       search_keyword: { searchValue },
+      page,
     },
     alert,
   } = useSelector((state) => state);
 
   const [totalPage, setTotalPage] = useState(0);
-  const [pageNum, setPageNum] = useState(
-    parseInt(pageRegex(location.search)) || 1
-  );
+
   const pages = new Array(totalPage).fill(null).map((v, i) => i);
   const [checkedState, setCheckedState] = useState({
     inflearn: true,
@@ -45,14 +37,18 @@ const Courses = () => {
   };
 
   useEffect(() => {
-    if (pageNum <= 0 || (totalPage !== 0 && pageNum > totalPage)) setPageNum(1);
-  }, [pageNum, totalPage]);
+    if (page <= 0 || (totalPage !== 0 && page > totalPage))
+      dispatch({
+        type: COURSE_TYPES.PAGE,
+        payload: { page: 1 },
+      });
+  }, [page, dispatch, totalPage]);
 
   useEffect(() => {
     if (!alert.loading) {
       const getCourses = async () => {
         const res = await axios.get(
-          `/api/courses?page=${pageNum}&platform=${JSON.stringify(
+          `/api/courses?page=${page}&platform=${JSON.stringify(
             checkedState
           )}&search=${searchValue ? encodeURI(searchValue) : ""}`
         );
@@ -80,7 +76,7 @@ const Courses = () => {
       };
       getCourses();
     }
-  }, [alert.loading, checkedState, pageNum, searchValue, dispatch]);
+  }, [alert.loading, checkedState, page, searchValue, dispatch]);
 
   return (
     <StyledCourses>
@@ -113,9 +109,12 @@ const Courses = () => {
                 onClick={() => {
                   dispatch({
                     type: COURSE_TYPES.SEARCH_KEYWORD,
-                    payload: "",
+                    payload: {},
                   });
-                  setPageNum(1);
+                  dispatch({
+                    type: COURSE_TYPES.PAGE,
+                    payload: 1,
+                  });
                 }}
               >
                 검색 결과 초기화
@@ -124,13 +123,9 @@ const Courses = () => {
           )}
           <div className="courses__navbar__pagination">
             <div className="courses__navbar__pagination-text">
-              {pageNum} 페이지
+              {page} 페이지
             </div>
-            <Pagination
-              pages={pages}
-              pageNum={pageNum}
-              setPageNum={setPageNum}
-            />
+            <Pagination pages={pages} pageNum={page} dispatch={dispatch} />
           </div>
         </div>
         <div className="courses__list">

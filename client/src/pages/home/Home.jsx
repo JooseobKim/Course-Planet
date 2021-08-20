@@ -44,6 +44,10 @@ const Home = () => {
       type: COURSE_TYPES.SEARCH_KEYWORD,
       payload: { searchValue },
     });
+    dispatch({
+      type: COURSE_TYPES.PAGE,
+      payload: 1,
+    });
 
     history.push("/courses");
   };
