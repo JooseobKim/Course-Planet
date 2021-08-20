@@ -37,7 +37,7 @@ const Pages = () => {
       <Route
         path="/user/:username/edit"
         exact
-        component={auth.token && EditProfile}
+        component={auth.token ? EditProfile : NotFound}
       />
       <Route
         path="/auth/activate/:activation_token"

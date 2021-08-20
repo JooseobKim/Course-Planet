@@ -7,7 +7,7 @@ import {
   getRecentAddCourses,
   getMostReviewCourses,
   getRecentReviewCourses,
-  searchCourses,
+  COURSE_TYPES,
 } from "../../redux/actions/courseAction";
 import { useHistory } from "react-router-dom";
 
@@ -40,7 +40,11 @@ const Home = () => {
     e.preventDefault();
     if (!searchValue) return;
 
-    dispatch(searchCourses({ searchValue }));
+    dispatch({
+      type: COURSE_TYPES.SEARCH_KEYWORD,
+      payload: { searchValue },
+    });
+
     history.push("/courses");
   };
 

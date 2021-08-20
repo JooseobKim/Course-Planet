@@ -7,7 +7,7 @@ export const COURSE_TYPES = {
   CLEAR_SCRAPING_DATA: "CLEAR_SCRAPING_DATA",
   GET_COURSES: "GET_COURSES",
   GET_COURSE: "GET_COURSE",
-  SEARCH_COURSES: "SEARCH_COURSES",
+  SEARCH_KEYWORD: "SEARCH_KEYWORD",
   UPDATE_COURSE: "UPDATE_COURSE",
   GET_MOST_REVIEW: "GET_MOST_REVIEW",
   GET_RECENT_REVIEW: "GET_RECENT_REVIEW",
@@ -350,36 +350,6 @@ export const getCoursesPerPage =
       dispatch({
         type: ALERT_TYPES.ALERT,
         payload: { loading: false, msg: res.data.msg },
-      });
-    } catch (err) {
-      dispatch({
-        type: ALERT_TYPES.ALERT,
-        payload: {
-          loading: false,
-          errMsg: err.response?.data.msg || err.message,
-        },
-      });
-    }
-  };
-
-export const searchCourses =
-  ({ searchValue }) =>
-  async (dispatch) => {
-    try {
-      dispatch({ type: ALERT_TYPES.ALERT, payload: { loading: true } });
-
-      const res = await axios.get(`/api/courses/search?title=${searchValue}`);
-
-      if (res.data.searchCourses !== null) {
-        dispatch({
-          type: COURSE_TYPES.SEARCH_COURSES,
-          payload: res.data.searchCourses,
-        });
-      }
-
-      dispatch({
-        type: ALERT_TYPES.ALERT,
-        payload: { loading: false, successMsg: res.data.msg },
       });
     } catch (err) {
       dispatch({

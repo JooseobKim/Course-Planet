@@ -113,6 +113,27 @@ const coursesCtrl = {
     const { category } = req.body;
 
     const fastcampusScraping = async (category) => {
+      const autoScroll = async (page) => {
+        await page.evaluate(async () => {
+          await new Promise((resolve, reject) => {
+            var totalHeight = 0;
+            var distance = 100;
+            var timer = setInterval(() => {
+              var scrollHeight = document.body.scrollHeight;
+              window.scrollBy(0, distance);
+              totalHeight += distance;
+
+              if (totalHeight >= scrollHeight) {
+                setTimeout(() => {
+                  clearInterval(timer);
+                  resolve();
+                }, 2000);
+              }
+            }, 100);
+          });
+        });
+      };
+
       const url = `https://fastcampus.co.kr/${category}`;
 
       const browser = await puppeteer.launch({
@@ -122,6 +143,7 @@ const coursesCtrl = {
 
       const page = await browser.newPage();
       await page.goto(url);
+      await autoScroll(page);
 
       const html = await page.content();
       const $ = cheerio.load(html);
@@ -144,7 +166,7 @@ const coursesCtrl = {
         const img = $(node).find(".card__image").css("background-image");
         const imgUrl = urlRegex(img);
         // const url = BASE_URL + $(node).find(".card__container").attr("href");
-        const url = BASE_URL;
+        const url = BASE_URL + "/" + category;
 
         courses.push({
           title,
@@ -245,6 +267,12 @@ const coursesCtrl = {
       if (req.query.platform.inflearn && !req.query.platform.fastcampus) {
         totalPage = await Courses.countDocuments({
           platform: "inflearn",
+          ...(req.query.search && {
+            title: {
+              $regex: req.query.search,
+              $options: "i",
+            },
+          }),
         });
       } else if (
         !req.query.platform.inflearn &&
@@ -252,12 +280,32 @@ const coursesCtrl = {
       ) {
         totalPage = await Courses.countDocuments({
           platform: "fastcampus",
+          ...(req.query.search && {
+            title: {
+              $regex: req.query.search,
+              $options: "i",
+            },
+          }),
         });
       } else {
-        totalPage = await Courses.countDocuments();
+        totalPage = await Courses.countDocuments({
+          ...(req.query.search && {
+            title: {
+              $regex: req.query.search,
+              $options: "i",
+            },
+          }),
+        });
       }
 
-      const queryResult = new QueryFeatures(Courses.find(), req.query)
+      const queryResult = new QueryFeatures(
+        req.query.search
+          ? Courses.find({
+              title: { $regex: req.query.search, $options: "i" },
+            })
+          : Courses.find(),
+        req.query
+      )
         .paginating()
         .filteringPlatform();
 
@@ -270,6 +318,12 @@ const coursesCtrl = {
             path: "owner likes",
             select: "-password",
           },
+        });
+
+      if (courses.length === 0)
+        return res.json({
+          msg: "찾으시는 강의가 존재하지 않습니다.",
+          courses,
         });
 
       res.json({
@@ -298,26 +352,6 @@ const coursesCtrl = {
       res.json({
         msg: "데이터 찾기 성공.",
         course,
-      });
-    } catch (err) {
-      return res.status(500).json({ msg: err.message });
-    }
-  },
-  searchCourse: async (req, res) => {
-    try {
-      const searchCourses = await Courses.find({
-        title: { $regex: req.query.title, $options: "i" },
-      });
-
-      if (searchCourses.length === 0)
-        return res.json({
-          msg: "찾으시는 강의가 존재하지 않습니다.",
-          searchCourses: null,
-        });
-
-      res.json({
-        msg: `${searchCourses.length}개의 강의 검색 성공`,
-        searchCourses,
       });
     } catch (err) {
       return res.status(500).json({ msg: err.message });

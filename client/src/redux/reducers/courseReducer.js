@@ -3,7 +3,7 @@ import { COURSE_TYPES } from "../actions/courseAction";
 const initialState = {
   inflearn_courses: [],
   fastcampus_courses: [],
-  search_courses: [],
+  search_keyword: "",
   get_course: [],
   most_review_courses: [],
   recent_review_courses: [],
@@ -35,10 +35,10 @@ const courseReducer = (state = initialState, action) => {
         ...state,
         ...action.payload,
       };
-    case COURSE_TYPES.SEARCH_COURSES:
+    case COURSE_TYPES.SEARCH_KEYWORD:
       return {
         ...state,
-        search_courses: [...action.payload],
+        search_keyword: action.payload,
       };
     case COURSE_TYPES.GET_COURSE:
       return {

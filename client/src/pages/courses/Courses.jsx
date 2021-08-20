@@ -9,6 +9,7 @@ import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { COURSE_TYPES } from "../../redux/actions/courseAction";
 import Skeleton from "../../components/Skeleton";
+import { ALERT_TYPES } from "../../redux/actions/alertAction";
 
 const pageRegex = (page) => {
   const re = /[0-9]/g;
@@ -19,7 +20,9 @@ const Courses = () => {
   const location = useLocation();
   const dispatch = useDispatch();
   const {
-    course: { search_courses },
+    course: {
+      search_keyword: { searchValue },
+    },
     alert,
   } = useSelector((state) => state);
 
@@ -47,36 +50,37 @@ const Courses = () => {
 
   useEffect(() => {
     if (!alert.loading) {
-      if (search_courses.length === 0) {
-        const getCourses = async () => {
-          const res = await axios.get(
-            `/api/courses?page=${pageNum}&platform=${JSON.stringify(
-              checkedState
-            )}`
-          );
-          setCoursesPerPage(res.data.courses);
-          setTotalPage(res.data.totalPage);
-        };
-        getCourses();
-      } else {
-        setTotalPage(Math.ceil(search_courses.length / 12));
+      const getCourses = async () => {
+        const res = await axios.get(
+          `/api/courses?page=${pageNum}&platform=${JSON.stringify(
+            checkedState
+          )}&search=${searchValue ? encodeURI(searchValue) : ""}`
+        );
 
-        if (checkedState.inflearn && !checkedState.fastcampus) {
-          const filteredCourses = search_courses.filter(
-            (course) => course.platform !== "fastcampus"
-          );
-          setCoursesPerPage(filteredCourses);
-        } else if (!checkedState.inflearn && checkedState.fastcampus) {
-          const filteredCourses = search_courses.filter(
-            (course) => course.platform !== "inflearn"
-          );
-          setCoursesPerPage(filteredCourses);
-        } else {
-          setCoursesPerPage(search_courses);
+        if (res.data.courses.length === 0) {
+          dispatch({
+            type: ALERT_TYPES.ALERT,
+            payload: { errMsg: res.data.msg },
+          });
+          setTimeout(() => {
+            dispatch({
+              type: COURSE_TYPES.SEARCH_KEYWORD,
+              payload: "",
+            });
+          }, 2000);
+          return;
         }
-      }
+
+        dispatch({
+          type: ALERT_TYPES.ALERT,
+          payload: { msg: res.data.msg },
+        });
+        setCoursesPerPage(res.data.courses);
+        setTotalPage(res.data.totalPage);
+      };
+      getCourses();
     }
-  }, [checkedState, pageNum, search_courses, alert.loading]);
+  }, [alert.loading, checkedState, pageNum, searchValue, dispatch]);
 
   return (
     <StyledCourses>
@@ -102,16 +106,17 @@ const Courses = () => {
             }
             label="패스트캠퍼스"
           />
-          {search_courses.length !== 0 && (
+          {searchValue && (
             <div className="courses__navbar__search-init">
               <button
                 className="courses__navbar__search-init__btn"
-                onClick={() =>
+                onClick={() => {
                   dispatch({
-                    type: COURSE_TYPES.SEARCH_COURSES,
-                    payload: [],
-                  })
-                }
+                    type: COURSE_TYPES.SEARCH_KEYWORD,
+                    payload: "",
+                  });
+                  setPageNum(1);
+                }}
               >
                 검색 결과 초기화
               </button>

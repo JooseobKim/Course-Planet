@@ -6,7 +6,7 @@ import ClearIcon from "@material-ui/icons/Clear";
 import Button from "@material-ui/core/Button";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../redux/actions/authAction";
-import { searchCourses } from "../redux/actions/courseAction";
+import { COURSE_TYPES } from "../redux/actions/courseAction";
 
 const Header = () => {
   const { auth } = useSelector((state) => state);
@@ -32,7 +32,11 @@ const Header = () => {
     e.preventDefault();
     if (!searchValue) return;
 
-    dispatch(searchCourses({ searchValue }));
+    dispatch({
+      type: COURSE_TYPES.SEARCH_KEYWORD,
+      payload: { searchValue },
+    });
+
     history.push("/courses");
   };
 
