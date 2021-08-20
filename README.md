@@ -2,6 +2,8 @@
 
 MERN 스택 + Redux를 기반으로 만든 개인 프로젝트이며, Cloudinary와 Heroku 서비스를 이용하였습니다.
 
+Course Planet은 간단한 인터넷 강의 리뷰 평점 사이트입니다.
+
 ## 기능
 
 #### [**기능 영상 재생 목록**](https://youtube.com/playlist?list=PLteiTo_UvJUBwK0_CbmUCfiE7IJ036FT1)
